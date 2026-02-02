@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>증명??발급 - ?�주공업고등?�교 졸업???�트?�크</title>
+    <title>증명??발급 - ?�주공업고등?�교 졸업???�트?�크</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/certificates.css">
@@ -16,121 +16,121 @@
             </div>
             <ul class="nav-links">
                 <li><a href="index.html">??/a></li>
-                <li><a href="jobs.html">채용 ?�보</a></li>
-                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
+                <li><a href="jobs.html">채용 ?�보</a></li>
+                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
                 <li><a href="certificates.html" class="active">증명??발급</a></li>
             </ul>
             <div class="user-menu" id="userMenu">
                 <span class="user-name" id="userName"></span>
-                <button onclick="logout()" class="btn-logout">로그?�웃</button>
+                <button onclick="logout()" class="btn-logout">로그?�웃</button>
             </div>
         </nav>
     </header>
 
     <div class="page-container">
         <div class="page-header">
-            <h1>?�� 증명??발급</h1>
-            <p>각종 증명?��? ?�라?�으�?간편?�게 ?�청?�고 발급받으?�요</p>
+            <h1>?�� 증명??발급</h1>
+            <p>각종 증명?��? ?�라?�으�?간편?�게 ?�청?�고 발급받으?�요</p>
         </div>
 
         <div class="certificate-types">
             <div class="cert-type-card" onclick="selectCertType('졸업')">
-                <div class="cert-icon">?��</div>
+                <div class="cert-icon">?��</div>
                 <h3>졸업증명??/h3>
                 <p>발급 비용: 500??/p>
             </div>
-            <div class="cert-type-card" onclick="selectCertType('?�적')">
-                <div class="cert-icon">?��</div>
-                <h3>?�적증명??/h3>
+            <div class="cert-type-card" onclick="selectCertType('?�적')">
+                <div class="cert-icon">?��</div>
+                <h3>?�적증명??/h3>
                 <p>발급 비용: 500??/p>
             </div>
-            <div class="cert-type-card" onclick="selectCertType('?�학')">
-                <div class="cert-icon">?��</div>
-                <h3>?�학증명??/h3>
+            <div class="cert-type-card" onclick="selectCertType('?�학')">
+                <div class="cert-icon">?��</div>
+                <h3>?�학증명??/h3>
                 <p>발급 비용: 500??/p>
             </div>
             <div class="cert-type-card" onclick="selectCertType('추천')">
-                <div class="cert-icon">?�️</div>
+                <div class="cert-icon">?�️</div>
                 <h3>추천??/h3>
                 <p>발급 비용: 1,000??/p>
             </div>
         </div>
 
         <div class="application-form-section">
-            <h2>증명???�청</h2>
+            <h2>증명???�청</h2>
             <form id="certificateForm" class="cert-form">
                 <div class="form-group">
                     <label for="certType">증명??종류 *</label>
                     <select id="certType" required>
-                        <option value="">?�택?�세??/option>
+                        <option value="">?�택?�세??/option>
                         <option value="졸업">졸업증명??/option>
-                        <option value="?�적">?�적증명??/option>
-                        <option value="?�학">?�학증명??/option>
+                        <option value="?�적">?�적증명??/option>
+                        <option value="?�학">?�학증명??/option>
                         <option value="추천">추천??/option>
                     </select>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="applicantName">?�청???�름 *</label>
+                        <label for="applicantName">?�청???�름 *</label>
                         <input type="text" id="applicantName" required>
                     </div>
                     <div class="form-group">
-                        <label for="graduationYear">졸업?�도 *</label>
+                        <label for="graduationYear">졸업?�도 *</label>
                         <input type="text" id="graduationYear" placeholder="?? 2020" required>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="studentId">?�번 *</label>
+                        <label for="studentId">?�번 *</label>
                         <input type="text" id="studentId" placeholder="?? 20201234" required>
                     </div>
                     <div class="form-group">
-                        <label for="birthDate">?�년?�일 *</label>
+                        <label for="birthDate">?�년?�일 *</label>
                         <input type="date" id="birthDate" required>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="purpose">?�용 목적 *</label>
+                    <label for="purpose">?�용 목적 *</label>
                     <select id="purpose" required>
-                        <option value="">?�택?�세??/option>
+                        <option value="">?�택?�세??/option>
                         <option value="취업">취업??/option>
                         <option value="진학">진학??/option>
-                        <option value="관공서">관공서 ?�출??/option>
-                        <option value="기�?">기�?</option>
+                        <option value="관공서">관공서 ?�출??/option>
+                        <option value="기�?">기�?</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="copies">발급 매수 *</label>
                     <select id="copies" required>
-                        <option value="1">1�?/option>
-                        <option value="2">2�?/option>
-                        <option value="3">3�?/option>
-                        <option value="5">5�?/option>
-                        <option value="10">10�?/option>
+                        <option value="1">1�?/option>
+                        <option value="2">2�?/option>
+                        <option value="3">3�?/option>
+                        <option value="5">5�?/option>
+                        <option value="10">10�?/option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="deliveryMethod">?�령 방법 *</label>
+                    <label for="deliveryMethod">?�령 방법 *</label>
                     <select id="deliveryMethod" required onchange="toggleAddressField()">
-                        <option value="">?�택?�세??/option>
-                        <option value="방문">?�교 방문 ?�령</option>
-                        <option value="?�편">?�편 발송</option>
-                        <option value="?�메??>?�메??발송</option>
+                        <option value="">?�택?�세??/option>
+                        <option value="방문">?�교 방문 ?�령</option>
+                        <option value="?�편">?�편 발송</option>
+                        <option value="?�메??>?�메??발송</option>
                     </select>
                 </div>
 
                 <div class="form-group" id="addressField" style="display: none;">
-                    <label for="address">?�령 주소</label>
-                    <textarea id="address" rows="3" placeholder="?�편번호?� ?�세 주소�??�력?�세??></textarea>
+                    <label for="address">?�령 주소</label>
+                    <textarea id="address" rows="3" placeholder="?�편번호?� ?�세 주소�??�력?�세??></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="contactPhone">?�락�?*</label>
+                    <label for="contactPhone">?�락�?*</label>
                     <input type="tel" id="contactPhone" placeholder="010-1234-5678" required>
                 </div>
 
@@ -140,60 +140,60 @@
                         <span id="certCost">0??/span>
                     </div>
                     <div class="cost-item">
-                        <span>발송�?</span>
+                        <span>발송�?</span>
                         <span id="deliveryCost">0??/span>
                     </div>
                     <div class="cost-total">
-                        <span>�?비용:</span>
+                        <span>�?비용:</span>
                         <span id="totalCost">0??/span>
                     </div>
                 </div>
 
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary">취소</button>
-                    <button type="submit" class="btn btn-primary">?�청 �?결제</button>
+                    <button type="submit" class="btn btn-primary">?�청 �?결제</button>
                 </div>
             </form>
         </div>
 
         <div class="application-history-section">
-            <h2>?�청 ?�역</h2>
+            <h2>?�청 ?�역</h2>
             <div class="history-table">
                 <table>
                     <thead>
                         <tr>
-                            <th>?�청??/th>
+                            <th>?�청??/th>
                             <th>증명??종류</th>
                             <th>매수</th>
-                            <th>?�령 방법</th>
-                            <th>?�태</th>
-                            <th>관�?/th>
+                            <th>?�령 방법</th>
+                            <th>?�태</th>
+                            <th>관�?/th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>2026-01-15</td>
                             <td>졸업증명??/td>
-                            <td>2�?/td>
-                            <td>?�편</td>
-                            <td><span class="status-badge completed">발송?�료</span></td>
-                            <td><button class="btn-detail">?�세보기</button></td>
+                            <td>2�?/td>
+                            <td>?�편</td>
+                            <td><span class="status-badge completed">발송?�료</span></td>
+                            <td><button class="btn-detail">?�세보기</button></td>
                         </tr>
                         <tr>
                             <td>2026-01-10</td>
-                            <td>?�적증명??/td>
-                            <td>1�?/td>
-                            <td>?�메??/td>
-                            <td><span class="status-badge completed">발급?�료</span></td>
-                            <td><button class="btn-detail">?�운로드</button></td>
+                            <td>?�적증명??/td>
+                            <td>1�?/td>
+                            <td>?�메??/td>
+                            <td><span class="status-badge completed">발급?�료</span></td>
+                            <td><button class="btn-detail">?�운로드</button></td>
                         </tr>
                         <tr>
                             <td>2025-12-20</td>
                             <td>졸업증명??/td>
-                            <td>3�?/td>
+                            <td>3�?/td>
                             <td>방문</td>
-                            <td><span class="status-badge completed">?�령?�료</span></td>
-                            <td><button class="btn-detail">?�세보기</button></td>
+                            <td><span class="status-badge completed">?�령?�료</span></td>
+                            <td><button class="btn-detail">?�세보기</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -201,40 +201,40 @@
         </div>
 
         <div class="info-section">
-            <h2>?�용 ?�내</h2>
+            <h2>?�용 ?�내</h2>
             <div class="info-grid">
                 <div class="info-card">
-                    <h3>?�� ?�청 방법</h3>
+                    <h3>?�� ?�청 방법</h3>
                     <ul>
-                        <li>증명??종류 ?�택</li>
-                        <li>?�청 ?�보 ?�력</li>
-                        <li>?�령 방법 ?�택</li>
-                        <li>결제 �??�청 ?�료</li>
+                        <li>증명??종류 ?�택</li>
+                        <li>?�청 ?�보 ?�력</li>
+                        <li>?�령 방법 ?�택</li>
+                        <li>결제 �??�청 ?�료</li>
                     </ul>
                 </div>
                 <div class="info-card">
-                    <h3>?�️ 발급 ?�간</h3>
+                    <h3>?�️ 발급 ?�간</h3>
                     <ul>
-                        <li>?�메?? 즉시 발급</li>
-                        <li>방문 ?�령: 1-2???�요</li>
-                        <li>?�편 발송: 3-5???�요</li>
+                        <li>?�메?? 즉시 발급</li>
+                        <li>방문 ?�령: 1-2???�요</li>
+                        <li>?�편 발송: 3-5???�요</li>
                     </ul>
                 </div>
                 <div class="info-card">
-                    <h3>?�� 결제 방법</h3>
+                    <h3>?�� 결제 방법</h3>
                     <ul>
-                        <li>?�용카드</li>
+                        <li>?�용카드</li>
                         <li>체크카드</li>
-                        <li>계좌?�체</li>
+                        <li>계좌?�체</li>
                         <li>간편결제</li>
                     </ul>
                 </div>
                 <div class="info-card">
-                    <h3>?�� 문의</h3>
+                    <h3>?�� 문의</h3>
                     <ul>
-                        <li>?�화: 063-210-9390</li>
-                        <li>?�메?? cert@jeonju-tech.hs.kr</li>
-                        <li>?�영?�간: ?�일 09:00-17:00</li>
+                        <li>?�화: 063-210-9390</li>
+                        <li>?�메?? cert@jeonju-tech.hs.kr</li>
+                        <li>?�영?�간: ?�일 09:00-17:00</li>
                     </ul>
                 </div>
             </div>
@@ -244,8 +244,8 @@
     <footer>
         <div class="footer-content">
             <div class="footer-about">
-                <h3>?�주공업고등?�교</h3>
-                <p>?�� ?�북?�별?�치???�주???�진�??�산�?101</p>
+                <h3>?�주공업고등?�교</h3>
+                <p>?�� ?�북?�별?�치???�주???�진�??�산�?101</p>
             </div>
         </div>
     </footer>

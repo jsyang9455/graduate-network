@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>?�원 관�?- JJOBB</title>
+    <title>?�원 관�?- JJOBB</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
@@ -14,11 +14,11 @@
                 <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
             </div>
             <ul class="nav-links">
-                <li><a href="dashboard.html">?�?�보??/a></li>
+                <li><a href="dashboard.html">?�?�보??/a></li>
             </ul>
             <div class="user-menu">
                 <span class="user-name" id="userName"></span>
-                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
+                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
             </div>
         </nav>
     </header>
@@ -27,22 +27,22 @@
         <aside class="sidebar">
             <div class="sidebar-menu">
                 <a href="dashboard.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�?�보??/span>
+                    <span class="icon">?��</span>
+                    <span>?�?�보??/span>
                 </a>
                 <div class="menu-divider"></div>
                 <div class="menu-section-title">관리자 메뉴</div>
                 <a href="admin-users.html" class="menu-item active">
-                    <span class="icon">?��</span>
-                    <span>?�원 관�?/span>
+                    <span class="icon">?��</span>
+                    <span>?�원 관�?/span>
                 </a>
                 <a href="education-programs.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>교육 ?�로그램 관�?/span>
+                    <span class="icon">?��</span>
+                    <span>교육 ?�로그램 관�?/span>
                 </a>
                 <a href="admin-board.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>게시??관�?/span>
+                    <span class="icon">?��</span>
+                    <span>게시??관�?/span>
                 </a>
             </div>
         </aside>
@@ -50,38 +50,38 @@
         <main class="main-content">
             <div class="page-container">
                 <div class="page-header">
-                    <h1>?�� ?�원 관�?/h1>
-                    <p>?�스?�에 ?�록??모든 ?�원??관리합?�다</p>
+                    <h1>?�� ?�원 관�?/h1>
+                    <p>?�스?�에 ?�록??모든 ?�원??관리합?�다</p>
                 </div>
 
                 <div class="stats-row">
                     <div class="stat-card">
-                        <h3>?�체 ?�원</h3>
-                        <p class="stat-number" id="totalUsers">0�?/p>
+                        <h3>?�체 ?�원</h3>
+                        <p class="stat-number" id="totalUsers">0�?/p>
                     </div>
                     <div class="stat-card">
-                        <h3>?�생</h3>
-                        <p class="stat-number" id="studentCount">0�?/p>
+                        <h3>?�생</h3>
+                        <p class="stat-number" id="studentCount">0�?/p>
                     </div>
                     <div class="stat-card">
                         <h3>교사</h3>
-                        <p class="stat-number" id="teacherCount">0�?/p>
+                        <p class="stat-number" id="teacherCount">0�?/p>
                     </div>
                     <div class="stat-card">
                         <h3>기업</h3>
-                        <p class="stat-number" id="companyCount">0�?/p>
+                        <p class="stat-number" id="companyCount">0�?/p>
                     </div>
                 </div>
 
                 <div class="search-section">
                     <div class="search-bar">
-                        <input type="text" id="searchUser" placeholder="?�름, ?�메?�로 검??..">
-                        <button class="btn-search" onclick="searchUsers()">?�� 검??/button>
+                        <input type="text" id="searchUser" placeholder="?�름, ?�메?�로 검??..">
+                        <button class="btn-search" onclick="searchUsers()">?�� 검??/button>
                     </div>
                     <div class="filter-bar">
                         <select id="filterUserType" onchange="applyFilters()">
-                            <option value="">?�체 ?�원 ?�형</option>
-                            <option value="student">?�생</option>
+                            <option value="">?�체 ?�원 ?�형</option>
+                            <option value="student">?�생</option>
                             <option value="graduate">졸업??/option>
                             <option value="teacher">교사</option>
                             <option value="company">기업</option>
@@ -95,17 +95,17 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>?�름</th>
-                                <th>?�메??/th>
-                                <th>?�형</th>
-                                <th>?�교/?�사</th>
-                                <th>?�공/?�종</th>
-                                <th>가?�일</th>
-                                <th>관�?/th>
+                                <th>?�름</th>
+                                <th>?�메??/th>
+                                <th>?�형</th>
+                                <th>?�교/?�사</th>
+                                <th>?�공/?�종</th>
+                                <th>가?�일</th>
+                                <th>관�?/th>
                             </tr>
                         </thead>
                         <tbody id="usersTableBody">
-                            <!-- ?�원 목록???�기???�시?�니??-->
+                            <!-- ?�원 목록???�기???�시?�니??-->
                         </tbody>
                     </table>
                 </div>
@@ -113,11 +113,11 @@
         </main>
     </div>
 
-    <!-- ?�원 ?�정 모달 -->
+    <!-- ?�원 ?�정 모달 -->
     <div id="editUserModal" class="modal" style="display: none;">
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
-                <h2>?�원 ?�보 ?�정</h2>
+                <h2>?�원 ?�보 ?�정</h2>
                 <span class="close" onclick="closeEditUserModal()">&times;</span>
             </div>
             <div class="modal-body">
@@ -125,19 +125,19 @@
                     <input type="hidden" id="editUserId">
                     
                     <div class="form-section">
-                        <label for="editUserName">?�름 *</label>
+                        <label for="editUserName">?�름 *</label>
                         <input type="text" id="editUserName" required>
                     </div>
 
                     <div class="form-section">
-                        <label for="editUserEmail">?�메??*</label>
+                        <label for="editUserEmail">?�메??*</label>
                         <input type="email" id="editUserEmail" required>
                     </div>
 
                     <div class="form-section">
-                        <label for="editUserType">?�원 ?�형 *</label>
+                        <label for="editUserType">?�원 ?�형 *</label>
                         <select id="editUserType" required>
-                            <option value="student">?�생</option>
+                            <option value="student">?�생</option>
                             <option value="graduate">졸업??/option>
                             <option value="teacher">교사</option>
                             <option value="company">기업</option>
@@ -145,23 +145,23 @@
                     </div>
 
                     <div class="form-section">
-                        <label for="editSchoolName">?�교�??�사�?/label>
+                        <label for="editSchoolName">?�교�??�사�?/label>
                         <input type="text" id="editSchoolName">
                     </div>
 
                     <div class="form-section">
-                        <label for="editMajor">?�공/?�종</label>
+                        <label for="editMajor">?�공/?�종</label>
                         <input type="text" id="editMajor">
                     </div>
 
                     <div class="form-section">
-                        <label for="editGraduationYear">졸업?�도</label>
+                        <label for="editGraduationYear">졸업?�도</label>
                         <input type="text" id="editGraduationYear" placeholder="?? 2020">
                     </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" onclick="closeEditUserModal()">취소</button>
-                        <button type="submit" class="btn btn-primary">?�??/button>
+                        <button type="submit" class="btn btn-primary">?�??/button>
                     </div>
                 </form>
             </div>
@@ -171,8 +171,8 @@
     <footer>
         <div class="footer-content">
             <div class="footer-about">
-                <h3>?�주공업고등?�교</h3>
-                <p>?�� ?�북?�별?�치???�주???�진�??�산�?101</p>
+                <h3>?�주공업고등?�교</h3>
+                <p>?�� ?�북?�별?�치???�주???�진�??�산�?101</p>
             </div>
         </div>
     </footer>

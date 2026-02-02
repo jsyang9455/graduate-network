@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>?�?�소 ?�인</title>
+    <title>?�?�소 ?�인</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -51,21 +51,21 @@
 </head>
 <body>
     <div class="container">
-        <h1>LocalStorage ?�인 ?�구</h1>
+        <h1>LocalStorage ?�인 ?�구</h1>
         
-        <h2>?�록???�용??목록</h2>
+        <h2>?�록???�용??목록</h2>
         <pre id="usersData">Loading...</pre>
         
-        <h2>?�재 로그???�보</h2>
+        <h2>?�재 로그???�보</h2>
         <pre id="currentUser">Loading...</pre>
         
-        <h2>?�큰</h2>
+        <h2>?�큰</h2>
         <pre id="token">Loading...</pre>
         
         <div>
-            <button onclick="refreshData()">?�로고침</button>
-            <button onclick="clearStorage()" class="danger">?�?�소 초기??/button>
-            <button onclick="testLogin()">?�스??로그??/button>
+            <button onclick="refreshData()">?�로고침</button>
+            <button onclick="clearStorage()" class="danger">?�?�소 초기??/button>
+            <button onclick="testLogin()">?�스??로그??/button>
         </div>
     </div>
 
@@ -73,33 +73,33 @@
         function refreshData() {
             // Get users
             const users = localStorage.getItem('graduateNetwork_users');
-            document.getElementById('usersData').textContent = users ? JSON.stringify(JSON.parse(users), null, 2) : '?�록???�용???�음';
+            document.getElementById('usersData').textContent = users ? JSON.stringify(JSON.parse(users), null, 2) : '?�록???�용???�음';
             
             // Get current user
             const currentUser = localStorage.getItem('graduateNetwork_user');
-            document.getElementById('currentUser').textContent = currentUser || '로그?�하지 ?�음';
+            document.getElementById('currentUser').textContent = currentUser || '로그?�하지 ?�음';
             
             // Get token
             const token = localStorage.getItem('token');
-            document.getElementById('token').textContent = token || '?�큰 ?�음';
+            document.getElementById('token').textContent = token || '?�큰 ?�음';
         }
 
         function clearStorage() {
-            if (confirm('모든 로컬 ?�이?��? ??��?�시겠습?�까?')) {
+            if (confirm('모든 로컬 ?�이?��? ??��?�시겠습?�까?')) {
                 localStorage.clear();
-                alert('?�?�소가 초기?�되?�습?�다.');
+                alert('?�?�소가 초기?�되?�습?�다.');
                 refreshData();
             }
         }
 
         function testLogin() {
             const users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
-            console.log('?�체 ?�용??', users);
+            console.log('?�체 ?�용??', users);
             
             const testEmail = 'aa@aa.com';
-            const testPassword = prompt('비�?번호�??�력?�세??');
+            const testPassword = prompt('비�?번호�??�력?�세??');
             
-            console.log('검??�? email =', testEmail, 'password =', testPassword);
+            console.log('검??�? email =', testEmail, 'password =', testPassword);
             
             const foundUser = users.find(u => {
                 console.log('비교:', u.email, '===', testEmail, '&&', u.password, '===', testPassword);
@@ -107,11 +107,11 @@
             });
             
             if (foundUser) {
-                alert('?�용??찾음: ' + JSON.stringify(foundUser, null, 2));
-                console.log('찾�? ?�용??', foundUser);
+                alert('?�용??찾음: ' + JSON.stringify(foundUser, null, 2));
+                console.log('찾�? ?�용??', foundUser);
             } else {
-                alert('?�용?��? 찾을 ???�습?�다.\n\n?�록???�용??목록:\n' + JSON.stringify(users, null, 2));
-                console.log('?�용?��? 찾을 ???�음');
+                alert('?�용?��? 찾을 ???�습?�다.\n\n?�록???�용??목록:\n' + JSON.stringify(users, null, 2));
+                console.log('?�용?��? 찾을 ???�음');
             }
         }
 

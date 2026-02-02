@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>채용 ?�보 - JJOBB</title>
+    <title>채용 ?�보 - JJOBB</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/jobs.css">
@@ -15,14 +15,14 @@
                 <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
             </div>
             <ul class="nav-links">
-                <li><a href="dashboard.html">?�?�보??/a></li>
-                <li><a href="jobs.html" class="active">채용 ?�보</a></li>
-                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
-                <li><a href="counseling.html">진로 ?�담</a></li>
+                <li><a href="dashboard.html">?�?�보??/a></li>
+                <li><a href="jobs.html" class="active">채용 ?�보</a></li>
+                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
+                <li><a href="counseling.html">진로 ?�담</a></li>
             </ul>
             <div class="user-menu">
                 <span class="user-name" id="userName"></span>
-                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
+                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
             </div>
         </nav>
     </header>
@@ -31,28 +31,28 @@
         <aside class="sidebar">
             <div class="sidebar-menu">
                 <a href="dashboard.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�?�보??/span>
+                    <span class="icon">?��</span>
+                    <span>?�?�보??/span>
                 </a>
                 <a href="profile.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>???�로??/span>
+                    <span class="icon">?��</span>
+                    <span>???�로??/span>
                 </a>
                 <a href="jobs.html" class="menu-item active">
-                    <span class="icon">?��</span>
-                    <span>채용 ?�보</span>
+                    <span class="icon">?��</span>
+                    <span>채용 ?�보</span>
                 </a>
                 <a href="networking.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�문 ?�트?�킹</span>
+                    <span class="icon">?��</span>
+                    <span>?�문 ?�트?�킹</span>
                 </a>
                 <a href="counseling.html" class="menu-item" id="counselingMenu">
-                    <span class="icon">?��</span>
-                    <span>진로 ?�담</span>
+                    <span class="icon">?��</span>
+                    <span>진로 ?�담</span>
                 </a>
                 <a href="career.html" class="menu-item" id="careerMenu">
-                    <span class="icon">?��</span>
-                    <span>경력 관�?/span>
+                    <span class="icon">?��</span>
+                    <span>경력 관�?/span>
                 </a>
             </div>
         </aside>
@@ -60,85 +60,85 @@
         <main class="main-content">
         <div class="page-container">
         <div class="page-header">
-            <h1>?�� 채용 ?�보</h1>
-            <p>?�주공고 졸업?�을 ?�한 맞춤 채용 ?�보�??�인?�세??/p>
+            <h1>?�� 채용 ?�보</h1>
+            <p>?�주공고 졸업?�을 ?�한 맞춤 채용 ?�보�??�인?�세??/p>
         </div>
 
         <div class="search-section">
             <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="기업�? 직무, ?�워??검??..">
-                <button class="btn-search">?�� 검??/button>
+                <input type="text" id="searchInput" placeholder="기업�? 직무, ?�워??검??..">
+                <button class="btn-search">?�� 검??/button>
             </div>
             <div class="filter-bar">
                 <select id="filterCompany">
-                    <option value="">?�체 기업</option>
-                    <option value="?�기업">?�기업</option>
+                    <option value="">?�체 기업</option>
+                    <option value="?�기업">?�기업</option>
                     <option value="중견기업">중견기업</option>
                     <option value="중소기업">중소기업</option>
-                    <option value="?��??�업">?��??�업</option>
+                    <option value="?��??�업">?��??�업</option>
                 </select>
                 <select id="filterExperience">
-                    <option value="">경력 무�?</option>
-                    <option value="?�입">?�입</option>
+                    <option value="">경력 무�?</option>
+                    <option value="?�입">?�입</option>
                     <option value="1-3??>1-3??/option>
                     <option value="3-5??>3-5??/option>
-                    <option value="5?�이??>5???�상</option>
+                    <option value="5?�이??>5???�상</option>
                 </select>
                 <select id="filterLocation">
-                    <option value="">?�체 지??/option>
-                    <option value="?�울">?�울</option>
+                    <option value="">?�체 지??/option>
+                    <option value="?�울">?�울</option>
                     <option value="경기">경기</option>
-                    <option value="?�북">?�북</option>
-                    <option value="기�?">기�?</option>
+                    <option value="?�북">?�북</option>
+                    <option value="기�?">기�?</option>
                 </select>
-                <button class="btn-filter">?�터 ?�용</button>
+                <button class="btn-filter">?�터 ?�용</button>
             </div>
         </div>
 
         <div class="jobs-container">
-            <!-- 채용 공고??JavaScript�??�적 ?�성?�니??-->
-            <p style="text-align: center; padding: 3rem; color: #6b7280;">채용 공고�?불러?�는 �?..</p>
+            <!-- 채용 공고??JavaScript�??�적 ?�성?�니??-->
+            <p style="text-align: center; padding: 3rem; color: #6b7280;">채용 공고�?불러?�는 �?..</p>
         </div>
                 <div class="job-card-header">
                     <div class="company-logo-large">H</div>
                     <div class="job-title-section">
-                        <h2>?��??�동�?/h2>
-                        <h3>?�산기술 ?��??�어</h3>
+                        <h2>?��??�동�?/h2>
+                        <h3>?�산기술 ?��??�어</h3>
                     </div>
-                    <button class="btn-bookmark">�?/button>
+                    <button class="btn-bookmark">�?/button>
                 </div>
                 <div class="job-card-body">
                     <div class="job-tags">
-                        <span class="tag">?�기업</span>
-                        <span class="tag">?�규�?/span>
+                        <span class="tag">?�기업</span>
+                        <span class="tag">?�규�?/span>
                         <span class="tag">경력 3-5??/span>
                     </div>
                     <div class="job-info-grid">
                         <div class="info-item">
-                            <span class="info-label">?�� 근무지</span>
-                            <span class="info-value">?�산광역??/span>
+                            <span class="info-label">?�� 근무지</span>
+                            <span class="info-value">?�산광역??/span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">?�� ?�봉</span>
-                            <span class="info-value">5,000만원 ?�상</span>
+                            <span class="info-label">?�� ?�봉</span>
+                            <span class="info-value">5,000만원 ?�상</span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">?�� 마감??/span>
+                            <span class="info-label">?�� 마감??/span>
                             <span class="info-value">2026-02-05 (D-15)</span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">?�� 채용?�원</span>
-                            <span class="info-value">5�?/span>
+                            <span class="info-label">?�� 채용?�원</span>
+                            <span class="info-value">5�?/span>
                         </div>
                     </div>
                     <p class="job-description">
-                        ?�동�??�산 공정??기술 개발 �?개선 ?�무�??�당?�니?? 
-                        ?�마???�토�?구축 경험???��??�니??
+                        ?�동�??�산 공정??기술 개발 �?개선 ?�무�??�당?�니?? 
+                        ?�마???�토�?구축 경험???��??�니??
                     </p>
                 </div>
                 <div class="job-card-footer">
-                    <button class="btn btn-secondary">?�세보기</button>
-                    <button class="btn btn-primary">지?�하�?/button>
+                    <button class="btn btn-secondary">?�세보기</button>
+                    <button class="btn btn-primary">지?�하�?/button>
                 </div>
             </div>
 
@@ -146,43 +146,43 @@
                 <div class="job-card-header">
                     <div class="company-logo-large">L</div>
                     <div class="job-title-section">
-                        <h2>LG?�자</h2>
-                        <h3>?�질관�??�당??/h3>
+                        <h2>LG?�자</h2>
+                        <h3>?�질관�??�당??/h3>
                     </div>
-                    <button class="btn-bookmark">�?/button>
+                    <button class="btn-bookmark">�?/button>
                 </div>
                 <div class="job-card-body">
                     <div class="job-tags">
-                        <span class="tag">?�기업</span>
-                        <span class="tag">?�규�?/span>
+                        <span class="tag">?�기업</span>
+                        <span class="tag">?�규�?/span>
                         <span class="tag">경력 2-4??/span>
                     </div>
                     <div class="job-info-grid">
                         <div class="info-item">
-                            <span class="info-label">?�� 근무지</span>
-                            <span class="info-value">경기???�택??/span>
+                            <span class="info-label">?�� 근무지</span>
+                            <span class="info-value">경기???�택??/span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">?�� ?�봉</span>
-                            <span class="info-value">4,500만원 ?�상</span>
+                            <span class="info-label">?�� ?�봉</span>
+                            <span class="info-value">4,500만원 ?�상</span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">?�� 마감??/span>
+                            <span class="info-label">?�� 마감??/span>
                             <span class="info-value">2026-02-12 (D-22)</span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">?�� 채용?�원</span>
-                            <span class="info-value">3�?/span>
+                            <span class="info-label">?�� 채용?�원</span>
+                            <span class="info-value">3�?/span>
                         </div>
                     </div>
                     <p class="job-description">
-                        가?�제???�질 검??�?개선 ?�무�??�행?�니?? 
-                        ISO 9001 ?�증 경험???��??�니??
+                        가?�제???�질 검??�?개선 ?�무�??�행?�니?? 
+                        ISO 9001 ?�증 경험???��??�니??
                     </p>
                 </div>
                 <div class="job-card-footer">
-                    <button class="btn btn-secondary">?�세보기</button>
-                    <button class="btn btn-primary">지?�하�?/button>
+                    <button class="btn btn-secondary">?�세보기</button>
+                    <button class="btn btn-primary">지?�하�?/button>
                 </div>
             </div>
 
@@ -190,43 +190,43 @@
                 <div class="job-card-header">
                     <div class="company-logo-large">S</div>
                     <div class="job-title-section">
-                        <h2>?�성?�자</h2>
-                        <h3>반도�?공정 ?��??�어</h3>
+                        <h2>?�성?�자</h2>
+                        <h3>반도�?공정 ?��??�어</h3>
                     </div>
-                    <button class="btn-bookmark">�?/button>
+                    <button class="btn-bookmark">�?/button>
                 </div>
                 <div class="job-card-body">
                     <div class="job-tags">
-                        <span class="tag">?�기업</span>
-                        <span class="tag">?�규�?/span>
+                        <span class="tag">?�기업</span>
+                        <span class="tag">?�규�?/span>
                         <span class="tag">경력 1-3??/span>
                     </div>
                     <div class="job-info-grid">
                         <div class="info-item">
-                            <span class="info-label">?�� 근무지</span>
-                            <span class="info-value">경기???�성??/span>
+                            <span class="info-label">?�� 근무지</span>
+                            <span class="info-value">경기???�성??/span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">?�� ?�봉</span>
-                            <span class="info-value">5,500만원 ?�상</span>
+                            <span class="info-label">?�� ?�봉</span>
+                            <span class="info-value">5,500만원 ?�상</span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">?�� 마감??/span>
+                            <span class="info-label">?�� 마감??/span>
                             <span class="info-value">2026-02-28 (D-38)</span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">?�� 채용?�원</span>
-                            <span class="info-value">10�?/span>
+                            <span class="info-label">?�� 채용?�원</span>
+                            <span class="info-value">10�?/span>
                         </div>
                     </div>
                     <p class="job-description">
-                        반도�??�산 공정 관�?�??�비 ?�영???�당?�니?? 
-                        ?�기/?�자 관???�공???��??�니??
+                        반도�??�산 공정 관�?�??�비 ?�영???�당?�니?? 
+                        ?�기/?�자 관???�공???��??�니??
                     </p>
                 </div>
                 <div class="job-card-footer">
-                    <button class="btn btn-secondary">?�세보기</button>
-                    <button class="btn btn-primary">지?�하�?/button>
+                    <button class="btn btn-secondary">?�세보기</button>
+                    <button class="btn btn-primary">지?�하�?/button>
                 </div>
             </div>
 
@@ -234,63 +234,63 @@
                 <div class="job-card-header">
                     <div class="company-logo-large">P</div>
                     <div class="job-title-section">
-                        <h2>?�스�?/h2>
-                        <h3>?�철 공정 관�?/h3>
+                        <h2>?�스�?/h2>
+                        <h3>?�철 공정 관�?/h3>
                     </div>
-                    <button class="btn-bookmark">�?/button>
+                    <button class="btn-bookmark">�?/button>
                 </div>
                 <div class="job-card-body">
                     <div class="job-tags">
-                        <span class="tag">?�기업</span>
-                        <span class="tag">?�규�?/span>
-                        <span class="tag">?�입/경력</span>
+                        <span class="tag">?�기업</span>
+                        <span class="tag">?�규�?/span>
+                        <span class="tag">?�입/경력</span>
                     </div>
                     <div class="job-info-grid">
                         <div class="info-item">
-                            <span class="info-label">?�� 근무지</span>
-                            <span class="info-value">?�북 군산??/span>
+                            <span class="info-label">?�� 근무지</span>
+                            <span class="info-value">?�북 군산??/span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">?�� ?�봉</span>
-                            <span class="info-value">4,000만원 ?�상</span>
+                            <span class="info-label">?�� ?�봉</span>
+                            <span class="info-value">4,000만원 ?�상</span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">?�� 마감??/span>
+                            <span class="info-label">?�� 마감??/span>
                             <span class="info-value">2026-02-20 (D-30)</span>
                         </div>
                         <div class="info-item">
-                            <span class="info-label">?�� 채용?�원</span>
-                            <span class="info-value">7�?/span>
+                            <span class="info-label">?�� 채용?�원</span>
+                            <span class="info-value">7�?/span>
                         </div>
                     </div>
                     <p class="job-description">
-                        ?�철???�산 공정 모니?�링 �??�질 관�??�무�??�행?�니??
+                        ?�철???�산 공정 모니?�링 �??�질 관�??�무�??�행?�니??
                     </p>
                 </div>
                 <div class="job-card-footer">
-                    <button class="btn btn-secondary">?�세보기</button>
-                    <button class="btn btn-primary">지?�하�?/button>
+                    <button class="btn btn-secondary">?�세보기</button>
+                    <button class="btn btn-primary">지?�하�?/button>
                 </div>
             </div>
         </div>
 
         <div class="pagination">
-            <button class="page-btn">???�전</button>
+            <button class="page-btn">???�전</button>
             <button class="page-btn active">1</button>
             <button class="page-btn">2</button>
             <button class="page-btn">3</button>
             <button class="page-btn">4</button>
             <button class="page-btn">5</button>
-            <button class="page-btn">?�음 ??/button>
+            <button class="page-btn">?�음 ??/button>
         </div>
     </div>
 
     <footer>
         <div class="footer-content">
             <div class="footer-about">
-                <h3>?�주공업고등?�교</h3>
-                <p>?�� ?�북?�별?�치???�주???�진�??�산�?101</p>
-                <p>?�� 063-210-9390</p>
+                <h3>?�주공업고등?�교</h3>
+                <p>?�� ?�북?�별?�치???�주???�진�??�산�?101</p>
+                <p>?�� 063-210-9390</p>
             </div>
         </div>
     </footer>

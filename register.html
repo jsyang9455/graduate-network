@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>?�원가??- ?�주공업고등?�교 졸업???�트?�크</title>
+    <title>?�원가??- ?�주공업고등?�교 졸업???�트?�크</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/auth.css">
@@ -12,116 +12,116 @@
     <div class="auth-container">
         <div class="auth-box register-box">
             <div class="auth-header">
-                <h1>?�� ?�원가??/h1>
-                <p>?�주공고 졸업???�트?�크??가?�하?�요</p>
+                <h1>?�� ?�원가??/h1>
+                <p>?�주공고 졸업???�트?�크??가?�하?�요</p>
             </div>
             
             <form id="registerForm" class="auth-form">
                 <div class="form-group">
-                    <label>?�원 ?�형 *</label>
+                    <label>?�원 ?�형 *</label>
                     <div style="display: flex; gap: 20px; margin-top: 0.5rem;">
                         <label class="radio-label">
                             <input type="radio" name="userType" value="student" checked>
-                            <span>?�생/졸업??/span>
+                            <span>?�생/졸업??/span>
                         </label>
                         <label class="radio-label">
                             <input type="radio" name="userType" value="teacher">
-                            <span>?�생??/span>
+                            <span>?�생??/span>
                         </label>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="name">?�름 *</label>
-                    <input type="text" id="name" name="name" required placeholder="?�명???�력?�세??>
+                    <label for="name">?�름 *</label>
+                    <input type="text" id="name" name="name" required placeholder="?�명???�력?�세??>
                 </div>
                 
                 <div class="form-group">
-                    <label for="email">?�메??*</label>
+                    <label for="email">?�메??*</label>
                     <input type="email" id="email" name="email" required placeholder="example@email.com">
                 </div>
                 
                 <div class="form-group">
-                    <label for="password">비�?번호 *</label>
-                    <input type="password" id="password" name="password" required placeholder="8???�상 ?�력">
-                    <small>?�문, ?�자, ?�수문자 조합 8???�상</small>
+                    <label for="password">비�?번호 *</label>
+                    <input type="password" id="password" name="password" required placeholder="8???�상 ?�력">
+                    <small>?�문, ?�자, ?�수문자 조합 8???�상</small>
                 </div>
                 
                 <div class="form-group">
-                    <label for="confirmPassword">비�?번호 ?�인 *</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="비�?번호�??�시 ?�력">
+                    <label for="confirmPassword">비�?번호 ?�인 *</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="비�?번호�??�시 ?�력">
                 </div>
                 
                 <div class="form-group">
-                    <label for="schoolName">?�교�?*</label>
+                    <label for="schoolName">?�교�?*</label>
                     <select id="schoolName" name="schoolName" required>
-                        <option value="">?�택?�세??/option>
-                        <option value="?�주공업고등?�교" selected>?�주공업고등?�교</option>
+                        <option value="">?�택?�세??/option>
+                        <option value="?�주공업고등?�교" selected>?�주공업고등?�교</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">?�락�?*</label>
+                    <label for="phone">?�락�?*</label>
                     <input type="tel" id="phone" name="phone" required placeholder="010-1234-5678">
                 </div>
 
-                <!-- ?�생/졸업???�용 ?�드 -->
+                <!-- ?�생/졸업???�용 ?�드 -->
                 <div id="studentFields" style="display: block;">
                     <div class="form-group">
-                        <label for="graduationYear">졸업?�도 *</label>
+                        <label for="graduationYear">졸업?�도 *</label>
                         <select id="graduationYear" name="graduationYear">
-                            <option value="">?�택?�세??/option>
+                            <option value="">?�택?�세??/option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label for="major">?�공 *</label>
+                        <label for="major">?�공 *</label>
                         <select id="major" name="major">
-                            <option value="">?�택?�세??/option>
-                            <option value="기계">기계�?/option>
-                            <option value="?�자">?�자�?/option>
-                            <option value="?�기">?�기�?/option>
-                            <option value="건축">건축�?/option>
-                            <option value="?�공">?�학공업�?/option>
-                            <option value="컴퓨??>컴퓨?�응?�과</option>
+                            <option value="">?�택?�세??/option>
+                            <option value="기계">기계�?/option>
+                            <option value="?�자">?�자�?/option>
+                            <option value="?�기">?�기�?/option>
+                            <option value="건축">건축�?/option>
+                            <option value="?�공">?�학공업�?/option>
+                            <option value="컴퓨??>컴퓨?�응?�과</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label for="company">?�재 근무�?(?�택)</label>
-                        <input type="text" id="company" name="company" placeholder="?�사명을 ?�력?�세??>
+                        <label for="company">?�재 근무�?(?�택)</label>
+                        <input type="text" id="company" name="company" placeholder="?�사명을 ?�력?�세??>
                     </div>
                     
                     <div class="form-group">
-                        <label for="position">직책 (?�택)</label>
-                        <input type="text" id="position" name="position" placeholder="직책???�력?�세??>
+                        <label for="position">직책 (?�택)</label>
+                        <input type="text" id="position" name="position" placeholder="직책???�력?�세??>
                     </div>
                 </div>
                 
                 <div class="form-options">
                     <label class="checkbox-label">
                         <input type="checkbox" id="agreeTerms" required>
-                        <span>?�비???�용?��????�의?�니??*</span>
+                        <span>?�비???�용?��????�의?�니??*</span>
                     </label>
                     <label class="checkbox-label">
                         <input type="checkbox" id="agreePrivacy" required>
-                        <span>개인?�보 처리방침???�의?�니??*</span>
+                        <span>개인?�보 처리방침???�의?�니??*</span>
                     </label>
                     <label class="checkbox-label">
                         <input type="checkbox" id="agreeMarketing">
-                        <span>마�????�보 ?�신???�의?�니??(?�택)</span>
+                        <span>마�????�보 ?�신???�의?�니??(?�택)</span>
                     </label>
                 </div>
                 
                 <div id="registerError" class="error-message" style="display: none;"></div>
                 <div id="registerSuccess" class="success-message" style="display: none;"></div>
                 
-                <button type="submit" class="btn btn-primary btn-full">가?�하�?/button>
+                <button type="submit" class="btn btn-primary btn-full">가?�하�?/button>
             </form>
             
             <div class="auth-footer">
-                <p>?��? ?�원?�신가?? <a href="login.html">로그??/a></p>
-                <a href="index.html" class="back-home">???�으�??�아가�?/a>
+                <p>?��? ?�원?�신가?? <a href="login.html">로그??/a></p>
+                <a href="index.html" class="back-home">???�으�??�아가�?/a>
             </div>
         </div>
     </div>

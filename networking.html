@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>?�문 ?�트?�킹 - JJOBB</title>
+    <title>?�문 ?�트?�킹 - JJOBB</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/networking.css">
@@ -15,14 +15,14 @@
                 <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
             </div>
             <ul class="nav-links">
-                <li><a href="dashboard.html">?�?�보??/a></li>
-                <li><a href="jobs.html">채용 ?�보</a></li>
-                <li><a href="networking.html" class="active">?�문 ?�트?�킹</a></li>
-                <li><a href="counseling.html">진로 ?�담</a></li>
+                <li><a href="dashboard.html">?�?�보??/a></li>
+                <li><a href="jobs.html">채용 ?�보</a></li>
+                <li><a href="networking.html" class="active">?�문 ?�트?�킹</a></li>
+                <li><a href="counseling.html">진로 ?�담</a></li>
             </ul>
             <div class="user-menu">
                 <span class="user-name" id="userName"></span>
-                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
+                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
             </div>
         </nav>
     </header>
@@ -31,28 +31,28 @@
         <aside class="sidebar">
             <div class="sidebar-menu">
                 <a href="dashboard.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�?�보??/span>
+                    <span class="icon">?��</span>
+                    <span>?�?�보??/span>
                 </a>
                 <a href="profile.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>???�로??/span>
+                    <span class="icon">?��</span>
+                    <span>???�로??/span>
                 </a>
                 <a href="jobs.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>채용 ?�보</span>
+                    <span class="icon">?��</span>
+                    <span>채용 ?�보</span>
                 </a>
                 <a href="networking.html" class="menu-item active">
-                    <span class="icon">?��</span>
-                    <span>?�문 ?�트?�킹</span>
+                    <span class="icon">?��</span>
+                    <span>?�문 ?�트?�킹</span>
                 </a>
                 <a href="counseling.html" class="menu-item" id="counselingMenu">
-                    <span class="icon">?��</span>
-                    <span>진로 ?�담</span>
+                    <span class="icon">?��</span>
+                    <span>진로 ?�담</span>
                 </a>
                 <a href="career.html" class="menu-item" id="careerMenu">
-                    <span class="icon">?��</span>
-                    <span>경력 관�?/span>
+                    <span class="icon">?��</span>
+                    <span>경력 관�?/span>
                 </a>
             </div>
         </aside>
@@ -60,72 +60,72 @@
         <main class="main-content">
         <div class="page-container">
         <div class="page-header">
-            <h1>?�� ?�문 ?�트?�킹</h1>
-            <p>?�후�?졸업?�들�??�결?�어 멘토링과 ?�트?�킹 기회�?만들?�보?�요</p>
+            <h1>?�� ?�문 ?�트?�킹</h1>
+            <p>?�후�?졸업?�들�??�결?�어 멘토링과 ?�트?�킹 기회�?만들?�보?�요</p>
         </div>
 
         <div class="search-section">
             <div class="search-bar">
-                <input type="text" id="searchAlumni" placeholder="?�름, ?�사, 직책?�로 검??..">
-                <button class="btn-search">?�� 검??/button>
+                <input type="text" id="searchAlumni" placeholder="?�름, ?�사, 직책?�로 검??..">
+                <button class="btn-search">?�� 검??/button>
             </div>
             <div class="filter-bar">
                 <select id="filterGradYear">
-                    <option value="">졸업?�도</option>
+                    <option value="">졸업?�도</option>
                     <option value="2020-2025">2020-2025</option>
                     <option value="2015-2019">2015-2019</option>
                     <option value="2010-2014">2010-2014</option>
                     <option value="2005-2009">2005-2009</option>
                 </select>
                 <select id="filterMajor">
-                    <option value="">?�공</option>
-                    <option value="기계">기계�?/option>
-                    <option value="?�자">?�자�?/option>
-                    <option value="?�기">?�기�?/option>
-                    <option value="건축">건축�?/option>
+                    <option value="">?�공</option>
+                    <option value="기계">기계�?/option>
+                    <option value="?�자">?�자�?/option>
+                    <option value="?�기">?�기�?/option>
+                    <option value="건축">건축�?/option>
                 </select>
                 <select id="filterIndustry">
-                    <option value="">?�종</option>
-                    <option value="?�조">?�조??/option>
-                    <option value="IT">IT/?�프?�웨??/option>
+                    <option value="">?�종</option>
+                    <option value="?�조">?�조??/option>
+                    <option value="IT">IT/?�프?�웨??/option>
                     <option value="건설">건설</option>
-                    <option value="기�?">기�?</option>
+                    <option value="기�?">기�?</option>
                 </select>
             </div>
         </div>
 
         <div class="networking-stats">
             <div class="stat-box" onclick="showMessages('received')" style="cursor: pointer;">
-                <h3>받�? 메시지</h3>
-                <p class="stat-number" id="receivedMessages">0�?/p>
+                <h3>받�? 메시지</h3>
+                <p class="stat-number" id="receivedMessages">0�?/p>
             </div>
             <div class="stat-box" onclick="showMessages('sent')" style="cursor: pointer;">
                 <h3>보낸 메시지</h3>
-                <p class="stat-number" id="sentMessages">0�?/p>
+                <p class="stat-number" id="sentMessages">0�?/p>
             </div>
         </div>
 
         <div class="alumni-grid" id="alumniGrid">
-            <!-- ?�문 목록???�기???�적?�로 ?�시?�니??-->
+            <!-- ?�문 목록???�기???�적?�로 ?�시?�니??-->
         </div>
 
         <div class="mentoring-section">
-            <h2>멘토�??�로그램</h2>
+            <h2>멘토�??�로그램</h2>
             <div class="mentoring-grid">
                 <div class="mentoring-card">
-                    <h3>?�� 취업 멘토�?/h3>
-                    <p>?�력???�성부??면접 준비까지 1:1 멘토�?/p>
-                    <button class="btn btn-primary">?�청?�기</button>
+                    <h3>?�� 취업 멘토�?/h3>
+                    <p>?�력???�성부??면접 준비까지 1:1 멘토�?/p>
+                    <button class="btn btn-primary">?�청?�기</button>
                 </div>
                 <div class="mentoring-card">
-                    <h3>?�� 커리??컨설??/h3>
-                    <p>경력 개발 �??�직 ?�략 ?�담</p>
-                    <button class="btn btn-primary">?�청?�기</button>
+                    <h3>?�� 커리??컨설??/h3>
+                    <p>경력 개발 �??�직 ?�략 ?�담</p>
+                    <button class="btn btn-primary">?�청?�기</button>
                 </div>
                 <div class="mentoring-card">
-                    <h3>?? 창업 멘토�?/h3>
-                    <p>창업 ?�이?�어부???�업?�까지 지??/p>
-                    <button class="btn btn-primary">?�청?�기</button>
+                    <h3>?? 창업 멘토�?/h3>
+                    <p>창업 ?�이?�어부???�업?�까지 지??/p>
+                    <button class="btn btn-primary">?�청?�기</button>
                 </div>
             </div>
         </div>
@@ -140,22 +140,22 @@
             </div>
             <div class="modal-body">
                 <div id="messageListContainer">
-                    <!-- 메시지 리스?��? ?�기???�시?�니??-->
+                    <!-- 메시지 리스?��? ?�기???�시?�니??-->
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 메시지 ?�세보기 모달 -->
+    <!-- 메시지 ?�세보기 모달 -->
     <div id="messageDetailModal" class="modal" style="display: none;">
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
-                <h2 id="messageDetailTitle">메시지 ?�세</h2>
+                <h2 id="messageDetailTitle">메시지 ?�세</h2>
                 <span class="close" onclick="closeMessageDetailModal()">&times;</span>
             </div>
             <div class="modal-body">
                 <div id="messageDetailContainer">
-                    <!-- 메시지 ?�세 ?�용???�기???�시?�니??-->
+                    <!-- 메시지 ?�세 ?�용???�기???�시?�니??-->
                 </div>
             </div>
         </div>
@@ -164,8 +164,8 @@
     <footer>
         <div class="footer-content">
             <div class="footer-about">
-                <h3>?�주공업고등?�교</h3>
-                <p>?�� ?�북?�별?�치???�주???�진�??�산�?101</p>
+                <h3>?�주공업고등?�교</h3>
+                <p>?�� ?�북?�별?�치???�주???�진�??�산�?101</p>
             </div>
         </div>
     </footer>

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>추천 교육 ?�로그램 - JJOBB</title>
+    <title>추천 교육 ?�로그램 - JJOBB</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
@@ -14,14 +14,14 @@
                 <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
             </div>
             <ul class="nav-links">
-                <li><a href="dashboard.html">?�?�보??/a></li>
-                <li><a href="jobs.html">채용 ?�보</a></li>
-                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
-                <li><a href="counseling.html">진로 ?�담</a></li>
+                <li><a href="dashboard.html">?�?�보??/a></li>
+                <li><a href="jobs.html">채용 ?�보</a></li>
+                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
+                <li><a href="counseling.html">진로 ?�담</a></li>
             </ul>
             <div class="user-menu">
                 <span class="user-name" id="userName"></span>
-                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
+                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
             </div>
         </nav>
     </header>
@@ -30,32 +30,32 @@
         <aside class="sidebar">
             <div class="sidebar-menu">
                 <a href="dashboard.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�?�보??/span>
+                    <span class="icon">?��</span>
+                    <span>?�?�보??/span>
                 </a>
                 <a href="profile.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>???�로??/span>
+                    <span class="icon">?��</span>
+                    <span>???�로??/span>
                 </a>
                 <a href="jobs.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>채용 ?�보</span>
+                    <span class="icon">?��</span>
+                    <span>채용 ?�보</span>
                 </a>
                 <a href="networking.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�문 ?�트?�킹</span>
+                    <span class="icon">?��</span>
+                    <span>?�문 ?�트?�킹</span>
                 </a>
                 <a href="counseling.html" class="menu-item" id="counselingMenu">
-                    <span class="icon">?��</span>
-                    <span>진로 ?�담</span>
+                    <span class="icon">?��</span>
+                    <span>진로 ?�담</span>
                 </a>
                 <a href="career.html" class="menu-item" id="careerMenu">
-                    <span class="icon">?��</span>
-                    <span>경력 관�?/span>
+                    <span class="icon">?��</span>
+                    <span>경력 관�?/span>
                 </a>
                 <a href="education-programs.html" class="menu-item active">
-                    <span class="icon">?��</span>
-                    <span>교육 ?�로그램</span>
+                    <span class="icon">?��</span>
+                    <span>교육 ?�로그램</span>
                 </a>
                 
                 <!-- 관리자 메뉴 -->
@@ -63,16 +63,16 @@
                     <div class="menu-divider"></div>
                     <div class="menu-section-title">관리자 메뉴</div>
                     <a href="admin-users.html" class="menu-item">
-                        <span class="icon">?��</span>
-                        <span>?�원 관�?/span>
+                        <span class="icon">?��</span>
+                        <span>?�원 관�?/span>
                     </a>
                     <a href="education-programs.html" class="menu-item active">
-                        <span class="icon">?��</span>
-                        <span>교육 ?�로그램 관�?/span>
+                        <span class="icon">?��</span>
+                        <span>교육 ?�로그램 관�?/span>
                     </a>
                     <a href="admin-board.html" class="menu-item">
-                        <span class="icon">?��</span>
-                        <span>게시??관�?/span>
+                        <span class="icon">?��</span>
+                        <span>게시??관�?/span>
                     </a>
                 </div>
             </div>
@@ -81,52 +81,52 @@
         <main class="main-content">
             <div class="page-container">
                 <div class="page-header">
-                    <h1>?�� 추천 교육 ?�로그램</h1>
-                    <p>?�양??교육 ?�로그램???�해 지?�적???�장???�어가?�요</p>
+                    <h1>?�� 추천 교육 ?�로그램</h1>
+                    <p>?�양??교육 ?�로그램???�해 지?�적???�장???�어가?�요</p>
                 </div>
 
                 <div class="page-actions" id="adminActions" style="display: none;">
                     <button class="btn btn-primary" onclick="openAddProgramModal()">
-                        ???�로그램 ?�록
+                        ???�로그램 ?�록
                     </button>
                 </div>
 
                 <div class="search-section">
                     <div class="search-bar">
-                        <input type="text" id="searchProgram" placeholder="?�로그램�? ?�용?�로 검??..">
-                        <button class="btn-search" onclick="searchPrograms()">?�� 검??/button>
+                        <input type="text" id="searchProgram" placeholder="?�로그램�? ?�용?�로 검??..">
+                        <button class="btn-search" onclick="searchPrograms()">?�� 검??/button>
                     </div>
                     <div class="filter-bar">
                         <select id="filterCategory" onchange="applyFilters()">
-                            <option value="">?�체 카테고리</option>
-                            <option value="IT">IT/?�프?�웨??/option>
-                            <option value="?�조">?�조/?�산</option>
-                            <option value="?�기?�자">?�기/?�자</option>
+                            <option value="">?�체 카테고리</option>
+                            <option value="IT">IT/?�프?�웨??/option>
+                            <option value="?�조">?�조/?�산</option>
+                            <option value="?�기?�자">?�기/?�자</option>
                             <option value="건축">건축/건설</option>
-                            <option value="?�격�?>?�격�?/option>
-                            <option value="기�?">기�?</option>
+                            <option value="?�격�?>?�격�?/option>
+                            <option value="기�?">기�?</option>
                         </select>
                         <select id="filterType" onchange="applyFilters()">
-                            <option value="">?�체 ?�형</option>
-                            <option value="?�라??>?�라??/option>
-                            <option value="?�프?�인">?�프?�인</option>
-                            <option value="?�합">?�합</option>
+                            <option value="">?�체 ?�형</option>
+                            <option value="?�라??>?�라??/option>
+                            <option value="?�프?�인">?�프?�인</option>
+                            <option value="?�합">?�합</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="programs-grid" id="programsGrid">
-                    <!-- ?�로그램 목록???�기???�적?�로 ?�시?�니??-->
+                    <!-- ?�로그램 목록???�기???�적?�로 ?�시?�니??-->
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- ?�로그램 ?�록/?�정 모달 -->
+    <!-- ?�로그램 ?�록/?�정 모달 -->
     <div id="programModal" class="modal" style="display: none;">
         <div class="modal-content" style="max-width: 700px;">
             <div class="modal-header">
-                <h2 id="programModalTitle">?�로그램 ?�록</h2>
+                <h2 id="programModalTitle">?�로그램 ?�록</h2>
                 <span class="close" onclick="closeProgramModal()">&times;</span>
             </div>
             <div class="modal-body">
@@ -134,46 +134,46 @@
                     <input type="hidden" id="programId">
                     
                     <div class="form-section">
-                        <label for="programTitle">?�로그램�?*</label>
+                        <label for="programTitle">?�로그램�?*</label>
                         <input type="text" id="programTitle" required>
                     </div>
 
                     <div class="form-section">
                         <label for="programCategory">카테고리 *</label>
                         <select id="programCategory" required>
-                            <option value="">?�택?�세??/option>
-                            <option value="IT">IT/?�프?�웨??/option>
-                            <option value="?�조">?�조/?�산</option>
-                            <option value="?�기?�자">?�기/?�자</option>
+                            <option value="">?�택?�세??/option>
+                            <option value="IT">IT/?�프?�웨??/option>
+                            <option value="?�조">?�조/?�산</option>
+                            <option value="?�기?�자">?�기/?�자</option>
                             <option value="건축">건축/건설</option>
-                            <option value="?�격�?>?�격�?/option>
-                            <option value="기�?">기�?</option>
+                            <option value="?�격�?>?�격�?/option>
+                            <option value="기�?">기�?</option>
                         </select>
                     </div>
 
                     <div class="form-section">
-                        <label for="programType">교육 ?�형 *</label>
+                        <label for="programType">교육 ?�형 *</label>
                         <select id="programType" required>
-                            <option value="">?�택?�세??/option>
-                            <option value="?�라??>?�라??/option>
-                            <option value="?�프?�인">?�프?�인</option>
-                            <option value="?�합">?�합</option>
+                            <option value="">?�택?�세??/option>
+                            <option value="?�라??>?�라??/option>
+                            <option value="?�프?�인">?�프?�인</option>
+                            <option value="?�합">?�합</option>
                         </select>
                     </div>
 
                     <div class="form-section">
                         <label for="programDuration">교육 기간 *</label>
-                        <input type="text" id="programDuration" placeholder="?? 4�? 8�? 3개월" required>
+                        <input type="text" id="programDuration" placeholder="?? 4�? 8�? 3개월" required>
                     </div>
 
                     <div class="form-section">
-                        <label for="programDescription">?�로그램 ?�명 *</label>
+                        <label for="programDescription">?�로그램 ?�명 *</label>
                         <textarea id="programDescription" rows="4" required></textarea>
                     </div>
 
                     <div class="form-section">
-                        <label for="programInstructor">강사/기�?</label>
-                        <input type="text" id="programInstructor" placeholder="?? OO ?�?�교, OO 교육??>
+                        <label for="programInstructor">강사/기�?</label>
+                        <input type="text" id="programInstructor" placeholder="?? OO ?�?�교, OO 교육??>
                     </div>
 
                     <div class="form-section">
@@ -182,29 +182,29 @@
                     </div>
 
                     <div class="form-section">
-                        <label for="programLink">?�청 링크</label>
+                        <label for="programLink">?�청 링크</label>
                         <input type="url" id="programLink" placeholder="https://">
                     </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" onclick="closeProgramModal()">취소</button>
-                        <button type="submit" class="btn btn-primary">?�??/button>
+                        <button type="submit" class="btn btn-primary">?�??/button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- ?�로그램 ?�세보기 모달 -->
+    <!-- ?�로그램 ?�세보기 모달 -->
     <div id="programDetailModal" class="modal" style="display: none;">
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
-                <h2 id="programDetailTitle">?�로그램 ?�세</h2>
+                <h2 id="programDetailTitle">?�로그램 ?�세</h2>
                 <span class="close" onclick="closeProgramDetailModal()">&times;</span>
             </div>
             <div class="modal-body">
                 <div id="programDetailContainer">
-                    <!-- ?�로그램 ?�세 ?�용???�기???�시?�니??-->
+                    <!-- ?�로그램 ?�세 ?�용???�기???�시?�니??-->
                 </div>
             </div>
         </div>
@@ -213,8 +213,8 @@
     <footer>
         <div class="footer-content">
             <div class="footer-about">
-                <h3>?�주공업고등?�교</h3>
-                <p>?�� ?�북?�별?�치???�주???�진�??�산�?101</p>
+                <h3>?�주공업고등?�교</h3>
+                <p>?�� ?�북?�별?�치???�주???�진�??�산�?101</p>
             </div>
         </div>
     </footer>

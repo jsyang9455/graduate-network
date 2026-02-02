@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>???�로??- JJOBB</title>
+    <title>???�로??- JJOBB</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
@@ -15,14 +15,14 @@
                 <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
             </div>
             <ul class="nav-links">
-                <li><a href="dashboard.html">?�?�보??/a></li>
-                <li><a href="jobs.html">채용 ?�보</a></li>
-                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
-                <li><a href="counseling.html">진로 ?�담</a></li>
+                <li><a href="dashboard.html">?�?�보??/a></li>
+                <li><a href="jobs.html">채용 ?�보</a></li>
+                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
+                <li><a href="counseling.html">진로 ?�담</a></li>
             </ul>
             <div class="user-menu">
                 <span class="user-name" id="userName"></span>
-                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
+                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
             </div>
         </nav>
     </header>
@@ -31,46 +31,46 @@
         <aside class="sidebar">
             <div class="sidebar-menu">
                 <a href="dashboard.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�?�보??/span>
+                    <span class="icon">?��</span>
+                    <span>?�?�보??/span>
                 </a>
                 <a href="profile.html" class="menu-item active">
-                    <span class="icon">?��</span>
-                    <span>???�로??/span>
+                    <span class="icon">?��</span>
+                    <span>???�로??/span>
                 </a>
                 <a href="jobs.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>채용 ?�보</span>
+                    <span class="icon">?��</span>
+                    <span>채용 ?�보</span>
                 </a>
                 <a href="networking.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�문 ?�트?�킹</span>
+                    <span class="icon">?��</span>
+                    <span>?�문 ?�트?�킹</span>
                 </a>
                 <a href="counseling.html" class="menu-item" id="counselingMenu">
-                    <span class="icon">?��</span>
-                    <span>진로 ?�담</span>
+                    <span class="icon">?��</span>
+                    <span>진로 ?�담</span>
                 </a>
                 <a href="career.html" class="menu-item" id="careerMenu">
-                    <span class="icon">?��</span>
-                    <span>경력 관�?/span>
+                    <span class="icon">?��</span>
+                    <span>경력 관�?/span>
                 </a>
             </div>
         </aside>
 
         <main class="main-content">
             <div class="page-header">
-                <h1>?�� ???�로??/h1>
-                <button class="btn btn-primary" onclick="alert('?�로???�정 기능?� 준�?중입?�다.')">?�로???�정</button>
+                <h1>?�� ???�로??/h1>
+                <button class="btn btn-primary" onclick="alert('?�로???�정 기능?� 준�?중입?�다.')">?�로???�정</button>
             </div>
 
             <div class="profile-section">
                 <div class="profile-card">
                     <div class="profile-avatar">
-                        <span style="font-size: 4rem;">?��</span>
+                        <span style="font-size: 4rem;">?��</span>
                     </div>
                     <div class="profile-info">
-                        <h2 id="profileName">김?�학</h2>
-                        <p id="profileType" class="profile-badge">?�학??/p>
+                        <h2 id="profileName">김?�학</h2>
+                        <p id="profileType" class="profile-badge">?�학??/p>
                         <p id="profileEmail">student@JJOBB.com</p>
                         <p id="profilePhone">010-1234-5678</p>
                     </div>
@@ -78,81 +78,81 @@
             </div>
 
             <div class="content-section">
-                <h2>기본 ?�보</h2>
+                <h2>기본 ?�보</h2>
                 <div class="info-grid">
                     <div class="info-item">
-                        <label>?�름</label>
+                        <label>?�름</label>
                         <p id="infoName">-</p>
                     </div>
                     <div class="info-item">
-                        <label>?�메??/label>
+                        <label>?�메??/label>
                         <p id="infoEmail">-</p>
                     </div>
                     <div class="info-item">
-                        <label>?�화번호</label>
+                        <label>?�화번호</label>
                         <p id="infoPhone">-</p>
                     </div>
                     <div class="info-item">
-                        <label>?�용???�형</label>
+                        <label>?�용???�형</label>
                         <p id="infoUserType">-</p>
                     </div>
                 </div>
             </div>
 
             <div class="content-section" id="studentInfo" style="display:none;">
-                <h2>?�생 ?�보</h2>
+                <h2>?�생 ?�보</h2>
                 <div class="info-grid">
                     <div class="info-item">
-                        <label>?�년</label>
-                        <p>2?�년</p>
+                        <label>?�년</label>
+                        <p>2?�년</p>
                     </div>
                     <div class="info-item">
-                        <label>?�과</label>
-                        <p>?�기�?/p>
+                        <label>?�과</label>
+                        <p>?�기�?/p>
                     </div>
                     <div class="info-item">
-                        <label>?�번</label>
+                        <label>?�번</label>
                         <p>20240101</p>
                     </div>
                 </div>
             </div>
 
             <div class="content-section" id="graduateInfo" style="display:none;">
-                <h2>졸업???�보</h2>
+                <h2>졸업???�보</h2>
                 <div class="info-grid">
                     <div class="info-item">
-                        <label>졸업?�도</label>
+                        <label>졸업?�도</label>
                         <p id="graduationYear">-</p>
                     </div>
                     <div class="info-item">
-                        <label>?�공</label>
+                        <label>?�공</label>
                         <p id="major">-</p>
                     </div>
                     <div class="info-item">
-                        <label>?�재 직장</label>
+                        <label>?�재 직장</label>
                         <p id="currentCompany">-</p>
                     </div>
                     <div class="info-item">
-                        <label>?�재 직급</label>
+                        <label>?�재 직급</label>
                         <p id="currentPosition">-</p>
                     </div>
                 </div>
             </div>
 
             <div class="content-section" id="teacherInfo" style="display:none;">
-                <h2>?�생???�보</h2>
+                <h2>?�생???�보</h2>
                 <div class="info-grid">
                     <div class="info-item">
-                        <label>?�교</label>
+                        <label>?�교</label>
                         <p id="schoolName">-</p>
                     </div>
                     <div class="info-item">
-                        <label>?�당 과목/분야</label>
-                        <p id="teacherSubject">진로?�담</p>
+                        <label>?�당 과목/분야</label>
+                        <p id="teacherSubject">진로?�담</p>
                     </div>
                     <div class="info-item">
-                        <label>?�담 가???�간</label>
-                        <p id="counselingTime">?�일 09:00-17:00</p>
+                        <label>?�담 가???�간</label>
+                        <p id="counselingTime">?�일 09:00-17:00</p>
                     </div>
                 </div>
             </div>
@@ -189,11 +189,11 @@
                 // Display basic info
                 document.getElementById('profileName').textContent = user.name;
                 document.getElementById('profileEmail').textContent = user.email;
-                document.getElementById('profilePhone').textContent = user.phone || '?�보 ?�음';
+                document.getElementById('profilePhone').textContent = user.phone || '?�보 ?�음';
                 
                 // User type in Korean
                 const typeMap = {
-                    'student': '?�학??,
+                    'student': '?�학??,
                     'graduate': '졸업??,
                     'teacher': '교사',
                     'company': '기업',
@@ -206,7 +206,7 @@
                 // Fill info grid
                 document.getElementById('infoName').textContent = user.name;
                 document.getElementById('infoEmail').textContent = user.email;
-                document.getElementById('infoPhone').textContent = user.phone || '?�보 ?�음';
+                document.getElementById('infoPhone').textContent = user.phone || '?�보 ?�음';
 
                 // Show specific info based on user type
                 if (user.user_type === 'student') {

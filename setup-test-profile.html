@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>?�스???�로???�정</title>
+    <title>?�스???�로???�정</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -62,67 +62,67 @@
 </head>
 <body>
     <div class="container">
-        <h1>?�� ?�스??기업 ?�로???�정</h1>
+        <h1>?�� ?�스??기업 ?�로???�정</h1>
         
         <div class="info">
-            <h3>기업 ?�스??계정 ?�보</h3>
-            <p><strong>?�메??</strong> company@JJOBB.com</p>
-            <p><strong>비�?번호:</strong> password123</p>
-            <p><strong>?�사�?</strong> JJOBB채용</p>
+            <h3>기업 ?�스??계정 ?�보</h3>
+            <p><strong>?�메??</strong> company@JJOBB.com</p>
+            <p><strong>비�?번호:</strong> password123</p>
+            <p><strong>?�사�?</strong> JJOBB채용</p>
         </div>
 
-        <button onclick="setupTestProfile()">?�스???�로???�성</button>
-        <button onclick="viewProfile()">?�재 ?�로??보기</button>
-        <button onclick="clearProfile()">?�로????��</button>
-        <button onclick="goToLogin()">로그???�이지�??�동</button>
+        <button onclick="setupTestProfile()">?�스???�로???�성</button>
+        <button onclick="viewProfile()">?�재 ?�로??보기</button>
+        <button onclick="clearProfile()">?�로????��</button>
+        <button onclick="goToLogin()">로그???�이지�??�동</button>
 
         <div id="result" class="result"></div>
 
-        <h3>?�성???�로???�이??</h3>
+        <h3>?�성???�로???�이??</h3>
         <pre id="profileData"></pre>
     </div>
 
     <script>
-        // ?�스???�로???�이??
+        // ?�스???�로???�이??
         const testProfile = {
             companyName: 'JJOBB채용',
             businessNumber: '123-45-67890',
-            ceoName: '김?�??,
+            ceoName: '김?�??,
             foundedDate: '2015-03-15',
             employees: '50',
-            industry: 'IT/?�프?�웨??,
+            industry: 'IT/?�프?�웨??,
             companyType: '중소기업',
-            address: '?�라북도 ?�주???�산�??�자??,
+            address: '?�라북도 ?�주???�산�??�자??,
             phone: '063-123-4567',
             email: 'hr@JJOBB.com',
             website: 'https://JJOBB.com',
-            description: 'JJOBB채용?� ?�주공업고등?�교 졸업?�들??취업??지?�하???�문 채용 ?�랫?�입?�다. ?�수??기술 ?�재�?발굴?�고 ?�결?�여 지???�업 발전??기여?�고 ?�습?�다.',
-            benefits: '4?�보험, ?�직�? ?�차, 교육�?지?? 중식 ?�공, ?�격�?취득 지??,
-            culture: '?�평??조직문화, ?�율 출퇴근제, ?�택근무 가??
+            description: 'JJOBB채용?� ?�주공업고등?�교 졸업?�들??취업??지?�하???�문 채용 ?�랫?�입?�다. ?�수??기술 ?�재�?발굴?�고 ?�결?�여 지???�업 발전??기여?�고 ?�습?�다.',
+            benefits: '4?�보험, ?�직�? ?�차, 교육�?지?? 중식 ?�공, ?�격�?취득 지??,
+            culture: '?�평??조직문화, ?�율 출퇴근제, ?�택근무 가??
         };
 
-        // ?�로???�이???�시
+        // ?�로???�이???�시
         document.getElementById('profileData').textContent = JSON.stringify(testProfile, null, 2);
 
         function setupTestProfile() {
-            // company@JJOBB.com??user_id�?5�?가??(?�제 DB??ID)
+            // company@JJOBB.com??user_id�?5�?가??(?�제 DB??ID)
             const userId = 5;
             
-            // localStorage???�로???�??
+            // localStorage???�로???�??
             localStorage.setItem(`company_profile_${userId}`, JSON.stringify(testProfile));
             
             const resultDiv = document.getElementById('result');
             resultDiv.className = 'result success';
             resultDiv.style.display = 'block';
             resultDiv.innerHTML = `
-                <h3>???�스???�로?�이 ?�공?�으�??�성?�었?�니??</h3>
+                <h3>???�스???�로?�이 ?�공?�으�??�성?�었?�니??</h3>
                 <p>User ID: ${userId}</p>
                 <p>localStorage key: company_profile_${userId}</p>
-                <p><strong>?�음 ?�계:</strong></p>
+                <p><strong>?�음 ?�계:</strong></p>
                 <ol>
-                    <li>로그???�이지�??�동</li>
-                    <li>company@JJOBB.com / password123�?로그??/li>
-                    <li>???�로???�릭?�여 ?�인</li>
+                    <li>로그???�이지�??�동</li>
+                    <li>company@JJOBB.com / password123�?로그??/li>
+                    <li>???�로???�릭?�여 ?�인</li>
                 </ol>
             `;
         }
@@ -137,13 +137,13 @@
             
             if (profile) {
                 resultDiv.innerHTML = `
-                    <h3>?�� ?�재 ?�?�된 ?�로??/h3>
+                    <h3>?�� ?�재 ?�?�된 ?�로??/h3>
                     <pre>${JSON.stringify(JSON.parse(profile), null, 2)}</pre>
                 `;
             } else {
                 resultDiv.innerHTML = `
-                    <h3>?�️ ?�?�된 ?�로?�이 ?�습?�다</h3>
-                    <p>"?�스???�로???�성" 버튼???�릭?�여 ?�로?�을 ?�성?�세??</p>
+                    <h3>?�️ ?�?�된 ?�로?�이 ?�습?�다</h3>
+                    <p>"?�스???�로???�성" 버튼???�릭?�여 ?�로?�을 ?�성?�세??</p>
                 `;
             }
         }
@@ -156,7 +156,7 @@
             resultDiv.className = 'result success';
             resultDiv.style.display = 'block';
             resultDiv.innerHTML = `
-                <h3>?���??�로?�이 ??��?�었?�니??/h3>
+                <h3>?���??�로?�이 ??��?�었?�니??/h3>
             `;
         }
 
@@ -164,7 +164,7 @@
             window.location.href = 'login.html';
         }
 
-        // ?�이지 로드 ???�재 ?�로???�태 ?�인
+        // ?�이지 로드 ???�재 ?�로???�태 ?�인
         window.onload = function() {
             const userId = 5;
             const profile = localStorage.getItem(`company_profile_${userId}`);
@@ -174,9 +174,9 @@
                 resultDiv.className = 'result success';
                 resultDiv.style.display = 'block';
                 resultDiv.innerHTML = `
-                    <h3>?�️ ?��? ?�로?�이 존재?�니??/h3>
-                    <p>"?�재 ?�로??보기" 버튼???�릭?�여 ?�인?�거??<br>
-                    "?�로????��" ???�시 ?�성?????�습?�다.</p>
+                    <h3>?�️ ?��? ?�로?�이 존재?�니??/h3>
+                    <p>"?�재 ?�로??보기" 버튼???�릭?�여 ?�인?�거??<br>
+                    "?�로????��" ???�시 ?�성?????�습?�다.</p>
                 `;
             }
         };
