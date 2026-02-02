@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginFormContainer = document.getElementById('loginFormContainer');
     const selectedUserTypeName = document.getElementById('selectedUserTypeName');
     const changeTypeBtn = document.getElementById('changeTypeBtn');
-    const testLoginBtn = document.getElementById('testLoginBtn');
     const loginForm = document.getElementById('loginForm');
     const loginError = document.getElementById('loginError');
 
@@ -32,15 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'admin': '관리자'
     };
 
-    // Test accounts for each user type
-    const testAccounts = {
-        'student': { email: 'student@jjob.com', password: 'password123', name: '김재학' },
-        'graduate': { email: 'graduate@jjob.com', password: 'password123', name: '이졸업' },
-        'teacher': { email: 'teacher@jjob.com', password: 'password123', name: '박선생' },
-        'company': { email: 'company@jjob.com', password: 'password123', name: '현대자동차' },
-        'admin': { email: 'admin@jjob.com', password: 'password123', name: '시스템관리자' }
-    };
-
     // Handle user type selection
     userTypeButtons.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -55,13 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 userTypeSelection.style.display = 'none';
                 loginFormContainer.style.display = 'block';
                 selectedUserTypeName.textContent = userTypeLabels[selectedUserType];
-                
-                // Update test account info
-                const testAccountInfo = document.getElementById('testAccountInfo');
-                if (testAccountInfo) {
-                    const testAccount = testAccounts[selectedUserType];
-                    testAccountInfo.innerHTML = `테스트 계정: <strong>${testAccount.email}</strong> / 비밀번호: <strong>${testAccount.password}</strong>`;
-                }
             }, 300);
         });
     });
@@ -75,19 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
             userTypeButtons.forEach(b => b.classList.remove('active'));
             loginForm.reset();
             hideError();
-        });
-    }
-
-    // Handle test login
-    if (testLoginBtn) {
-        testLoginBtn.addEventListener('click', function() {
-            if (!selectedUserType) {
-                showError('사용자 유형을 먼저 선택해주세요.');
-                return;
-            }
-
-            const testAccount = testAccounts[selectedUserType];
-            performLogin(testAccount.email, testAccount.password, true);
         });
     }
 
