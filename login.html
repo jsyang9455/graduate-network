@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그??- ?�주공업고등?�교 졸업???�트?�크</title>
+    <title>로그인 - 전주공업고등학교 졸업생 네트워크</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/auth.css">
@@ -15,18 +15,18 @@
                 <a href="index.html"><img src="images/logo.png" alt="JJOBB" style="height: 40px;"></a>
             </div>
             <div class="nav-links">
-                <a href="index.html">??/a>
-                <a href="jobs.html">채용 ?�보</a>
-                <a href="networking.html">?�문 ?�트?�킹</a>
-                <a href="counseling.html">진로 ?�담</a>
+                <a href="index.html">홈</a>
+                <a href="jobs.html">채용 정보</a>
+                <a href="networking.html">동문 네트워킹</a>
+                <a href="counseling.html">진로 상담</a>
             </div>
             <div class="auth-buttons" id="authButtons">
-                <a href="login.html" class="btn btn-secondary">로그??/a>
-                <a href="register.html" class="btn btn-primary">?�원가??/a>
+                <a href="login.html" class="btn btn-secondary">로그인</a>
+                <a href="register.html" class="btn btn-primary">회원가입</a>
             </div>
             <div class="user-menu" id="userMenu" style="display: none;">
                 <span id="userName"></span>
-                <button onclick="logout()" class="btn btn-secondary">로그?�웃</button>
+                <button onclick="logout()" class="btn btn-secondary">로그아웃</button>
             </div>
         </nav>
     </header>
@@ -34,119 +34,103 @@
     <div class="auth-container">
         <div class="auth-box login-box">
             <div class="auth-header">
-                <h1>JJOBB 로그??/h1>
-                <p>?�주공업고등?�교 졸업???�트?�크 ?�랫??/p>
+                <h1>JJOBB 로그인</h1>
+                <p>전주공업고등학교 졸업생 네트워크 플랫폼</p>
             </div>
             
             <div id="loginError" class="error-message" style="display: none;"></div>
             <div id="loginSuccess" class="success-message" style="display: none;"></div>
 
-            <!-- User Type Selection -->
             <div id="userTypeSelection" class="user-type-selection">
-                <h3>?�용???�형???�택?�세??/h3>
+                <h3>사용자 유형을 선택하세요</h3>
                 <div class="user-type-grid">
                     <button type="button" class="user-type-btn" data-type="student">
-                        <div class="user-type-icon">?��</div>
-                        <div class="user-type-name">?�학??/div>
+                        <div class="user-type-icon"></div>
+                        <div class="user-type-name">재학생</div>
+                        <div class="user-type-desc">학생 계정</div>
                     </button>
                     <button type="button" class="user-type-btn" data-type="graduate">
-                        <div class="user-type-icon">?��?��?/div>
-                        <div class="user-type-name">졸업??/div>
+                        <div class="user-type-icon"></div>
+                        <div class="user-type-name">졸업생</div>
+                        <div class="user-type-desc">동문 계정</div>
                     </button>
                     <button type="button" class="user-type-btn" data-type="teacher">
-                        <div class="user-type-icon">?��?��?/div>
+                        <div class="user-type-icon"></div>
                         <div class="user-type-name">교사</div>
+                        <div class="user-type-desc">상담 교사</div>
                     </button>
                     <button type="button" class="user-type-btn" data-type="company">
-                        <div class="user-type-icon">?��</div>
+                        <div class="user-type-icon"></div>
                         <div class="user-type-name">기업</div>
+                        <div class="user-type-desc">채용 담당자</div>
                     </button>
                     <button type="button" class="user-type-btn" data-type="admin">
-                        <div class="user-type-icon">?�️</div>
+                        <div class="user-type-icon"></div>
                         <div class="user-type-name">관리자</div>
+                        <div class="user-type-desc">시스템 관리</div>
                     </button>
                 </div>
             </div>
 
-            <!-- Login Form (hidden initially) -->
-            <div id="loginFormContainer" style="display: none;">
-                <div class="selected-user-type">
-                    <span id="selectedUserTypeName"></span>
-                    <button type="button" class="btn-change-type" id="changeTypeBtn">변�?/button>
+            <form id="loginForm" style="display: none;">
+                <div class="form-group">
+                    <label for="email">이메일</label>
+                    <input type="email" id="email" name="email" required 
+                           placeholder="example@email.com">
                 </div>
 
-                <form id="loginForm" class="auth-form">
-                    <div class="form-group">
-                        <label for="email">?�메??/label>
-                        <input type="email" id="email" name="email" placeholder="?�메?�을 ?�력?�세?? required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password">비�?번호</label>
-                        <input type="password" id="password" name="password" placeholder="비�?번호�??�력?�세?? required>
-                    </div>
-
-                    <div class="form-options">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="rememberMe" name="rememberMe">
-                            <span>로그???�태 ?��?</span>
-                        </label>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-full">로그??/button>
-                </form>
-
-                <div class="auth-divider">
-                    <span>?�는</span>
+                <div class="form-group">
+                    <label for="password">비밀번호</label>
+                    <input type="password" id="password" name="password" required 
+                           placeholder="비밀번호를 입력하세요">
                 </div>
 
-                <div class="social-login">
-                    <button class="btn-social btn-kakao">
-                        <span>?��</span>
-                        카카?�톡?�로 로그??
-                    </button>
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe">
+                        <span>로그인 상태 유지</span>
+                    </label>
+                    <a href="#" class="link">비밀번호 찾기</a>
                 </div>
 
-                <!-- Test Login Section -->
-                <div class="test-login-section">
-                    <div class="test-login-info">
-                        <h4>?�� ?�스??로그??/h4>
-                        <p id="testAccountInfo">개발/?�스?�용 계정?�로 빠르�?로그?�하?�요</p>
-                    </div>
-                    <button type="button" class="btn btn-test" id="testLoginBtn">?�스??계정?�로 로그??/button>
-                </div>
-            </div>
+                <button type="submit" class="btn btn-primary btn-block">로그인</button>
 
-            <div class="auth-footer">
-                <p>계정???�으?��??? <a href="register.html">?�원가??/a></p>
-                <a href="#">비�?번호�??�으?�나??</a>
-            </div>
+                <div class="auth-footer">
+                    <p>계정이 없으신가요? <a href="register.html" class="link">회원가입</a></p>
+                </div>
+            </form>
         </div>
 
-        <!-- Login Info Sidebar -->
         <div class="auth-info">
-            <h2>?�시�??�림 ?�비??/h2>
-            <p>카카?�톡 로그????졸업?�과 ?�학?�에�?맞춤???�보�??�시간으�??�려?�립?�다.</p>
-            <ul>
-                <li>???�전 10?? ?�후 5???�기 ?�림</li>
-                <li>??AI 맞춤 채용?�보 �?교육?�로그램</li>
-                <li>??관??콘텐�?북마???�동 ?�림</li>
-            </ul>
-            
-            <h3 style="margin-top: 2rem;">JJOBB 주요 ?�비??/h3>
-            <div class="service-list">
-                <span>??취업 ?�보</span>
-                <span>???�문 ?�트?�킹</span>
-                <span>??진로 ?�담</span>
-                <span>???�생 교육</span>
-                <span>??경력 관�?/span>
-                <span>??AI 추천</span>
-                <span>??창업 지??/span>
-                <span>??글로벌 ?�로그램</span>
+            <div class="info-card">
+                <div class="info-icon"></div>
+                <h3>학생 및 졸업생</h3>
+                <p>취업 정보 탐색, 동문 네트워킹, 진로 상담 서비스를 이용하실 수 있습니다.</p>
+            </div>
+            <div class="info-card">
+                <div class="info-icon"></div>
+                <h3>기업</h3>
+                <p>채용 공고 등록, 우수 인재 발굴, 기업 정보 관리 서비스를 제공합니다.</p>
+            </div>
+            <div class="info-card">
+                <div class="info-icon"></div>
+                <h3>교사</h3>
+                <p>학생 진로 상담, 취업 지원, 교육 프로그램 관리를 지원합니다.</p>
             </div>
         </div>
     </div>
-    
+
+    <footer class="auth-footer-bottom">
+        <div class="container">
+            <p>&copy; 2025 전주공업고등학교. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">개인정보처리방침</a>
+                <a href="#">이용약관</a>
+                <a href="#">고객센터</a>
+            </div>
+        </div>
+    </footer>
+
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/login.js"></script>
