@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>채용 공고 ?�정 - JJOBB</title>
+    <title>채용 공고 ?�정 - JJOBB</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
@@ -229,68 +229,68 @@
                 <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
             </div>
             <ul class="nav-links">
-                <li><a href="dashboard.html">?�?�보??/a></li>
-                <li><a href="jobs.html">채용 ?�보</a></li>
-                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
-                <li><a href="profile.html">???�로??/a></li>
+                <li><a href="dashboard.html">?�?�보??/a></li>
+                <li><a href="jobs.html">채용 ?�보</a></li>
+                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
+                <li><a href="profile.html">???�로??/a></li>
             </ul>
             <div class="user-menu">
                 <span class="user-name" id="userName"></span>
-                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
+                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
             </div>
         </nav>
     </header>
 
     <div class="job-create-container">
-        <a href="dashboard.html" class="back-link">???�?�보?�로 ?�아가�?/a>
+        <a href="dashboard.html" class="back-link">???�?�보?�로 ?�아가�?/a>
         
         <div class="job-create-header">
-            <h1>채용 공고 ?�정</h1>
-            <p>채용 공고 ?�보�??�정?�세??/p>
+            <h1>채용 공고 ?�정</h1>
+            <p>채용 공고 ?�보�??�정?�세??/p>
         </div>
 
         <form id="jobCreateForm">
-            <!-- 기본 ?�보 -->
+            <!-- 기본 ?�보 -->
             <div class="form-section">
-                <h2>기본 ?�보</h2>
+                <h2>기본 ?�보</h2>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="jobTitle" class="required">직무�?/label>
-                        <input type="text" id="jobTitle" name="jobTitle" placeholder="?? ?�자?�로 ?�계 ?��??�어" required>
+                        <label for="jobTitle" class="required">직무�?/label>
+                        <input type="text" id="jobTitle" name="jobTitle" placeholder="?? ?�자?�로 ?�계 ?��??�어" required>
                     </div>
                     <div class="form-group">
-                        <label for="companyName">?�사�?/label>
-                        <input type="text" id="companyName" name="companyName" placeholder="?�사�?>
+                        <label for="companyName">?�사�?/label>
+                        <input type="text" id="companyName" name="companyName" placeholder="?�사�?>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="location">근무지</label>
-                        <input type="text" id="location" name="location" placeholder="?? ?�울?�별??강남�?>
+                        <input type="text" id="location" name="location" placeholder="?? ?�울?�별??강남�?>
                     </div>
                     <div class="form-group">
                         <label for="department">부??/label>
-                        <input type="text" id="department" name="department" placeholder="?? ?�구개발부">
+                        <input type="text" id="department" name="department" placeholder="?? ?�구개발부">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="employmentType">고용 ?�태</label>
+                        <label for="employmentType">고용 ?�태</label>
                         <select id="employmentType" name="employmentType">
-                            <option value="?�규�?>?�규�?/option>
-                            <option value="계약�?>계약�?/option>
-                            <option value="?�턴">?�턴</option>
-                            <option value="?�견�?>?�견�?/option>
+                            <option value="?�규�?>?�규�?/option>
+                            <option value="계약�?>계약�?/option>
+                            <option value="?�턴">?�턴</option>
+                            <option value="?�견�?>?�견�?/option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="experience">경력</label>
                         <select id="experience" name="experience">
-                            <option value="?�입">?�입</option>
+                            <option value="?�입">?�입</option>
                             <option value="경력">경력</option>
-                            <option value="경력무�?">경력무�?</option>
+                            <option value="경력무�?">경력무�?</option>
                         </select>
                     </div>
                 </div>
@@ -309,61 +309,61 @@
                     </label>
                     <label class="checkbox-label">
                         <input type="checkbox" name="remote" id="remote">
-                        <span>?�택근무 가??/span>
+                        <span>?�택근무 가??/span>
                     </label>
                 </div>
             </div>
 
-            <!-- ?�세 ?�명 -->
+            <!-- ?�세 ?�명 -->
             <div class="form-section">
-                <h2>?�세 ?�명</h2>
+                <h2>?�세 ?�명</h2>
                 <div class="form-row full">
                     <div class="form-group">
-                        <label for="jobDescription" class="required">직무 ?�명</label>
-                        <textarea id="jobDescription" name="jobDescription" placeholder="?�당???�무?� ??��???�???�세???�명?�주?�요..." required></textarea>
+                        <label for="jobDescription" class="required">직무 ?�명</label>
+                        <textarea id="jobDescription" name="jobDescription" placeholder="?�당???�무?� ??��???�???�세???�명?�주?�요..." required></textarea>
                     </div>
                 </div>
 
                 <div class="form-row full">
                     <div class="form-group">
-                        <label for="qualifications" class="required">지???�격</label>
-                        <textarea id="qualifications" name="qualifications" placeholder="?�요???�력, 경력, ?�격�??�을 ?�력?�주?�요..." required></textarea>
+                        <label for="qualifications" class="required">지???�격</label>
+                        <textarea id="qualifications" name="qualifications" placeholder="?�요???�력, 경력, ?�격�??�을 ?�력?�주?�요..." required></textarea>
                     </div>
                 </div>
 
                 <div class="form-row full">
                     <div class="form-group">
-                        <label for="benefits">복리?�생</label>
-                        <textarea id="benefits" name="benefits" placeholder="?�공?�는 복리?�생???�력?�주?�요..."></textarea>
+                        <label for="benefits">복리?�생</label>
+                        <textarea id="benefits" name="benefits" placeholder="?�공?�는 복리?�생???�력?�주?�요..."></textarea>
                     </div>
                 </div>
             </div>
 
-            <!-- ?�요 기술 -->
+            <!-- ?�요 기술 -->
             <div class="form-section">
-                <h2>?�요 기술</h2>
+                <h2>?�요 기술</h2>
                 <div class="form-row full">
                     <div class="form-group">
-                        <label>기술???�력 ??추�? 버튼 ?�릭</label>
+                        <label>기술???�력 ??추�? 버튼 ?�릭</label>
                         <div class="skills-input-group">
-                            <input type="text" id="skillInput" placeholder="?? C++, Python, ?�로?�계">
-                            <button type="button" id="addSkillBtn">추�?</button>
+                            <input type="text" id="skillInput" placeholder="?? C++, Python, ?�로?�계">
+                            <button type="button" id="addSkillBtn">추�?</button>
                         </div>
                         <div class="skills-tags" id="skillsTags"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- ?�락�??�보 -->
+            <!-- ?�락�??�보 -->
             <div class="form-section">
-                <h2>?�락�??�보</h2>
+                <h2>?�락�??�보</h2>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="contactEmail">?�당???�메??/label>
+                        <label for="contactEmail">?�당???�메??/label>
                         <input type="email" id="contactEmail" name="contactEmail" placeholder="hr@company.com">
                     </div>
                     <div class="form-group">
-                        <label for="contactPhone">?�당???�화번호</label>
+                        <label for="contactPhone">?�당???�화번호</label>
                         <input type="tel" id="contactPhone" name="contactPhone" placeholder="010-1234-5678">
                     </div>
                 </div>
@@ -376,10 +376,10 @@
                 </div>
             </div>
 
-            <!-- ?�션 버튼 -->
+            <!-- ?�션 버튼 -->
             <div class="form-actions">
                 <button type="button" class="btn-cancel" onclick="window.history.back()">취소</button>
-                <button type="submit" class="btn-submit">공고 ?�록</button>
+                <button type="submit" class="btn-submit">공고 ?�록</button>
             </div>
         </form>
     </div>
@@ -439,7 +439,7 @@
         const jobId = urlParams.get('id');
 
         if (!jobId) {
-            alert('?�못???�근?�니??');
+            alert('?�못???�근?�니??');
             window.location.href = 'dashboard.html';
         }
 
@@ -448,7 +448,7 @@
         const job = jobs.find(j => j.id === jobId);
 
         if (!job) {
-            alert('채용 공고�?찾을 ???�습?�다.');
+            alert('채용 공고�?찾을 ???�습?�다.');
             window.location.href = 'dashboard.html';
         }
 
@@ -457,8 +457,8 @@
         document.getElementById('companyName').value = job.companyName || '';
         document.getElementById('location').value = job.location || '';
         document.getElementById('department').value = job.department || '';
-        document.getElementById('employmentType').value = job.employmentType || '?�규�?;
-        document.getElementById('experience').value = job.experience || '?�입';
+        document.getElementById('employmentType').value = job.employmentType || '?�규�?;
+        document.getElementById('experience').value = job.experience || '?�입';
         document.getElementById('salary').value = job.salary || '';
         if (job.urgency) {
             const urgencyRadio = document.querySelector(`input[name="urgency"][value="${job.urgency}"]`);
@@ -517,10 +517,10 @@
                 jobs[index] = formData;
                 localStorage.setItem('jobPostings', JSON.stringify(jobs));
                 console.log('Job posting updated:', formData);
-                alert('채용 공고가 ?�정?�었?�니??');
+                alert('채용 공고가 ?�정?�었?�니??');
                 window.location.href = 'dashboard.html';
             } else {
-                alert('채용 공고�?찾을 ???�습?�다.');
+                alert('채용 공고�?찾을 ???�습?�다.');
             }
         });
 

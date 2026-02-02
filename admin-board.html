@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시??관�?- JJOBB</title>
+    <title>게시??관�?- JJOBB</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
@@ -14,11 +14,11 @@
                 <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
             </div>
             <ul class="nav-links">
-                <li><a href="dashboard.html">?�?�보??/a></li>
+                <li><a href="dashboard.html">?�?�보??/a></li>
             </ul>
             <div class="user-menu">
                 <span class="user-name" id="userName"></span>
-                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
+                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
             </div>
         </nav>
     </header>
@@ -27,22 +27,22 @@
         <aside class="sidebar">
             <div class="sidebar-menu">
                 <a href="dashboard.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�?�보??/span>
+                    <span class="icon">?��</span>
+                    <span>?�?�보??/span>
                 </a>
                 <div class="menu-divider"></div>
                 <div class="menu-section-title">관리자 메뉴</div>
                 <a href="admin-users.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�원 관�?/span>
+                    <span class="icon">?��</span>
+                    <span>?�원 관�?/span>
                 </a>
                 <a href="education-programs.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>교육 ?�로그램 관�?/span>
+                    <span class="icon">?��</span>
+                    <span>교육 ?�로그램 관�?/span>
                 </a>
                 <a href="admin-board.html" class="menu-item active">
-                    <span class="icon">?��</span>
-                    <span>게시??관�?/span>
+                    <span class="icon">?��</span>
+                    <span>게시??관�?/span>
                 </a>
             </div>
         </aside>
@@ -50,28 +50,28 @@
         <main class="main-content">
             <div class="page-container">
                 <div class="page-header">
-                    <h1>?�� 게시??관�?/h1>
-                    <p>공�??�항 �?게시글??관리합?�다</p>
+                    <h1>?�� 게시??관�?/h1>
+                    <p>공�??�항 �?게시글??관리합?�다</p>
                 </div>
 
                 <div class="page-actions">
                     <button class="btn btn-primary" onclick="openAddPostModal()">
-                        ??게시글 ?�록
+                        ??게시글 ?�록
                     </button>
                 </div>
 
                 <div class="search-section">
                     <div class="search-bar">
-                        <input type="text" id="searchPost" placeholder="?�목, ?�용?�로 검??..">
-                        <button class="btn-search" onclick="searchPosts()">?�� 검??/button>
+                        <input type="text" id="searchPost" placeholder="?�목, ?�용?�로 검??..">
+                        <button class="btn-search" onclick="searchPosts()">?�� 검??/button>
                     </div>
                     <div class="filter-bar">
                         <select id="filterCategory" onchange="applyFilters()">
-                            <option value="">?�체 카테고리</option>
-                            <option value="공�??�항">공�??�항</option>
-                            <option value="?�스">?�스</option>
-                            <option value="?�벤??>?�벤??/option>
-                            <option value="채용?�보">채용?�보</option>
+                            <option value="">?�체 카테고리</option>
+                            <option value="공�??�항">공�??�항</option>
+                            <option value="?�스">?�스</option>
+                            <option value="?�벤??>?�벤??/option>
+                            <option value="채용?�보">채용?�보</option>
                         </select>
                     </div>
                 </div>
@@ -82,15 +82,15 @@
                             <tr>
                                 <th width="80">번호</th>
                                 <th width="120">카테고리</th>
-                                <th>?�목</th>
-                                <th width="120">?�성??/th>
+                                <th>?�목</th>
+                                <th width="120">?�성??/th>
                                 <th width="100">조회??/th>
-                                <th width="120">?�성??/th>
-                                <th width="150">관�?/th>
+                                <th width="120">?�성??/th>
+                                <th width="150">관�?/th>
                             </tr>
                         </thead>
                         <tbody id="postsTableBody">
-                            <!-- 게시글 목록???�기???�시?�니??-->
+                            <!-- 게시글 목록???�기???�시?�니??-->
                         </tbody>
                     </table>
                 </div>
@@ -98,11 +98,11 @@
         </main>
     </div>
 
-    <!-- 게시글 ?�록/?�정 모달 -->
+    <!-- 게시글 ?�록/?�정 모달 -->
     <div id="postModal" class="modal" style="display: none;">
         <div class="modal-content" style="max-width: 800px;">
             <div class="modal-header">
-                <h2 id="postModalTitle">게시글 ?�록</h2>
+                <h2 id="postModalTitle">게시글 ?�록</h2>
                 <span class="close" onclick="closePostModal()">&times;</span>
             </div>
             <div class="modal-body">
@@ -112,34 +112,34 @@
                     <div class="form-section">
                         <label for="postCategory">카테고리 *</label>
                         <select id="postCategory" required>
-                            <option value="">?�택?�세??/option>
-                            <option value="공�??�항">공�??�항</option>
-                            <option value="?�스">?�스</option>
-                            <option value="?�벤??>?�벤??/option>
-                            <option value="채용?�보">채용?�보</option>
+                            <option value="">?�택?�세??/option>
+                            <option value="공�??�항">공�??�항</option>
+                            <option value="?�스">?�스</option>
+                            <option value="?�벤??>?�벤??/option>
+                            <option value="채용?�보">채용?�보</option>
                         </select>
                     </div>
 
                     <div class="form-section">
-                        <label for="postTitle">?�목 *</label>
+                        <label for="postTitle">?�목 *</label>
                         <input type="text" id="postTitle" required>
                     </div>
 
                     <div class="form-section">
-                        <label for="postContent">?�용 *</label>
+                        <label for="postContent">?�용 *</label>
                         <textarea id="postContent" rows="10" required></textarea>
                     </div>
 
                     <div class="form-section">
                         <label>
                             <input type="checkbox" id="postImportant">
-                            중요 공�? (?�단 고정)
+                            중요 공�? (?�단 고정)
                         </label>
                     </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" onclick="closePostModal()">취소</button>
-                        <button type="submit" class="btn btn-primary">?�??/button>
+                        <button type="submit" class="btn btn-primary">?�??/button>
                     </div>
                 </form>
             </div>
@@ -149,8 +149,8 @@
     <footer>
         <div class="footer-content">
             <div class="footer-about">
-                <h3>?�주공업고등?�교</h3>
-                <p>?�� ?�북?�별?�치???�주???�진�??�산�?101</p>
+                <h3>?�주공업고등?�교</h3>
+                <p>?�� ?�북?�별?�치???�주???�진�??�산�?101</p>
             </div>
         </div>
     </footer>

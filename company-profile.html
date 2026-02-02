@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>기업 ?�로??관�?- JJOBB</title>
+    <title>기업 ?�로??관�?- JJOBB</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
@@ -288,14 +288,14 @@
                 <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
             </div>
             <ul class="nav-links">
-                <li><a href="dashboard.html">?�?�보??/a></li>
-                <li><a href="jobs.html">채용 ?�보</a></li>
-                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
-                <li><a href="profile.html" class="active">???�로??/a></li>
+                <li><a href="dashboard.html">?�?�보??/a></li>
+                <li><a href="jobs.html">채용 ?�보</a></li>
+                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
+                <li><a href="profile.html" class="active">???�로??/a></li>
             </ul>
             <div class="user-menu">
                 <span class="user-name" id="userName"></span>
-                <button onclick="logout()" class="btn-logout">로그?�웃</button>
+                <button onclick="logout()" class="btn-logout">로그?�웃</button>
             </div>
         </nav>
     </header>
@@ -304,70 +304,70 @@
         <aside class="sidebar">
             <div class="sidebar-menu">
                 <a href="dashboard.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�?�보??/span>
+                    <span class="icon">?��</span>
+                    <span>?�?�보??/span>
                 </a>
                 <a href="profile.html" class="menu-item active">
-                    <span class="icon">?��</span>
-                    <span>???�로??/span>
+                    <span class="icon">?��</span>
+                    <span>???�로??/span>
                 </a>
                 <a href="jobs.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>채용 ?�보</span>
+                    <span class="icon">?��</span>
+                    <span>채용 ?�보</span>
                 </a>
                 <a href="networking.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�문 ?�트?�킹</span>
+                    <span class="icon">?��</span>
+                    <span>?�문 ?�트?�킹</span>
                 </a>
             </div>
         </aside>
 
         <main class="profile-container">
         <div class="profile-header">
-            <h1>기업 ?�로??관�?/h1>
-            <p>귀?�의 ?�보�??�록?�고 ?�수???�재�?채용?�세??/p>
+            <h1>기업 ?�로??관�?/h1>
+            <p>귀?�의 ?�보�??�록?�고 ?�수???�재�?채용?�세??/p>
         </div>
 
         <div id="successMessage" class="success-message"></div>
         <div id="errorMessage" class="error-message"></div>
 
         <form id="companyProfileForm" class="profile-form">
-            <!-- 기본 ?�보 -->
+            <!-- 기본 ?�보 -->
             <div class="form-section">
-                <h3>기본 ?�보</h3>
+                <h3>기본 ?�보</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>?�사�?<span class="required">*</span></label>
+                        <label>?�사�?<span class="required">*</span></label>
                         <input type="text" id="companyName" name="companyName" required>
                     </div>
                     <div class="form-group">
-                        <label>?�업?�등록번??<span class="required">*</span></label>
+                        <label>?�업?�등록번??<span class="required">*</span></label>
                         <input type="text" id="businessNumber" name="businessNumber" placeholder="000-00-00000" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>?�?�자�?<span class="required">*</span></label>
+                        <label>?�?�자�?<span class="required">*</span></label>
                         <input type="text" id="ceoName" name="ceoName" required>
                     </div>
                     <div class="form-group">
-                        <label>?�립??/label>
+                        <label>?�립??/label>
                         <input type="date" id="foundedDate" name="foundedDate">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>?�종 <span class="required">*</span></label>
+                        <label>?�종 <span class="required">*</span></label>
                         <select id="industry" name="industry" required>
-                            <option value="">?�택?�세??/option>
-                            <option value="?�조??>?�조??/option>
+                            <option value="">?�택?�세??/option>
+                            <option value="?�조??>?�조??/option>
                             <option value="건설??>건설??/option>
-                            <option value="IT/?�프?�웨??>IT/?�프?�웨??/option>
-                            <option value="?�기/?�자">?�기/?�자</option>
-                            <option value="?�학/?�너지">?�학/?�너지</option>
-                            <option value="?�동�?>?�동�?/option>
+                            <option value="IT/?�프?�웨??>IT/?�프?�웨??/option>
+                            <option value="?�기/?�자">?�기/?�자</option>
+                            <option value="?�학/?�너지">?�학/?�너지</option>
+                            <option value="?�동�?>?�동�?/option>
                             <option value="기계">기계</option>
-                            <option value="기�?">기�?</option>
+                            <option value="기�?">기�?</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -377,79 +377,79 @@
                 </div>
             </div>
 
-            <!-- ?�락�??�보 -->
+            <!-- ?�락�??�보 -->
             <div class="form-section">
-                <h3>?�락�??�보</h3>
+                <h3>?�락�??�보</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>?�???�화번호 <span class="required">*</span></label>
+                        <label>?�???�화번호 <span class="required">*</span></label>
                         <input type="tel" id="phone" name="phone" placeholder="02-1234-5678" required>
                     </div>
                     <div class="form-group">
-                        <label>?�당???�메??<span class="required">*</span></label>
+                        <label>?�당???�메??<span class="required">*</span></label>
                         <input type="email" id="email" name="email" placeholder="contact@company.com" required>
                     </div>
                 </div>
                 <div class="form-row full">
                     <div class="form-group">
-                        <label>?�사 주소 <span class="required">*</span></label>
-                        <input type="text" id="address" name="address" placeholder="?�사???�체 주소�??�력?�세?? required>
+                        <label>?�사 주소 <span class="required">*</span></label>
+                        <input type="text" id="address" name="address" placeholder="?�사???�체 주소�??�력?�세?? required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>?�사 ?�사?�트</label>
+                        <label>?�사 ?�사?�트</label>
                         <input type="url" id="website" name="website" placeholder="https://www.company.com">
                     </div>
                     <div class="form-group">
-                        <label>?�당?�명</label>
-                        <input type="text" id="contactPerson" name="contactPerson" placeholder="?�사 ?�당??>
+                        <label>?�당?�명</label>
+                        <input type="text" id="contactPerson" name="contactPerson" placeholder="?�사 ?�당??>
                     </div>
                 </div>
             </div>
 
-            <!-- ?�사 ?�개 -->
+            <!-- ?�사 ?�개 -->
             <div class="form-section">
-                <h3>?�사 ?�개</h3>
+                <h3>?�사 ?�개</h3>
                 <div class="form-row full">
                     <div class="form-group">
-                        <label>?�사 ?�개 <span class="required">*</span></label>
-                        <textarea id="description" name="description" placeholder="?�사??비전, ?�업 분야, 주요 ?�품 ?�을 ?�개?�주?�요" required></textarea>
-                        <span class="hint">최소 50???�상 ?�성?�주?�요</span>
+                        <label>?�사 ?�개 <span class="required">*</span></label>
+                        <textarea id="description" name="description" placeholder="?�사??비전, ?�업 분야, 주요 ?�품 ?�을 ?�개?�주?�요" required></textarea>
+                        <span class="hint">최소 50???�상 ?�성?�주?�요</span>
                     </div>
                 </div>
                 <div class="form-row full">
                     <div class="form-group">
-                        <label>복리?�생</label>
-                        <textarea id="benefits" name="benefits" placeholder="?�공?�는 복리?�생???�세???�성?�주?�요 (?? 4?�보험, ?�차, ?�직�? 중식 ?�공 ??"></textarea>
+                        <label>복리?�생</label>
+                        <textarea id="benefits" name="benefits" placeholder="?�공?�는 복리?�생???�세???�성?�주?�요 (?? 4?�보험, ?�차, ?�직�? 중식 ?�공 ??"></textarea>
                     </div>
                 </div>
             </div>
 
-            <!-- ?�사 로고 -->
+            <!-- ?�사 로고 -->
             <div class="form-section">
-                <h3>?�사 로고</h3>
+                <h3>?�사 로고</h3>
                 <div class="form-row full">
                     <div class="form-group">
-                        <label>로고 ?��?지</label>
+                        <label>로고 ?��?지</label>
                         <div class="logo-upload">
                             <div class="logo-preview" id="logoPreview">
                                 <div class="placeholder">로고 미리보기</div>
                             </div>
                             <div class="file-input-wrapper">
                                 <input type="file" id="logoFile" name="logoFile" accept="image/*">
-                                <label for="logoFile">?�일 ?�택</label>
+                                <label for="logoFile">?�일 ?�택</label>
                             </div>
                         </div>
-                        <span class="hint">권장 ?�기: 200x200px, 최�? 5MB (JPG, PNG)</span>
+                        <span class="hint">권장 ?�기: 200x200px, 최�? 5MB (JPG, PNG)</span>
                     </div>
                 </div>
             </div>
 
-            <!-- ?�출 버튼 -->
+            <!-- ?�출 버튼 -->
             <div class="btn-group">
                 <button type="button" class="btn btn-secondary" onclick="window.location.href='dashboard.html'">취소</button>
-                <button type="submit" class="btn btn-primary">?�?�하�?/button>
+                <button type="submit" class="btn btn-primary">?�?�하�?/button>
             </div>
         </form>
         </main>
@@ -463,13 +463,13 @@
             const user = auth.getCurrentUser();
             console.log('Current user:', user);
             if (!user) {
-                alert('로그?�이 ?�요?�니??');
+                alert('로그?�이 ?�요?�니??');
                 window.location.href = 'login.html?type=company&returnUrl=company-profile.html';
                 return;
             }
 
             if (user.user_type !== 'company') {
-                alert('기업 ?�원�??�근?????�습?�다.');
+                alert('기업 ?�원�??�근?????�습?�다.');
                 window.location.href = 'dashboard.html';
                 return;
             }
@@ -491,7 +491,7 @@
                 const file = e.target.files[0];
                 if (file) {
                     if (file.size > 5 * 1024 * 1024) {
-                        showError('?�일 ?�기??5MB�?초과?????�습?�다.');
+                        showError('?�일 ?�기??5MB�?초과?????�습?�다.');
                         return;
                     }
 
@@ -565,14 +565,14 @@
 
             // Validation
             if (profile.description && profile.description.length < 50) {
-                showError('?�사 ?�개??최소 50???�상 ?�성?�주?�요.');
+                showError('?�사 ?�개??최소 50???�상 ?�성?�주?�요.');
                 return;
             }
 
             // Save to localStorage
             localStorage.setItem(`company_profile_${user.id}`, JSON.stringify(profile));
             
-            showSuccess('기업 ?�로?�이 ?�공?�으�??�?�되?�습?�다!');
+            showSuccess('기업 ?�로?�이 ?�공?�으�??�?�되?�습?�다!');
             
             // Redirect to dashboard after 2 seconds
             setTimeout(() => {

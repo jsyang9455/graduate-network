@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>경력 관�?- JJOBB</title>
+    <title>경력 관�?- JJOBB</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
@@ -14,14 +14,14 @@
                 <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
             </div>
             <ul class="nav-links">
-                <li><a href="dashboard.html">?�?�보??/a></li>
-                <li><a href="jobs.html">채용 ?�보</a></li>
-                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
-                <li><a href="counseling.html">진로 ?�담</a></li>
+                <li><a href="dashboard.html">?�?�보??/a></li>
+                <li><a href="jobs.html">채용 ?�보</a></li>
+                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
+                <li><a href="counseling.html">진로 ?�담</a></li>
             </ul>
             <div class="user-menu">
                 <span class="user-name" id="userName"></span>
-                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
+                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
             </div>
         </nav>
     </header>
@@ -30,50 +30,50 @@
         <aside class="sidebar">
             <div class="sidebar-menu">
                 <a href="dashboard.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�?�보??/span>
+                    <span class="icon">?��</span>
+                    <span>?�?�보??/span>
                 </a>
-                <a href="#" class="menu-item" onclick="alert('?�로???�이지??준�?중입?�다.'); return false;">
-                    <span class="icon">?��</span>
-                    <span>???�로??/span>
+                <a href="#" class="menu-item" onclick="alert('?�로???�이지??준�?중입?�다.'); return false;">
+                    <span class="icon">?��</span>
+                    <span>???�로??/span>
                 </a>
                 <a href="jobs.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>채용 ?�보</span>
+                    <span class="icon">?��</span>
+                    <span>채용 ?�보</span>
                 </a>
                 <a href="networking.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�문 ?�트?�킹</span>
+                    <span class="icon">?��</span>
+                    <span>?�문 ?�트?�킹</span>
                 </a>
                 <a href="counseling.html" class="menu-item" id="counselingMenu">
-                    <span class="icon">?��</span>
-                    <span>진로 ?�담</span>
+                    <span class="icon">?��</span>
+                    <span>진로 ?�담</span>
                 </a>
                 <a href="career.html" class="menu-item active" id="careerMenu">
-                    <span class="icon">?��</span>
-                    <span>경력 관�?/span>
+                    <span class="icon">?��</span>
+                    <span>경력 관�?/span>
                 </a>
             </div>
         </aside>
 
         <main class="main-content">
             <div class="page-header">
-                <h1>?�� 경력 관�?/h1>
-                <p>?�의 경력�??�장 과정??관리하?�요</p>
+                <h1>?�� 경력 관�?/h1>
+                <p>?�의 경력�??�장 과정??관리하?�요</p>
             </div>
 
             <div class="content-section">
                 <div class="section-header">
-                    <h2>?�력??관�?/h2>
+                    <h2>?�력??관�?/h2>
                 </div>
                 <div class="resume-upload-section">
                     <div class="upload-area">
                         <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" style="display: none;" onchange="uploadResume()">
-                        <button class="btn btn-secondary" onclick="document.getElementById('resumeFile').click()">?�력???�로??/button>
-                        <p class="upload-info">PDF, DOC, DOCX ?�식 지??(최�? 5MB)</p>
+                        <button class="btn btn-secondary" onclick="document.getElementById('resumeFile').click()">?�력???�로??/button>
+                        <p class="upload-info">PDF, DOC, DOCX ?�식 지??(최�? 5MB)</p>
                         <div id="currentResume" class="current-resume" style="display: none;">
-                            <p>?�� <span id="resumeFileName"></span></p>
-                            <button class="btn btn-sm btn-danger" onclick="deleteResume()">??��</button>
+                            <p>?�� <span id="resumeFileName"></span></p>
+                            <button class="btn btn-sm btn-danger" onclick="deleteResume()">??��</button>
                         </div>
                     </div>
                 </div>
@@ -81,77 +81,77 @@
 
             <div class="content-section">
                 <div class="section-header">
-                    <h2>경력 ?�?�라??/h2>
-                    <button class="btn btn-primary" onclick="openAddCareerModal()">+ 경력 추�?</button>
+                    <h2>경력 ?�?�라??/h2>
+                    <button class="btn btn-primary" onclick="openAddCareerModal()">+ 경력 추�?</button>
                 </div>
 
                 <div class="timeline" id="careerTimeline">
-                    <!-- 경력 목록???�기???�적?�로 ?�시?�니??-->
+                    <!-- 경력 목록???�기???�적?�로 ?�시?�니??-->
                 </div>
             </div>
 
             <div class="content-section">
-                <h2>보유 기술 �??�격�?/h2>
+                <h2>보유 기술 �??�격�?/h2>
                 <div class="skills-grid">
                     <div class="skill-card">
-                        <h3>기술 ?�택</h3>
+                        <h3>기술 ?�택</h3>
                         <div class="skill-input-group">
-                            <input type="text" id="skillInput" placeholder="기술 ?�택???�력?�세?? onkeypress="if(event.key==='Enter') addSkill()">
-                            <button class="btn btn-primary btn-sm" onclick="addSkill()">+ 추�?</button>
+                            <input type="text" id="skillInput" placeholder="기술 ?�택???�력?�세?? onkeypress="if(event.key==='Enter') addSkill()">
+                            <button class="btn btn-primary btn-sm" onclick="addSkill()">+ 추�?</button>
                         </div>
                         <div class="tag-list" id="skillList">
-                            <!-- 기술 ?�택???�기???�적?�로 ?�시?�니??-->
+                            <!-- 기술 ?�택???�기???�적?�로 ?�시?�니??-->
                         </div>
                     </div>
                     <div class="skill-card">
-                        <h3>?�격�?/h3>
+                        <h3>?�격�?/h3>
                         <div class="certificate-list" id="certificateList">
-                            <!-- ?�격�?목록???�기???�적?�로 ?�시?�니??-->
+                            <!-- ?�격�?목록???�기???�적?�로 ?�시?�니??-->
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="content-section">
-                <h2>교육 �??�련</h2>
+                <h2>교육 �??�련</h2>
                 <div class="education-list" id="educationList">
-                    <!-- 교육 목록???�기???�적?�로 ?�시?�니??-->
+                    <!-- 교육 목록???�기???�적?�로 ?�시?�니??-->
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- 경력 추�? 모달 -->
+    <!-- 경력 추�? 모달 -->
     <div id="addCareerModal" class="modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>?�� 경력 추�?</h2>
+                <h2>?�� 경력 추�?</h2>
                 <span class="close" onclick="closeAddCareerModal()">&times;</span>
             </div>
             <form id="addCareerForm" onsubmit="addCareer(event)">
                 <div class="modal-body">
                     <div class="form-section">
                         <div class="form-group">
-                            <label for="careerType">?�형 <span class="required">*</span></label>
+                            <label for="careerType">?�형 <span class="required">*</span></label>
                             <select id="careerType" required>
-                                <option value="">?�택?�세??/option>
-                                <option value="work">?�� ?�무 경력</option>
-                                <option value="education">?�� 교육</option>
-                                <option value="project">?? ?�로?�트</option>
-                                <option value="activity">?�� ?�?�활??/option>
-                                <option value="certificate">?�� ?�격�?/option>
+                                <option value="">?�택?�세??/option>
+                                <option value="work">?�� ?�무 경력</option>
+                                <option value="education">?�� 교육</option>
+                                <option value="project">?? ?�로?�트</option>
+                                <option value="activity">?�� ?�?�활??/option>
+                                <option value="certificate">?�� ?�격�?/option>
                             </select>
                         </div>
                     </div>
 
                     <div class="form-section">
                         <div class="form-group">
-                            <label for="careerTitle">?�목 <span class="required">*</span></label>
-                            <input type="text" id="careerTitle" required placeholder="?? ?��??�동�??�턴">
+                            <label for="careerTitle">?�목 <span class="required">*</span></label>
+                            <input type="text" id="careerTitle" required placeholder="?? ?��??�동�??�턴">
                         </div>
                         <div class="form-group">
-                            <label for="careerCompany">?�사/기�?</label>
-                            <input type="text" id="careerCompany" placeholder="?? ?��??�동�?>
+                            <label for="careerCompany">?�사/기�?</label>
+                            <input type="text" id="careerCompany" placeholder="?? ?��??�동�?>
                         </div>
                     </div>
 
@@ -159,7 +159,7 @@
                         <h3 class="section-title">기간</h3>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="careerStartDate">?�작??<span class="required">*</span></label>
+                                <label for="careerStartDate">?�작??<span class="required">*</span></label>
                                 <input type="date" id="careerStartDate" required>
                             </div>
                             <div class="form-group">
@@ -170,23 +170,23 @@
                         <div class="checkbox-group">
                             <label class="checkbox-label">
                                 <input type="checkbox" id="careerOngoing" onchange="toggleEndDate()">
-                                <span>?�재 진행 �?/span>
+                                <span>?�재 진행 �?/span>
                             </label>
                         </div>
                     </div>
 
                     <div class="form-section">
                         <div class="form-group">
-                            <label for="careerDescription">?�세 ?�명</label>
-                            <textarea id="careerDescription" rows="4" placeholder="?�당 ?�무, 주요 ?�과, ?�용 기술 ?�을 ?�성?�세??></textarea>
-                            <span class="form-hint">경력???�??구체?�인 ?�명???�성?�면 ?�욱 ?�과?�입?�다.</span>
+                            <label for="careerDescription">?�세 ?�명</label>
+                            <textarea id="careerDescription" rows="4" placeholder="?�당 ?�무, 주요 ?�과, ?�용 기술 ?�을 ?�성?�세??></textarea>
+                            <span class="form-hint">경력???�??구체?�인 ?�명???�성?�면 ?�욱 ?�과?�입?�다.</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeAddCareerModal()">취소</button>
-                    <button type="submit" class="btn btn-primary">경력 추�?</button>
+                    <button type="submit" class="btn btn-primary">경력 추�?</button>
                 </div>
             </form>
         </div>
@@ -206,7 +206,7 @@
             currentUser = user;
             // Redirect company users
             if (user.user_type === 'company') {
-                alert('기업 계정?� 경력 관�??�비?��? ?�용?????�습?�다.');
+                alert('기업 계정?� 경력 관�??�비?��? ?�용?????�습?�다.');
                 window.location.href = 'dashboard.html';
             } else {
                 document.getElementById('userName').textContent = user.name;
@@ -218,16 +218,16 @@
             }
         }
 
-        // ?�력???�로??
+        // ?�력???�로??
         function uploadResume() {
             const fileInput = document.getElementById('resumeFile');
             const file = fileInput.files[0];
             
             if (!file) return;
             
-            // ?�일 ?�기 체크 (5MB)
+            // ?�일 ?�기 체크 (5MB)
             if (file.size > 5 * 1024 * 1024) {
-                alert('?�일 ?�기??5MB�?초과?????�습?�다.');
+                alert('?�일 ?�기??5MB�?초과?????�습?�다.');
                 return;
             }
             
@@ -243,12 +243,12 @@
                 
                 localStorage.setItem(`graduateNetwork_resume_${currentUser.id}`, JSON.stringify(resumeData));
                 displayResume(resumeData);
-                alert('?�력?��? ?�로?�되?�습?�다.');
+                alert('?�력?��? ?�로?�되?�습?�다.');
             };
             reader.readAsDataURL(file);
         }
         
-        // ?�력??로드
+        // ?�력??로드
         function loadUserResume() {
             const resumeData = localStorage.getItem(`graduateNetwork_resume_${currentUser.id}`);
             if (resumeData) {
@@ -256,7 +256,7 @@
             }
         }
         
-        // ?�력???�시
+        // ?�력???�시
         function displayResume(resumeData) {
             const currentResumeDiv = document.getElementById('currentResume');
             const fileNameSpan = document.getElementById('resumeFileName');
@@ -264,13 +264,13 @@
             currentResumeDiv.style.display = 'block';
         }
         
-        // ?�력????��
+        // ?�력????��
         function deleteResume() {
-            if (confirm('?�력?��? ??��?�시겠습?�까?')) {
+            if (confirm('?�력?��? ??��?�시겠습?�까?')) {
                 localStorage.removeItem(`graduateNetwork_resume_${currentUser.id}`);
                 document.getElementById('currentResume').style.display = 'none';
                 document.getElementById('resumeFile').value = '';
-                alert('?�력?��? ??��?�었?�니??');
+                alert('?�력?��? ??��?�었?�니??');
             }
         }
 
@@ -279,7 +279,7 @@
             const careersData = localStorage.getItem(`graduateNetwork_careers_${currentUser.id}`);
             const careers = careersData ? JSON.parse(careersData) : [];
             
-            // ?�짜 기�? ?�렬 (최신??
+            // ?�짜 기�? ?�렬 (최신??
             careers.sort((a, b) => {
                 const dateA = a.endDate || a.startDate;
                 const dateB = b.endDate || b.startDate;
@@ -289,26 +289,26 @@
             displayCareers(careers);
         }
         
-        // 경력 목록 ?�시
+        // 경력 목록 ?�시
         function displayCareers(careers) {
             const timeline = document.getElementById('careerTimeline');
             
             if (careers.length === 0) {
-                timeline.innerHTML = '<p style="text-align: center; color: #999; padding: 40px;">?�직 ?�록??경력???�습?�다. 경력??추�??�보?�요!</p>';
+                timeline.innerHTML = '<p style="text-align: center; color: #999; padding: 40px;">?�직 ?�록??경력???�습?�다. 경력??추�??�보?�요!</p>';
                 return;
             }
             
             timeline.innerHTML = careers.map(career => {
                 const typeEmoji = {
-                    work: '?��',
-                    education: '?��',
+                    work: '?��',
+                    education: '?��',
                     project: '??',
-                    activity: '?��',
-                    certificate: '?��'
-                }[career.type] || '?��';
+                    activity: '?��',
+                    certificate: '?��'
+                }[career.type] || '?��';
                 
                 const startDate = new Date(career.startDate).toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit'});
-                const endDate = career.endDate ? new Date(career.endDate).toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit'}) : '?�재';
+                const endDate = career.endDate ? new Date(career.endDate).toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit'}) : '?�재';
                 
                 return `
                     <div class="timeline-item">
@@ -318,25 +318,25 @@
                             ${career.company ? `<p class="company-name">${career.company}</p>` : ''}
                             <p class="timeline-date">${startDate} - ${endDate}</p>
                             ${career.description ? `<p class="career-description">${career.description}</p>` : ''}
-                            <button class="btn btn-sm btn-danger" onclick="deleteCareer('${career.id}')">??��</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteCareer('${career.id}')">??��</button>
                         </div>
                     </div>
                 `;
             }).join('');
         }
         
-        // 경력 추�? 모달 ?�기
+        // 경력 추�? 모달 ?�기
         function openAddCareerModal() {
             document.getElementById('addCareerModal').style.display = 'block';
         }
         
-        // 경력 추�? 모달 ?�기
+        // 경력 추�? 모달 ?�기
         function closeAddCareerModal() {
             document.getElementById('addCareerModal').style.display = 'none';
             document.getElementById('addCareerForm').reset();
         }
         
-        // 종료???��?
+        // 종료???��?
         function toggleEndDate() {
             const endDateInput = document.getElementById('careerEndDate');
             const ongoingCheckbox = document.getElementById('careerOngoing');
@@ -346,7 +346,7 @@
             }
         }
         
-        // 경력 추�?
+        // 경력 추�?
         function addCareer(event) {
             event.preventDefault();
             
@@ -365,31 +365,31 @@
             const careersData = localStorage.getItem(`graduateNetwork_careers_${currentUser.id}`);
             const careers = careersData ? JSON.parse(careersData) : [];
             
-            // ??경력 추�?
+            // ??경력 추�?
             careers.push(careerData);
             
-            // ?�??
+            // ?�??
             localStorage.setItem(`graduateNetwork_careers_${currentUser.id}`, JSON.stringify(careers));
             
-            // 목록 ?�로고침
+            // 목록 ?�로고침
             loadCareers();
             
-            // ?�격증이??교육 ?�?�이�??�당 ?�션???�데?�트
+            // ?�격증이??교육 ?�?�이�??�당 ?�션???�데?�트
             if (careerData.type === 'certificate') {
                 loadCertificates();
             } else if (careerData.type === 'education') {
                 loadEducation();
             }
             
-            // 모달 ?�기
+            // 모달 ?�기
             closeAddCareerModal();
             
-            alert('경력??추�??�었?�니??');
+            alert('경력??추�??�었?�니??');
         }
         
-        // 경력 ??��
+        // 경력 ??��
         function deleteCareer(careerId) {
-            if (!confirm('??경력????��?�시겠습?�까?')) return;
+            if (!confirm('??경력????��?�시겠습?�까?')) return;
             
             const careersData = localStorage.getItem(`graduateNetwork_careers_${currentUser.id}`);
             let careers = careersData ? JSON.parse(careersData) : [];
@@ -401,7 +401,7 @@
             localStorage.setItem(`graduateNetwork_careers_${currentUser.id}`, JSON.stringify(careers));
             loadCareers();
             
-            // ?�격증이??교육 ?�?�이�??�당 ?�션???�데?�트
+            // ?�격증이??교육 ?�?�이�??�당 ?�션???�데?�트
             if (deletedCareer) {
                 if (deletedCareer.type === 'certificate') {
                     loadCertificates();
@@ -410,10 +410,10 @@
                 }
             }
             
-            alert('경력????��?�었?�니??');
+            alert('경력????��?�었?�니??');
         }
         
-        // ?�격�?목록 로드
+        // ?�격�?목록 로드
         function loadCertificates() {
             const careersData = localStorage.getItem(`graduateNetwork_careers_${currentUser.id}`);
             const careers = careersData ? JSON.parse(careersData) : [];
@@ -423,11 +423,11 @@
             const certificateList = document.getElementById('certificateList');
             
             if (certificates.length === 0) {
-                certificateList.innerHTML = '<p style="color: #999; padding: 1rem; text-align: center;">?�록???�격증이 ?�습?�다.</p>';
+                certificateList.innerHTML = '<p style="color: #999; padding: 1rem; text-align: center;">?�록???�격증이 ?�습?�다.</p>';
                 return;
             }
             
-            // ?�짜 기�? ?�렬 (최신??
+            // ?�짜 기�? ?�렬 (최신??
             certificates.sort((a, b) => {
                 const dateA = a.endDate || a.startDate;
                 const dateB = b.endDate || b.startDate;
@@ -451,11 +451,11 @@
             const educationList = document.getElementById('educationList');
             
             if (educations.length === 0) {
-                educationList.innerHTML = '<p style="color: #999; padding: 1rem; text-align: center;">?�록??교육 ?�력???�습?�다.</p>';
+                educationList.innerHTML = '<p style="color: #999; padding: 1rem; text-align: center;">?�록??교육 ?�력???�습?�다.</p>';
                 return;
             }
             
-            // ?�짜 기�? ?�렬 (최신??
+            // ?�짜 기�? ?�렬 (최신??
             educations.sort((a, b) => {
                 const dateA = a.endDate || a.startDate;
                 const dateB = b.endDate || b.startDate;
@@ -464,7 +464,7 @@
             
             educationList.innerHTML = educations.map(edu => {
                 const startDate = new Date(edu.startDate).toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit'});
-                const endDate = edu.endDate ? new Date(edu.endDate).toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit'}) : '?�재';
+                const endDate = edu.endDate ? new Date(edu.endDate).toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit'}) : '?�재';
                 
                 return `
                     <div class="education-item">
@@ -476,7 +476,7 @@
             }).join('');
         }
         
-        // 기술 ?�택 로드
+        // 기술 ?�택 로드
         function loadSkills() {
             const skillsData = localStorage.getItem(`graduateNetwork_skills_${currentUser.id}`);
             const skills = skillsData ? JSON.parse(skillsData) : [];
@@ -484,12 +484,12 @@
             displaySkills(skills);
         }
         
-        // 기술 ?�택 ?�시
+        // 기술 ?�택 ?�시
         function displaySkills(skills) {
             const skillList = document.getElementById('skillList');
             
             if (skills.length === 0) {
-                skillList.innerHTML = '<p style="color: #999; text-align: center; padding: 1rem;">기술 ?�택??추�??�보?�요!</p>';
+                skillList.innerHTML = '<p style="color: #999; text-align: center; padding: 1rem;">기술 ?�택??추�??�보?�요!</p>';
                 return;
             }
             
@@ -498,13 +498,13 @@
             }).join('');
         }
         
-        // 기술 ?�택 추�?
+        // 기술 ?�택 추�?
         function addSkill() {
             const input = document.getElementById('skillInput');
             const skillName = input.value.trim();
             
             if (!skillName) {
-                alert('기술 ?�택???�력?�세??');
+                alert('기술 ?�택???�력?�세??');
                 return;
             }
             
@@ -513,7 +513,7 @@
             
             // 중복 체크
             if (skills.includes(skillName)) {
-                alert('?��? 추�???기술 ?�택?�니??');
+                alert('?��? 추�???기술 ?�택?�니??');
                 input.value = '';
                 return;
             }
@@ -525,9 +525,9 @@
             input.value = '';
         }
         
-        // 기술 ?�택 ??��
+        // 기술 ?�택 ??��
         function removeSkill(skillName) {
-            if (!confirm(`"${skillName}"??�? ??��?�시겠습?�까?`)) return;
+            if (!confirm(`"${skillName}"??�? ??��?�시겠습?�까?`)) return;
             
             const skillsData = localStorage.getItem(`graduateNetwork_skills_${currentUser.id}`);
             let skills = skillsData ? JSON.parse(skillsData) : [];
@@ -538,7 +538,7 @@
             loadSkills();
         }
         
-        // 모달 ?��? ?�릭 ???�기
+        // 모달 ?��? ?�릭 ???�기
         window.onclick = function(event) {
             const modal = document.getElementById('addCareerModal');
             if (event.target === modal) {
