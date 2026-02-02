@@ -149,8 +149,8 @@ fi
 
 # 7단계: Docker Compose로 실행
 info "Docker Compose로 애플리케이션 시작 중..."
-docker-compose down 2>/dev/null || true
-docker-compose up -d
+sudo docker compose down 2>/dev/null || true
+sudo docker compose up -d
 
 # 컨테이너 시작 대기
 info "컨테이너 시작 대기 중..."
@@ -158,7 +158,7 @@ sleep 5
 
 # 8단계: 상태 확인
 info "컨테이너 상태 확인 중..."
-docker-compose ps
+sudo docker compose ps
 
 # 9단계: 완료 메시지
 echo ""
@@ -171,10 +171,10 @@ echo "- 프론트엔드: http://$(curl -s ifconfig.me)"
 echo "- 백엔드 API: http://$(curl -s ifconfig.me):5000"
 echo ""
 echo "유용한 명령어:"
-echo "  - 로그 확인: docker-compose logs"
-echo "  - 서비스 중지: docker-compose down"
-echo "  - 서비스 시작: docker-compose up -d"
-echo "  - 서비스 재시작: docker-compose restart"
+echo "  - 로그 확인: sudo docker compose logs"
+echo "  - 서비스 중지: sudo docker compose down"
+echo "  - 서비스 시작: sudo docker compose up -d"
+echo "  - 서비스 재시작: sudo docker compose restart"
 echo ""
-info "Docker 그룹 권한이 적용되지 않았다면 로그아웃 후 다시 로그인하세요."
+info "참고: 로그아웃 후 재로그인하면 sudo 없이 docker 명령 사용 가능합니다."
 echo ""
