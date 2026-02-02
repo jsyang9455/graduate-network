@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>?�?�소 ?�인</title>
+    <title>예�소 ?�인</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -56,7 +56,7 @@
         <h2>?�록???�용??목록</h2>
         <pre id="usersData">Loading...</pre>
         
-        <h2>?�재 로그???�보</h2>
+        <h2>?�재 로그인?�보</h2>
         <pre id="currentUser">Loading...</pre>
         
         <h2>?�큰</h2>
@@ -64,8 +64,8 @@
         
         <div>
             <button onclick="refreshData()">?�로고침</button>
-            <button onclick="clearStorage()" class="danger">?�?�소 초기??/button>
-            <button onclick="testLogin()">?�스??로그??/button>
+            <button onclick="clearStorage()" class="danger">예�소 초기??/button>
+            <button onclick="testLogin()">?�스??로그인/button>
         </div>
     </div>
 
@@ -87,7 +87,7 @@
         function clearStorage() {
             if (confirm('모든 로컬 ?�이?��? ??��?�시겠습?�까?')) {
                 localStorage.clear();
-                alert('?�?�소가 초기?�되?�습?�다.');
+                alert('예�소가 초기?�되?�습?�다.');
                 refreshData();
             }
         }
@@ -97,9 +97,9 @@
             console.log('?�체 ?�용??', users);
             
             const testEmail = 'aa@aa.com';
-            const testPassword = prompt('비�?번호�??�력?�세??');
+            const testPassword = prompt('비밀번호�?입력하세요');
             
-            console.log('검??�? email =', testEmail, 'password =', testPassword);
+            console.log('검?예 email =', testEmail, 'password =', testPassword);
             
             const foundUser = users.find(u => {
                 console.log('비교:', u.email, '===', testEmail, '&&', u.password, '===', testPassword);

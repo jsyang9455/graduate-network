@@ -53,19 +53,26 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="phone">전화번호 *</label>
-                    <input type="tel" id="phone" name="phone" required placeholder="010-1234-5678">
+                    <label for="schoolName">학교명 *</label>
+                    <select id="schoolName" name="schoolName" required>
+                        <option value="">학교 선택</option>
+                        <option value="전주공업고등학교">전주공업고등학교</option>
+                    </select>
                 </div>
 
                 <div id="studentFields" style="display: block;">
+                    <div class="form-group">
+                        <label for="phone">전화번호 *</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="010-1234-5678">
+                    </div>
                     <div class="form-group">
                         <label for="studentId">학번</label>
                         <input type="text" id="studentId" name="studentId" placeholder="예: 20230101">
                     </div>
                     
                     <div class="form-group">
-                        <label for="major">전공</label>
-                        <select id="major" name="major">
+                        <label for="major">전공 *</label>
+                        <select id="major" name="major" required>
                             <option value="">전공 선택</option>
                             <option value="기계과">기계과</option>
                             <option value="전기과">전기과</option>
@@ -76,28 +83,8 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="graduationYear">졸업년도</label>
-                        <input type="number" id="graduationYear" name="graduationYear" min="1980" max="2030" placeholder="예: 2023">
-                    </div>
-                </div>
-
-                <div id="teacherFields" style="display: none;">
-                    <div class="form-group">
-                        <label for="department">소속 학과</label>
-                        <select id="department" name="department">
-                            <option value="">학과 선택</option>
-                            <option value="기계과">기계과</option>
-                            <option value="전기과">전기과</option>
-                            <option value="전자과">전자과</option>
-                            <option value="자동차과">자동차과</option>
-                            <option value="건축과">건축과</option>
-                            <option value="행정">행정</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="position">직책</label>
-                        <input type="text" id="position" name="position" placeholder="예: 진로상담교사">
+                        <label for="graduationYear">졸업년도 *</label>
+                        <input type="number" id="graduationYear" name="graduationYear" min="1980" max="2030" placeholder="예: 2023" required>
                     </div>
                 </div>
                 

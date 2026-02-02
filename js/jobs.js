@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (user && user.user_type === 'company') {
         hideStudentMenuItems();
     }
+    if (user && user.user_type === 'teacher') {
+        hideCareerMenuForTeacher();
+    }
     
     // Load jobs data
     loadJobs();
@@ -15,6 +18,8 @@ document.addEventListener('DOMContentLoaded', function() {
     setupSearch();
     setupFilters();
     setupJobApplications();
+    setupJobCreateForm();
+    setupJobEditForm();
 });
 
 function hideStudentMenuItems() {
@@ -22,6 +27,11 @@ function hideStudentMenuItems() {
     const careerMenu = document.getElementById('careerMenu');
     
     if (counselingMenu) counselingMenu.style.display = 'none';
+    if (careerMenu) careerMenu.style.display = 'none';
+}
+
+function hideCareerMenuForTeacher() {
+    const careerMenu = document.getElementById('careerMenu');
     if (careerMenu) careerMenu.style.display = 'none';
 }
 
@@ -303,4 +313,103 @@ function applyJob(jobId) {
 function setupJobApplications() {
     // 동적으로 생성되는 버튼은 이벤트 위임 방식으로 처리
     // applyJob과 viewJobDetail 함수로 대체
+}
+
+function setupJobCreateForm() {
+    const form = document.getElementById('jobCreateForm');
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (!auth.isLoggedIn()) {
+            alert('로그인이 필요한 서비스입니다.');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const user = auth.getCurrentUser();
+        
+        const jobData = {
+            id: Date.now(),
+            companyId: user.id,
+            companyName: user.name,
+            jobTitle: document.getElementById('title').value,
+            description: document.getElementById('description').value,
+            type: document.getElementById('type').value,
+            location: document.getElementById('location').value || '미정',
+            salary: document.getElementById('salary').value || '협의',
+            deadline: document.getElementById('deadline').value || '상시채용',
+            status: 'active',
+            createdAt: new Date().toISOString(),
+            views: 0,
+            applicants: 0
+        };
+
+        // Save to localStorage
+        const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
+        jobs.push(jobData);
+        localStorage.setItem('jobPostings', JSON.stringify(jobs));
+
+        alert('채용 공고가 성공적으로 등록되었습니다!');
+        window.location.href = 'dashboard.html';
+    });
+}
+
+function setupJobEditForm() {
+    const form = document.getElementById('jobEditForm');
+    if (!form) return;
+
+    // Load job data for editing
+    const urlParams = new URLSearchParams(window.location.search);
+    const jobId = urlParams.get('id');
+
+    if (jobId) {
+        const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
+        const job = jobs.find(j => j.id == jobId);
+
+        if (job) {
+            document.getElementById('jobId').value = job.id;
+            document.getElementById('title').value = job.jobTitle;
+            document.getElementById('description').value = job.description;
+            document.getElementById('type').value = job.type;
+            document.getElementById('location').value = job.location;
+            document.getElementById('salary').value = job.salary;
+            document.getElementById('deadline').value = job.deadline;
+            if (document.getElementById('status')) {
+                document.getElementById('status').value = job.status;
+            }
+        }
+    }
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (!auth.isLoggedIn()) {
+            alert('로그인이 필요한 서비스입니다.');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const jobId = document.getElementById('jobId').value;
+        const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
+        const jobIndex = jobs.findIndex(j => j.id == jobId);
+
+        if (jobIndex !== -1) {
+            jobs[jobIndex].jobTitle = document.getElementById('title').value;
+            jobs[jobIndex].description = document.getElementById('description').value;
+            jobs[jobIndex].type = document.getElementById('type').value;
+            jobs[jobIndex].location = document.getElementById('location').value;
+            jobs[jobIndex].salary = document.getElementById('salary').value;
+            jobs[jobIndex].deadline = document.getElementById('deadline').value;
+            if (document.getElementById('status')) {
+                jobs[jobIndex].status = document.getElementById('status').value;
+            }
+
+            localStorage.setItem('jobPostings', JSON.stringify(jobs));
+
+            alert('채용 공고가 성공적으로 수정되었습니다!');
+            window.location.href = 'dashboard.html';
+        }
+    });
 }

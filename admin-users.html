@@ -3,109 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>?�원 관�?- JJOBB</title>
+    <title>회원 관리 - 관리자</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-    <header id="mainHeader">
-        <nav>
-            <div class="logo">
-                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
-            </div>
-            <ul class="nav-links">
-                <li><a href="dashboard.html">?�?�보??/a></li>
-            </ul>
-            <div class="user-menu">
-                <span class="user-name" id="userName"></span>
-                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
-            </div>
-        </nav>
-    </header>
-
     <div class="dashboard-container">
         <aside class="sidebar">
             <div class="sidebar-menu">
                 <a href="dashboard.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�?�보??/span>
+                    <span class="icon">🏠</span>
+                    <span>대시보드</span>
                 </a>
-                <div class="menu-divider"></div>
-                <div class="menu-section-title">관리자 메뉴</div>
+                <div style="border-top: 1px solid #e5e7eb; margin: 1rem 0; padding-top: 1rem;">
+                    <p style="padding: 0 1rem; color: #6b7280; font-size: 0.875rem; font-weight: 600;">관리자 메뉴</p>
+                </div>
                 <a href="admin-users.html" class="menu-item active">
-                    <span class="icon">?��</span>
-                    <span>?�원 관�?/span>
+                    <span class="icon">👥</span>
+                    <span>회원 관리</span>
                 </a>
-                <a href="education-programs.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>교육 ?�로그램 관�?/span>
+                <a href="admin-jobs.html" class="menu-item">
+                    <span class="icon">💼</span>
+                    <span>채용공고 관리</span>
                 </a>
                 <a href="admin-board.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>게시??관�?/span>
+                    <span class="icon">📋</span>
+                    <span>게시판 관리</span>
                 </a>
+                <a href="admin-codes.html" class="menu-item">
+                    <span class="icon">⚙️</span>
+                    <span>코드 관리</span>
+                </a>
+            </div>
+            <div class="sidebar-footer">
+                <button onclick="auth.logout()" class="btn-logout">로그아웃</button>
             </div>
         </aside>
 
         <main class="main-content">
-            <div class="page-container">
-                <div class="page-header">
-                    <h1>?�� ?�원 관�?/h1>
-                    <p>?�스?�에 ?�록??모든 ?�원??관리합?�다</p>
+            <header class="content-header">
+                <h1>회원 관리</h1>
+                <div class="user-info">
+                    <span id="userName"></span>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <div class="filter-section" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                    <input type="text" id="searchUser" placeholder="이름, 이메일로 검색..." style="flex: 1; padding: 0.8rem; border: 2px solid #e5e7eb; border-radius: 8px;">
+                    <select id="userTypeFilter" style="padding: 0.8rem; border: 2px solid #e5e7eb; border-radius: 8px; min-width: 150px;">
+                        <option value="">전체 유형</option>
+                        <option value="student">학생</option>
+                        <option value="graduate">졸업생</option>
+                        <option value="teacher">선생님</option>
+                        <option value="company">기업</option>
+                        <option value="admin">관리자</option>
+                    </select>
+                    <button onclick="filterUsers()" class="btn btn-primary">검색</button>
                 </div>
 
-                <div class="stats-row">
-                    <div class="stat-card">
-                        <h3>?�체 ?�원</h3>
-                        <p class="stat-number" id="totalUsers">0�?/p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>?�생</h3>
-                        <p class="stat-number" id="studentCount">0�?/p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>교사</h3>
-                        <p class="stat-number" id="teacherCount">0�?/p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>기업</h3>
-                        <p class="stat-number" id="companyCount">0�?/p>
-                    </div>
-                </div>
-
-                <div class="search-section">
-                    <div class="search-bar">
-                        <input type="text" id="searchUser" placeholder="?�름, ?�메?�로 검??..">
-                        <button class="btn-search" onclick="searchUsers()">?�� 검??/button>
-                    </div>
-                    <div class="filter-bar">
-                        <select id="filterUserType" onchange="applyFilters()">
-                            <option value="">?�체 ?�원 ?�형</option>
-                            <option value="student">?�생</option>
-                            <option value="graduate">졸업??/option>
-                            <option value="teacher">교사</option>
-                            <option value="company">기업</option>
-                            <option value="admin">관리자</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
+                <div class="users-table" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead style="background: #f9fafb;">
                             <tr>
-                                <th>ID</th>
-                                <th>?�름</th>
-                                <th>?�메??/th>
-                                <th>?�형</th>
-                                <th>?�교/?�사</th>
-                                <th>?�공/?�종</th>
-                                <th>가?�일</th>
-                                <th>관�?/th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">ID</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">이름</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">이메일</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">유형</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">전화번호</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">등록일</th>
+                                <th style="padding: 1rem; text-align: center; border-bottom: 2px solid #e5e7eb;">관리</th>
                             </tr>
                         </thead>
                         <tbody id="usersTableBody">
-                            <!-- ?�원 목록???�기???�시?�니??-->
+                            <!-- Users will be loaded here -->
                         </tbody>
                     </table>
                 </div>
@@ -113,72 +85,184 @@
         </main>
     </div>
 
-    <!-- ?�원 ?�정 모달 -->
+    <!-- 회원 수정 모달 -->
     <div id="editUserModal" class="modal" style="display: none;">
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
-                <h2>?�원 ?�보 ?�정</h2>
+                <h2>회원 정보 수정</h2>
                 <span class="close" onclick="closeEditUserModal()">&times;</span>
             </div>
             <div class="modal-body">
-                <form id="editUserForm" onsubmit="saveUser(event)">
+                <form id="editUserForm">
                     <input type="hidden" id="editUserId">
-                    
-                    <div class="form-section">
-                        <label for="editUserName">?�름 *</label>
+                    <div class="form-group">
+                        <label>이름</label>
                         <input type="text" id="editUserName" required>
                     </div>
-
-                    <div class="form-section">
-                        <label for="editUserEmail">?�메??*</label>
+                    <div class="form-group">
+                        <label>이메일</label>
                         <input type="email" id="editUserEmail" required>
                     </div>
-
-                    <div class="form-section">
-                        <label for="editUserType">?�원 ?�형 *</label>
+                    <div class="form-group">
+                        <label>전화번호</label>
+                        <input type="tel" id="editUserPhone">
+                    </div>
+                    <div class="form-group">
+                        <label>유형</label>
                         <select id="editUserType" required>
-                            <option value="student">?�생</option>
-                            <option value="graduate">졸업??/option>
-                            <option value="teacher">교사</option>
+                            <option value="student">학생</option>
+                            <option value="graduate">졸업생</option>
+                            <option value="teacher">선생님</option>
                             <option value="company">기업</option>
+                            <option value="admin">관리자</option>
                         </select>
                     </div>
-
-                    <div class="form-section">
-                        <label for="editSchoolName">?�교�??�사�?/label>
-                        <input type="text" id="editSchoolName">
-                    </div>
-
-                    <div class="form-section">
-                        <label for="editMajor">?�공/?�종</label>
-                        <input type="text" id="editMajor">
-                    </div>
-
-                    <div class="form-section">
-                        <label for="editGraduationYear">졸업?�도</label>
-                        <input type="text" id="editGraduationYear" placeholder="?? 2020">
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" onclick="closeEditUserModal()">취소</button>
-                        <button type="submit" class="btn btn-primary">?�??/button>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">저장</button>
+                        <button type="button" onclick="closeEditUserModal()" class="btn btn-secondary">취소</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-about">
-                <h3>?�주공업고등?�교</h3>
-                <p>?�� ?�북?�별?�치???�주???�진�??�산�?101</p>
-            </div>
-        </div>
-    </footer>
-
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
-    <script src="js/admin-users.js"></script>
+    <script>
+        let allUsers = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!auth.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const user = auth.getCurrentUser();
+            if (user.user_type !== 'admin') {
+                alert('관리자만 접근할 수 있습니다.');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            document.getElementById('userName').textContent = user.name;
+            loadUsers();
+
+            document.getElementById('searchUser').addEventListener('input', filterUsers);
+            document.getElementById('userTypeFilter').addEventListener('change', filterUsers);
+
+            document.getElementById('editUserForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveUser();
+            });
+        });
+
+        function loadUsers() {
+            allUsers = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
+            displayUsers(allUsers);
+        }
+
+        function displayUsers(users) {
+            const tbody = document.getElementById('usersTableBody');
+            
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">등록된 회원이 없습니다.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = users.map(user => {
+                const userTypeText = {
+                    'student': '학생',
+                    'graduate': '졸업생',
+                    'teacher': '선생님',
+                    'company': '기업',
+                    'admin': '관리자'
+                };
+
+                return `
+                    <tr style="border-bottom: 1px solid #e5e7eb;">
+                        <td style="padding: 1rem;">${user.id}</td>
+                        <td style="padding: 1rem;">${user.name}</td>
+                        <td style="padding: 1rem;">${user.email}</td>
+                        <td style="padding: 1rem;"><span class="badge badge-${user.user_type}">${userTypeText[user.user_type] || user.user_type}</span></td>
+                        <td style="padding: 1rem;">${user.phone || '-'}</td>
+                        <td style="padding: 1rem;">${user.created_at ? new Date(user.created_at).toLocaleDateString('ko-KR') : '-'}</td>
+                        <td style="padding: 1rem; text-align: center;">
+                            <button onclick="editUser(${user.id})" class="btn btn-sm btn-primary" style="margin-right: 0.5rem;">수정</button>
+                            <button onclick="deleteUser(${user.id})" class="btn btn-sm btn-danger">삭제</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterUsers() {
+            const searchTerm = document.getElementById('searchUser').value.toLowerCase();
+            const typeFilter = document.getElementById('userTypeFilter').value;
+
+            let filtered = allUsers;
+
+            if (searchTerm) {
+                filtered = filtered.filter(user => 
+                    user.name.toLowerCase().includes(searchTerm) ||
+                    user.email.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            if (typeFilter) {
+                filtered = filtered.filter(user => user.user_type === typeFilter);
+            }
+
+            displayUsers(filtered);
+        }
+
+        function editUser(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+
+            document.getElementById('editUserId').value = user.id;
+            document.getElementById('editUserName').value = user.name;
+            document.getElementById('editUserEmail').value = user.email;
+            document.getElementById('editUserPhone').value = user.phone || '';
+            document.getElementById('editUserType').value = user.user_type;
+
+            document.getElementById('editUserModal').style.display = 'flex';
+        }
+
+        function closeEditUserModal() {
+            document.getElementById('editUserModal').style.display = 'none';
+            document.getElementById('editUserForm').reset();
+        }
+
+        function saveUser() {
+            const userId = parseInt(document.getElementById('editUserId').value);
+            const users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
+            const userIndex = users.findIndex(u => u.id === userId);
+
+            if (userIndex !== -1) {
+                users[userIndex].name = document.getElementById('editUserName').value;
+                users[userIndex].email = document.getElementById('editUserEmail').value;
+                users[userIndex].phone = document.getElementById('editUserPhone').value;
+                users[userIndex].user_type = document.getElementById('editUserType').value;
+
+                localStorage.setItem('graduateNetwork_users', JSON.stringify(users));
+                
+                alert('회원 정보가 수정되었습니다.');
+                closeEditUserModal();
+                loadUsers();
+            }
+        }
+
+        function deleteUser(userId) {
+            if (!confirm('정말 이 회원을 삭제하시겠습니까?')) return;
+
+            const users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
+            const filtered = users.filter(u => u.id !== userId);
+            
+            localStorage.setItem('graduateNetwork_users', JSON.stringify(filtered));
+            
+            alert('회원이 삭제되었습니다.');
+            loadUsers();
+        }
+    </script>
 </body>
 </html>

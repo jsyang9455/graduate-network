@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>?�?�보??- ?�주공업고등?�교 졸업???�트?�크</title>
+    <title>대시보드 - 전주공업고등학교 졸업생 네트워크</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
@@ -15,14 +15,14 @@
                 <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
             </div>
             <ul class="nav-links">
-                <li><a href="dashboard.html" class="active">?�?�보??/a></li>
-                <li><a href="jobs.html">채용 ?�보</a></li>
-                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
-                <li><a href="profile.html">???�로??/a></li>
+                <li><a href="dashboard.html" class="active">대시보드</a></li>
+                <li><a href="jobs.html">채용 정보</a></li>
+                <li><a href="networking.html">동문 네트워킹</a></li>
+                <li><a href="counseling.html">진로 상담</a></li>
             </ul>
             <div class="user-menu">
                 <span class="user-name" id="userName"></span>
-                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
+                <button onclick="auth.logout()" class="btn-logout">로그아웃</button>
             </div>
         </nav>
     </header>
@@ -31,376 +31,253 @@
         <aside class="sidebar">
             <div class="sidebar-menu">
                 <a href="dashboard.html" class="menu-item active">
-                    <span class="icon">?��</span>
-                    <span>?�?�보??/span>
+                    <span class="icon">📊</span>
+                    <span>대시보드</span>
                 </a>
                 <a href="profile.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>???�로??/span>
+                    <span class="icon">👤</span>
+                    <span>내 프로필</span>
                 </a>
                 <a href="jobs.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>채용 ?�보</span>
+                    <span class="icon">💼</span>
+                    <span>채용 정보</span>
                 </a>
                 <a href="networking.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�문 ?�트?�킹</span>
+                    <span class="icon">🤝</span>
+                    <span>동문 네트워킹</span>
                 </a>
                 <a href="counseling.html" class="menu-item" id="counselingMenu">
-                    <span class="icon">?��</span>
-                    <span>진로 ?�담</span>
+                    <span class="icon">💬</span>
+                    <span>진로 상담</span>
                 </a>
                 <a href="career.html" class="menu-item" id="careerMenu">
-                    <span class="icon">?��</span>
-                    <span>경력 관�?/span>
+                    <span class="icon">📈</span>
+                    <span>경력 관리</span>
                 </a>
-                <a href="education-programs.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>교육 ?�로그램</span>
-                </a>
-                
                 <!-- 관리자 메뉴 -->
                 <div id="adminMenuSection" style="display: none;">
-                    <div class="menu-divider"></div>
-                    <div class="menu-section-title">관리자 메뉴</div>
+                    <div style="border-top: 1px solid #e5e7eb; margin: 1rem 0; padding-top: 1rem;">
+                        <p style="padding: 0 1rem; color: #6b7280; font-size: 0.875rem; font-weight: 600;">관리자 메뉴</p>
+                    </div>
                     <a href="admin-users.html" class="menu-item">
-                        <span class="icon">?��</span>
-                        <span>?�원 관�?/span>
+                        <span class="icon">👥</span>
+                        <span>회원 관리</span>
                     </a>
-                    <a href="education-programs.html" class="menu-item">
-                        <span class="icon">?��</span>
-                        <span>교육 ?�로그램 관�?/span>
+                    <a href="admin-jobs.html" class="menu-item">
+                        <span class="icon">💼</span>
+                        <span>채용공고 관리</span>
                     </a>
                     <a href="admin-board.html" class="menu-item">
-                        <span class="icon">?��</span>
-                        <span>게시??관�?/span>
+                        <span class="icon">📋</span>
+                        <span>게시판 관리</span>
+                    </a>
+                    <a href="admin-codes.html" class="menu-item">
+                        <span class="icon">⚙️</span>
+                        <span>코드 관리</span>
                     </a>
                 </div>
             </div>
         </aside>
 
-        <main class="main-content" id="defaultDashboard">
-            <!-- Default Dashboard -->
+        <main class="main-content">
             <div class="welcome-section">
-                <h1>?�녕?�세?? <span id="dashboardUserName"></span>??</h1>
-                <p>?�늘??좋�? ?�루 보내?�요 ?��</p>
+                <h1 id="welcomeMessage">환영합니다!</h1>
+                <p id="welcomeSubtext">오늘도 좋은 하루 되세요</p>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">?��</div>
-                    <div class="stat-info">
-                        <h3>?�로??채용공고</h3>
-                        <p class="stat-number">12�?/p>
+            <!-- 학생/졸업생 대시보드 -->
+            <div id="defaultDashboard" class="dashboard-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">💼</div>
+                        <div class="stat-info">
+                            <h3 id="newJobCount">0</h3>
+                            <p>신규 채용공고</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📩</div>
+                        <div class="stat-info">
+                            <h3 id="applicationCount">0</h3>
+                            <p>지원 현황</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🤝</div>
+                        <div class="stat-info">
+                            <h3 id="networkCount">0</h3>
+                            <p>네트워크 연결</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💬</div>
+                        <div class="stat-info">
+                            <h3 id="messageCount">0</h3>
+                            <p>새 메시지</p>
+                        </div>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon">?��</div>
-                    <div class="stat-info">
-                        <h3>?�트?�크 ?�결</h3>
-                        <p class="stat-number">45�?/p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">?��</div>
-                    <div class="stat-info">
-                        <h3>?�정???�담</h3>
-                        <p class="stat-number">2�?/p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">?��</div>
-                    <div class="stat-info">
-                        <h3>진행중인 교육</h3>
-                        <p class="stat-number">3�?/p>
-                    </div>
+
+                <div class="dashboard-sections">
+                    <section class="dashboard-section">
+                        <div class="section-header">
+                            <h2>🎯 추천 채용공고</h2>
+                            <a href="jobs.html" class="section-link">전체보기 →</a>
+                        </div>
+                        <div id="recommendedJobs" class="jobs-list">
+                            <p style="text-align: center; color: #6b7280; padding: 2rem;">채용공고를 불러오는 중...</p>
+                        </div>
+                    </section>
+
+                    <section class="dashboard-section">
+                        <div class="section-header">
+                            <h2>📢 최근 소식</h2>
+                        </div>
+                        <div id="recentNews" class="news-list">
+                            <p style="text-align: center; color: #6b7280; padding: 2rem;">최근 소식을 불러오는 중...</p>
+                        </div>
+                    </section>
+
+                    <section class="dashboard-section">
+                        <div class="section-header">
+                            <h2>🎓 평생교육프로그램</h2>
+                        </div>
+                        <div id="educationPrograms" class="news-list">
+                            <p style="text-align: center; color: #6b7280; padding: 2rem;">교육프로그램을 불러오는 중...</p>
+                        </div>
+                    </section>
                 </div>
             </div>
 
-            <div class="dashboard-grid">
-                <section class="dashboard-section">
-                    <div class="section-header">
-                        <h2>맞춤 채용 ?�보</h2>
-                        <a href="jobs.html" class="view-more">?�보�???/a>
-                    </div>
-                    <div class="job-list">
-                        <div class="job-item">
-                            <div class="company-logo">H</div>
-                            <div class="job-info">
-                                <h3>?��??�동�?/h3>
-                                <p>?�산기술 ?��??�어</p>
-                                <span class="job-meta">경력 3-5??| 마감 D-7</span>
-                            </div>
-                            <button class="btn-apply">지?�하�?/button>
-                        </div>
-                        <div class="job-item">
-                            <div class="company-logo">L</div>
-                            <div class="job-info">
-                                <h3>LG?�자</h3>
-                                <p>?�질관�??�당??/p>
-                                <span class="job-meta">경력 2-4??| 마감 D-14</span>
-                            </div>
-                            <button class="btn-apply">지?�하�?/button>
-                        </div>
-                        <div class="job-item">
-                            <div class="company-logo">S</div>
-                            <div class="job-info">
-                                <h3>?�성?�자</h3>
-                                <p>반도�?공정 ?��??�어</p>
-                                <span class="job-meta">경력 1-3??| 마감 D-21</span>
-                            </div>
-                            <button class="btn-apply">지?�하�?/button>
+            <!-- 기업 대시보드 -->
+            <div id="companyDashboard" class="dashboard-content" style="display: none;">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-info">
+                            <h3 id="activeJobCount">0</h3>
+                            <p>활성 채용공고</p>
                         </div>
                     </div>
-                </section>
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <h3 id="totalApplicants">0</h3>
+                            <p>총 지원자</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👁️</div>
+                        <div class="stat-info">
+                            <h3 id="totalViews">0</h3>
+                            <p>조회수</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <h3 id="hiredCount">0</h3>
+                            <p>채용 완료</p>
+                        </div>
+                    </div>
+                </div>
 
-                <section class="dashboard-section">
-                    <div class="section-header">
-                        <h2>최근 ?�동</h2>
-                    </div>
-                    <div class="activity-list">
-                        <div class="activity-item">
-                            <span class="activity-icon">?��</span>
-                            <div class="activity-info">
-                                <p>?��??�동�?채용공고??관???�시</p>
-                                <span class="activity-time">2?�간 ??/span>
-                            </div>
+                <div class="dashboard-sections">
+                    <section class="dashboard-section">
+                        <div class="section-header">
+                            <h2>📋 내 채용공고</h2>
+                            <button id="createJobBtn" class="btn btn-primary">공고 등록</button>
                         </div>
-                        <div class="activity-item">
-                            <span class="activity-icon">?��</span>
-                            <div class="activity-info">
-                                <p>김민수?�과 ?�트?�크 ?�결</p>
-                                <span class="activity-time">1????/span>
-                            </div>
+                        <div id="jobPostingsList" class="company-jobs-list">
+                            <p style="text-align: center; color: #6b7280; padding: 2rem;">채용공고를 불러오는 중...</p>
                         </div>
-                        <div class="activity-item">
-                            <span class="activity-icon">?��</span>
-                            <div class="activity-info">
-                                <p>?�로???�데?�트 ?�료</p>
-                                <span class="activity-time">3????/span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                    </section>
 
-                <section class="dashboard-section">
-                    <div class="section-header">
-                        <h2>추천 교육 ?�로그램</h2>
-                        <a href="education.html" class="view-more">?�보�???/a>
-                    </div>
-                    <div class="education-list">
-                        <div class="education-item">
-                            <h3>AI 기초 과정</h3>
-                            <p>?�공지?�의 기초 개념�??�무 ?�용</p>
-                            <span class="education-meta">4�?과정 | ?�라??/span>
+                    <section class="dashboard-section">
+                        <div class="section-header">
+                            <h2>👥 최근 지원자</h2>
+                            <a href="jobs.html" class="section-link">전체보기 →</a>
                         </div>
-                        <div class="education-item">
-                            <h3>?�마??공장 ?�동??/h3>
-                            <p>4�??�업?�명 ?��???공장 ?�동??기술</p>
-                            <span class="education-meta">6�?과정 | ?�프?�인</span>
+                        <div id="recentApplicantsList" class="applicants-list">
+                            <p style="text-align: center; color: #6b7280; padding: 2rem;">지원자 정보를 불러오는 중...</p>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <section class="dashboard-section">
-                    <div class="section-header">
-                        <h2>?�문 ?�식</h2>
-                        <a href="networking.html" class="view-more">?�보�???/a>
-                    </div>
-                    <div class="news-list">
-                        <div class="news-item">
-                            <p><strong>김민수</strong>?�이 ?��??�동차에???�?�으�??�진?�셨?�니??/p>
-                            <span class="news-time">2????/span>
+                    <section class="dashboard-section">
+                        <div class="section-header">
+                            <h2>💬 상담 신청 내역</h2>
+                            <a href="counseling.html" class="section-link">전체보기 →</a>
                         </div>
-                        <div class="news-item">
-                            <p><strong>박�???/strong>?�이 LG?�자 ?�수?�원?�로 ?�정?�었?�니??/p>
-                            <span class="news-time">5????/span>
+                        <div id="counselingRequestsList" class="counseling-requests-list">
+                            <p style="text-align: center; color: #6b7280; padding: 2rem;">상담 신청 내역을 불러오는 중...</p>
                         </div>
-                        <div class="news-item">
-                            <p><strong>?��???/strong>?�이 창업??메카?�이 Series A ?�자 ?�치???�공?�습?�다</p>
-                            <span class="news-time">1�???/span>
+                    </section>
+
+                    <section class="dashboard-section">
+                        <div class="section-header">
+                            <h2>📢 최근 소식</h2>
                         </div>
-                    </div>
-                </section>
+                        <div id="recentNewsCompany" class="news-list">
+                            <p style="text-align: center; color: #6b7280; padding: 2rem;">최근 소식을 불러오는 중...</p>
+                        </div>
+                    </section>
+
+                    <section class="dashboard-section">
+                        <div class="section-header">
+                            <h2>🎓 평생교육프로그램</h2>
+                        </div>
+                        <div id="educationProgramsCompany" class="news-list">
+                            <p style="text-align: center; color: #6b7280; padding: 2rem;">교육프로그램을 불러오는 중...</p>
+                        </div>
+                    </section>
+                </div>
             </div>
         </main>
+    </div>
 
-        <!-- Company Dashboard -->
-        <main class="main-content" id="companyDashboard" style="display: none;">
-            <div class="welcome-section">
-                <h1>기업 ?�?�보??/h1>
-                <p>채용 관�?�??�문 ?�결</p>
+    <!-- 최근 소식 상세보기 모달 -->
+    <div id="newsDetailModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 id="newsDetailTitle">소식 제목</h2>
+                <button onclick="closeNewsDetailModal()" class="modal-close">&times;</button>
             </div>
+            <div class="modal-body">
+                <div id="newsDetailDate" style="color: #6b7280; margin-bottom: 1rem;"></div>
+                <div id="newsDetailContent" style="white-space: pre-wrap; line-height: 1.6;"></div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeNewsDetailModal()" class="btn btn-secondary">닫기</button>
+            </div>
+        </div>
+    </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">?��</div>
-                    <div class="stat-info">
-                        <h3>공식 채용공고</h3>
-                        <p class="stat-number"><span id="activeJobCount">5</span>�?/p>
-                        <span class="stat-label">?�성 모집�?/span>
-                    </div>
+    <!-- 교육프로그램 상세보기 모달 -->
+    <div id="educationDetailModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 id="educationDetailTitle">프로그램명</h2>
+                <button onclick="closeEducationDetailModal()" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 1rem;">
+                    <strong>기간:</strong> <span id="educationDetailPeriod"></span>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon">?��</div>
-                    <div class="stat-info">
-                        <h3>�?지?�자</h3>
-                        <p class="stat-number"><span id="totalApplicants">24</span>�?/p>
-                        <span class="stat-label">?�번 �?기�?</span>
-                    </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong>신청 마감일:</strong> <span id="educationDetailDeadline"></span>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon">??</div>
-                    <div class="stat-info">
-                        <h3>조회??/h3>
-                        <p class="stat-number"><span id="totalViews">186</span>??/p>
-                        <span class="stat-label">�?조회</span>
-                    </div>
+                <div style="margin-bottom: 1rem;">
+                    <strong>수강료:</strong> <span id="educationDetailFee"></span>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon">??/div>
-                    <div class="stat-info">
-                        <h3>?�번 ??채용</h3>
-                        <p class="stat-number"><span id="monthlyHires">2</span>�?/p>
-                        <span class="stat-label">채용 ?�료</span>
-                    </div>
+                <div style="margin-top: 1.5rem;">
+                    <strong>프로그램 설명:</strong>
+                    <div id="educationDetailDescription" style="white-space: pre-wrap; line-height: 1.6; margin-top: 0.5rem;"></div>
                 </div>
             </div>
-
-            <div class="dashboard-grid">
-                <!-- 채용 공고 관�?-->
-                <section class="dashboard-section full-width">
-                    <div class="section-header">
-                        <h2>채용 공고 관�?/h2>
-                        <button class="btn btn-primary" id="createJobBtn">
-                            ??공고 ?�성
-                        </button>
-                    </div>
-                    <div class="job-postings-list" id="jobPostingsList">
-                        <!-- Jobs will be loaded here -->
-                    </div>
-                </section>
-
-                <!-- 최근 지?�자 -->
-                <section class="dashboard-section">
-                    <div class="section-header">
-                        <h2>최근 지?�자</h2>
-                        <a href="#" class="view-more">?�체보기 ??/a>
-                    </div>
-                    <div class="applicants-list" id="recentApplicantsList">
-                        <!-- Applicants will be loaded here -->
-                    </div>
-                </section>
-
-                <!-- 빠른 ?�행 -->
-                <section class="dashboard-section">
-                    <div class="section-header">
-                        <h2>빠른 ?�행</h2>
-                    </div>
-                    <div class="quick-actions">
-                        <button class="quick-action-btn" id="quickJobCreate">
-                            <span class="icon">??/span>
-                            <span>채용공고</span>
-                        </button>
-                        <button class="quick-action-btn" id="quickApplicantManage">
-                            <span class="icon">?��</span>
-                            <span>지?�자관�?/span>
-                        </button>
-                        <button class="quick-action-btn" id="quickTalentPool">
-                            <span class="icon">?��</span>
-                            <span>?�재?�</span>
-                        </button>
-                        <button class="quick-action-btn" id="quickAnalytics">
-                            <span class="icon">?��</span>
-                            <span>분석</span>
-                        </button>
-                    </div>
-                </section>
-
-                <!-- 채용 ?�황 -->
-                <section class="dashboard-section">
-                    <div class="section-header">
-                        <h2>채용 ?�황</h2>
-                    </div>
-                    <div class="hiring-status">
-                        <p class="status-label">지?�별 ?�태</p>
-                        <div class="status-item">
-                            <span>?�류검??/span>
-                            <span class="status-count">4�?/span>
-                        </div>
-                        <div class="status-item">
-                            <span>면접?��?/span>
-                            <span class="status-count">5�?/span>
-                        </div>
-                        <div class="status-item">
-                            <span>최종검??/span>
-                            <span class="status-count">2�?/span>
-                        </div>
-                        <div class="status-item highlight">
-                            <span>?�격</span>
-                            <span class="status-count">1�?/span>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- ?�정???�정 -->
-                <section class="dashboard-section">
-                    <div class="section-header">
-                        <h2>?�정???�정</h2>
-                    </div>
-                    <div class="schedule-list">
-                        <div class="schedule-item">
-                            <span class="schedule-icon">?��</span>
-                            <div class="schedule-info">
-                                <h4>?�늘 14:00</h4>
-                                <p>면접 ?�정</p>
-                            </div>
-                        </div>
-                        <div class="schedule-item">
-                            <span class="schedule-icon">?��</span>
-                            <div class="schedule-info">
-                                <h4>?�일 10:00</h4>
-                                <p>?�사 ?�개</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 공통 ?�비??-->
-                <section class="dashboard-section">
-                    <div class="section-header">
-                        <h2>공통 ?�비??/h2>
-                    </div>
-                    <div class="service-list">
-                        <a href="#" class="service-item">
-                            <span class="icon">?��</span>
-                            <span>채용?�보 분석</span>
-                        </a>
-                        <a href="networking.html" class="service-item">
-                            <span class="icon">?��</span>
-                            <span>?�문 ?�트?�킹</span>
-                        </a>
-                        <a href="#" class="service-item">
-                            <span class="icon">?��</span>
-                            <span>취업 박람??/span>
-                        </a>
-                        <a href="#" class="service-item">
-                            <span class="icon">?��</span>
-                            <span>글로벌 ?�재</span>
-                        </a>
-                    </div>
-                </section>
-
-                <!-- ?�사 ?�보 ?�데?�트 -->
-                <section class="dashboard-section info-update">
-                    <div class="section-header">
-                        <h2>?�사 ?�보 ?�데?�트</h2>
-                    </div>
-                    <p>?�사 ?�보�?최신 ?�태�??��??�세??/p>
-                    <button class="btn btn-secondary">?�� ?�사 ?�보 ?�정</button>
-                </section>
+            <div class="modal-footer">
+                <button onclick="closeEducationDetailModal()" class="btn btn-secondary">닫기</button>
             </div>
-        </main>
+        </div>
     </div>
 
     <script src="js/api.js"></script>

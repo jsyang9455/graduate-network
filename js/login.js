@@ -169,6 +169,21 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Found user:', foundUser);
         
         if (foundUser) {
+            // Verify user type matches selection
+            // Allow 'student' to match 'student', 'graduate' to match 'graduate',
+            // and both 'student' and 'graduate' can login from either selection
+            const validUserTypes = ['student', 'graduate'];
+            const userTypeMatches = 
+                foundUser.user_type === selectedUserType || 
+                (validUserTypes.includes(foundUser.user_type) && validUserTypes.includes(selectedUserType));
+            
+            if (!userTypeMatches && foundUser.user_type !== selectedUserType) {
+                showError('선택한 사용자 유형과 일치하지 않습니다. 올바른 유형을 선택해주세요.');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                return;
+            }
+            
             // User found in localStorage
             const loginUser = {
                 id: foundUser.id,

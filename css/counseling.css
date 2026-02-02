@@ -200,36 +200,208 @@
     box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 
+.teachers-grid {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
 .teachers-grid h2 {
     margin-bottom: 1.5rem;
 }
 
 .teacher-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
     background: #f9fafb;
     padding: 1.5rem;
     border-radius: 8px;
-    text-align: center;
     margin-bottom: 1rem;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s;
+}
+
+.teacher-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .teacher-avatar {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-}
-
-.teacher-card h3 {
-    margin: 0.5rem 0;
-}
-
-.teacher-card p {
-    margin: 0.25rem 0;
-    color: #4b5563;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    flex-shrink: 0;
 }
 
 .teacher-info {
+    flex: 1;
+}
+
+.teacher-card h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+}
+
+.teacher-card p {
+    margin: 0.3rem 0;
+    color: #4b5563;
+    font-size: 0.95rem;
+}
+
+.teacher-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.teacher-actions .btn {
+    white-space: nowrap;
+    padding: 0.6rem 1.2rem;
+}
+
+/* Request Card Styles */
+.request-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s;
+}
+
+.request-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.request-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.request-header h3 {
+    margin: 0 0 0.5rem 0;
+    color: #1f2937;
+    font-size: 1.2rem;
+}
+
+.request-type {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: #e0f2fe;
+    color: #0369a1;
+    border-radius: 20px;
     font-size: 0.875rem;
+    margin-right: 0.5rem;
+}
+
+.request-status {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-approved {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.status-rejected {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.request-date {
     color: #6b7280;
-    margin-top: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.request-body h4 {
+    margin: 0 0 0.5rem 0;
+    color: #1f2937;
+    font-size: 1rem;
+}
+
+.request-body p {
+    color: #4b5563;
+    line-height: 1.6;
+    margin: 0 0 1rem 0;
+}
+
+.request-info {
+    display: flex;
+    gap: 1.5rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.request-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.request-response {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 8px;
+    border-left: 4px solid #6b7280;
+}
+
+.response-approved {
+    background: #f0fdf4;
+    border-left-color: #059669;
+}
+
+.response-rejected {
+    background: #fef2f2;
+    border-left-color: #dc2626;
+}
+
+.request-response strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #1f2937;
+}
+
+.request-response p {
+    margin: 0 0 0.5rem 0;
+    color: #4b5563;
+}
+
+.request-response small {
+    color: #6b7280;
+    font-size: 0.75rem;
+}
+
+.counseling-list {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 
 @media (max-width: 768px) {

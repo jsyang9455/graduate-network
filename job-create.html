@@ -3,224 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>채용 공고 ?�록 - JJOBB</title>
+    <title>채용 공고 등록 - 전주공업고등학교 졸업생 네트워크</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <style>
-        .job-create-container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .job-create-header {
-            margin-bottom: 2rem;
-        }
-
-        .job-create-header h1 {
-            font-size: 1.75rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .job-create-header p {
-            color: var(--text-light);
-        }
-
-        .form-section {
-            margin-bottom: 2.5rem;
-        }
-
-        .form-section h2 {
-            font-size: 1.25rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-row.full {
-            grid-template-columns: 1fr;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-dark);
-        }
-
-        .form-group label.required::after {
-            content: " *";
-            color: #ef4444;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        .form-group input::placeholder,
-        .form-group textarea::placeholder {
-            color: #9ca3af;
-        }
-
-        .checkbox-group {
-            display: flex;
-            gap: 2rem;
-            margin-top: 0.5rem;
-        }
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-        }
-
-        .checkbox-label input[type="radio"],
-        .checkbox-label input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .skills-input-group {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .skills-input-group input {
-            flex: 1;
-        }
-
-        .skills-input-group button {
-            padding: 0.75rem 1.5rem;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .skills-input-group button:hover {
-            background: var(--secondary-color);
-        }
-
-        .skills-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .skill-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: #e0e7ff;
-            color: #4c51bf;
-            border-radius: 20px;
-            font-size: 0.9rem;
-        }
-
-        .skill-tag button {
-            background: none;
-            border: none;
-            color: #4c51bf;
-            cursor: pointer;
-            font-size: 1.2rem;
-            padding: 0;
-            line-height: 1;
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .btn-cancel {
-            padding: 0.75rem 2rem;
-            background: #6b7280;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-cancel:hover {
-            background: #4b5563;
-        }
-
-        .btn-submit {
-            padding: 0.75rem 2rem;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-submit:hover {
-            background: var(--secondary-color);
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--primary-color);
-            text-decoration: none;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="css/jobs.css">
 </head>
 <body>
     <header id="mainHeader">
@@ -229,257 +15,58 @@
                 <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
             </div>
             <ul class="nav-links">
-                <li><a href="dashboard.html">?�?�보??/a></li>
-                <li><a href="jobs.html">채용 ?�보</a></li>
-                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
-                <li><a href="profile.html">???�로??/a></li>
+                <li><a href="dashboard.html">대시보드</a></li>
+                <li><a href="jobs.html" class="active">채용 정보</a></li>
+                <li><a href="networking.html">동문 네트워킹</a></li>
             </ul>
             <div class="user-menu">
                 <span class="user-name" id="userName"></span>
-                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
+                <button onclick="auth.logout()" class="btn-logout">로그아웃</button>
             </div>
         </nav>
     </header>
 
-    <div class="job-create-container">
-        <a href="dashboard.html" class="back-link">???�?�보?�로 ?�아가�?/a>
-        
-        <div class="job-create-header">
-            <h1>채용 공고 ?�록</h1>
-            <p>?�로??채용 공고�??�록?�여 ?�수???�재�?찾아보세??/p>
-        </div>
-
+    <div class="job-form-container">
+        <h1>채용 공고 등록</h1>
         <form id="jobCreateForm">
-            <!-- 기본 ?�보 -->
-            <div class="form-section">
-                <h2>기본 ?�보</h2>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="jobTitle" class="required">직무�?/label>
-                        <input type="text" id="jobTitle" name="jobTitle" placeholder="?? ?�자?�로 ?�계 ?��??�어" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="companyName">?�사�?/label>
-                        <input type="text" id="companyName" name="companyName" placeholder="?�사�?>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="location">근무지</label>
-                        <input type="text" id="location" name="location" placeholder="?? ?�울?�별??강남�?>
-                    </div>
-                    <div class="form-group">
-                        <label for="department">부??/label>
-                        <input type="text" id="department" name="department" placeholder="?? ?�구개발부">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="employmentType">고용 ?�태</label>
-                        <select id="employmentType" name="employmentType">
-                            <option value="?�규�?>?�규�?/option>
-                            <option value="계약�?>계약�?/option>
-                            <option value="?�턴">?�턴</option>
-                            <option value="?�견�?>?�견�?/option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="experience">경력</label>
-                        <select id="experience" name="experience">
-                            <option value="?�입">?�입</option>
-                            <option value="경력">경력</option>
-                            <option value="경력무�?">경력무�?</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="salary">급여</label>
-                        <input type="text" id="salary" name="salary" placeholder="?? 3000-4000만원">
-                    </div>
-                </div>
-
-                <div class="checkbox-group">
-                    <label class="checkbox-label">
-                        <input type="radio" name="urgency" value="긴급채용">
-                        <span>긴급 채용</span>
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="remote" id="remote">
-                        <span>?�택근무 가??/span>
-                    </label>
-                </div>
+            <div class="form-group">
+                <label for="title">채용 제목 *</label>
+                <input type="text" id="title" required>
             </div>
-
-            <!-- ?�세 ?�명 -->
-            <div class="form-section">
-                <h2>?�세 ?�명</h2>
-                <div class="form-row full">
-                    <div class="form-group">
-                        <label for="jobDescription" class="required">직무 ?�명</label>
-                        <textarea id="jobDescription" name="jobDescription" placeholder="?�당???�무?� ??��???�???�세???�명?�주?�요..." required></textarea>
-                    </div>
-                </div>
-
-                <div class="form-row full">
-                    <div class="form-group">
-                        <label for="qualifications" class="required">지???�격</label>
-                        <textarea id="qualifications" name="qualifications" placeholder="?�요???�력, 경력, ?�격�??�을 ?�력?�주?�요..." required></textarea>
-                    </div>
-                </div>
-
-                <div class="form-row full">
-                    <div class="form-group">
-                        <label for="benefits">복리?�생</label>
-                        <textarea id="benefits" name="benefits" placeholder="?�공?�는 복리?�생???�력?�주?�요..."></textarea>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="description">채용 내용 *</label>
+                <textarea id="description" rows="10" required></textarea>
             </div>
-
-            <!-- ?�요 기술 -->
-            <div class="form-section">
-                <h2>?�요 기술</h2>
-                <div class="form-row full">
-                    <div class="form-group">
-                        <label>기술???�력 ??추�? 버튼 ?�릭</label>
-                        <div class="skills-input-group">
-                            <input type="text" id="skillInput" placeholder="?? C++, Python, ?�로?�계">
-                            <button type="button" id="addSkillBtn">추�?</button>
-                        </div>
-                        <div class="skills-tags" id="skillsTags"></div>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="type">채용 유형 *</label>
+                <select id="type" required>
+                    <option value="">선택하세요</option>
+                    <option value="정규직">정규직</option>
+                    <option value="계약직">계약직</option>
+                    <option value="인턴">인턴</option>
+                </select>
             </div>
-
-            <!-- ?�락�??�보 -->
-            <div class="form-section">
-                <h2>?�락�??�보</h2>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="contactEmail">?�당???�메??/label>
-                        <input type="email" id="contactEmail" name="contactEmail" placeholder="hr@company.com">
-                    </div>
-                    <div class="form-group">
-                        <label for="contactPhone">?�당???�화번호</label>
-                        <input type="tel" id="contactPhone" name="contactPhone" placeholder="010-1234-5678">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="deadline">지??마감??/label>
-                        <input type="date" id="deadline" name="deadline">
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="location">근무 지역</label>
+                <input type="text" id="location">
             </div>
-
-            <!-- ?�션 버튼 -->
+            <div class="form-group">
+                <label for="salary">급여 정보</label>
+                <input type="text" id="salary">
+            </div>
+            <div class="form-group">
+                <label for="deadline">마감일</label>
+                <input type="date" id="deadline">
+            </div>
             <div class="form-actions">
-                <button type="button" class="btn-cancel" onclick="window.history.back()">취소</button>
-                <button type="submit" class="btn-submit">공고 ?�록</button>
+                <button type="submit" class="btn-primary">등록</button>
+                <button type="button" onclick="location.href='jobs.html'" class="btn-secondary">취소</button>
             </div>
         </form>
     </div>
 
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
-    <script>
-        // Check authentication
-        if (!auth.requireAuth()) {
-            window.location.href = 'login.html';
-        }
-
-        // Update user name
-        const user = auth.getCurrentUser();
-        if (user) {
-            document.getElementById('userName').textContent = user.name;
-        }
-
-        // Skills management
-        const skills = [];
-        const skillInput = document.getElementById('skillInput');
-        const addSkillBtn = document.getElementById('addSkillBtn');
-        const skillsTags = document.getElementById('skillsTags');
-
-        addSkillBtn.addEventListener('click', function() {
-            const skill = skillInput.value.trim();
-            if (skill && !skills.includes(skill)) {
-                skills.push(skill);
-                renderSkills();
-                skillInput.value = '';
-            }
-        });
-
-        skillInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                addSkillBtn.click();
-            }
-        });
-
-        function renderSkills() {
-            skillsTags.innerHTML = skills.map((skill, index) => `
-                <div class="skill-tag">
-                    <span>${skill}</span>
-                    <button type="button" onclick="removeSkill(${index})">×</button>
-                </div>
-            `).join('');
-        }
-
-        function removeSkill(index) {
-            skills.splice(index, 1);
-            renderSkills();
-        }
-
-        // Form submission
-        document.getElementById('jobCreateForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const user = auth.getCurrentUser();
-            const jobId = Date.now().toString();
-            
-            const formData = {
-                id: jobId,
-                jobTitle: document.getElementById('jobTitle').value,
-                companyName: document.getElementById('companyName').value || user.name,
-                location: document.getElementById('location').value,
-                department: document.getElementById('department').value,
-                employmentType: document.getElementById('employmentType').value,
-                experience: document.getElementById('experience').value,
-                salary: document.getElementById('salary').value,
-                urgency: document.querySelector('input[name="urgency"]:checked')?.value || '',
-                remote: document.getElementById('remote').checked,
-                jobDescription: document.getElementById('jobDescription').value,
-                qualifications: document.getElementById('qualifications').value,
-                benefits: document.getElementById('benefits').value,
-                skills: skills,
-                contactEmail: document.getElementById('contactEmail').value,
-                contactPhone: document.getElementById('contactPhone').value,
-                deadline: document.getElementById('deadline').value,
-                companyId: user.id,
-                status: 'active',
-                applicants: Math.floor(Math.random() * 20) + 1,
-                views: Math.floor(Math.random() * 100) + 10,
-                createdAt: new Date().toISOString()
-            };
-
-            // Save to localStorage
-            let jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
-            jobs.push(formData);
-            localStorage.setItem('jobPostings', JSON.stringify(jobs));
-
-            console.log('Job posting saved:', formData);
-
-            alert('채용 공고가 ?�록?�었?�니??');
-            window.location.href = 'dashboard.html';
-        });
-
-        // Set minimum date for deadline (today)
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('deadline').setAttribute('min', today);
-    </script>
+    <script src="js/jobs.js"></script>
 </body>
 </html>

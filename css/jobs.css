@@ -224,3 +224,97 @@
         text-align: center;
     }
 }
+
+/* 채용 공고 등록/수정 폼 스타일 */
+.job-form-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.job-form-container h1 {
+    margin-bottom: 2rem;
+    color: var(--text-color);
+    font-size: 1.8rem;
+    border-bottom: 3px solid var(--primary-color);
+    padding-bottom: 1rem;
+}
+
+.job-form-container .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.job-form-container label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.job-form-container input[type="text"],
+.job-form-container input[type="date"],
+.job-form-container textarea,
+.job-form-container select {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    font-family: inherit;
+}
+
+.job-form-container input:focus,
+.job-form-container textarea:focus,
+.job-form-container select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.job-form-container textarea {
+    resize: vertical;
+    min-height: 200px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.form-actions .btn-primary,
+.form-actions .btn-secondary {
+    padding: 0.85rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.form-actions .btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.form-actions .btn-primary:hover {
+    background: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.form-actions .btn-secondary {
+    background: #6b7280;
+    color: white;
+}
+
+.form-actions .btn-secondary:hover {
+    background: #4b5563;
+}

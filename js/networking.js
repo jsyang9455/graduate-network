@@ -14,6 +14,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentUser.user_type === 'company') {
             hideStudentMenuItems();
         }
+        // Hide career menu for teacher users
+        if (currentUser.user_type === 'teacher') {
+            hideCareerMenuForTeacher();
+        }
         
         document.getElementById('userName').textContent = currentUser.name;
         
@@ -32,6 +36,11 @@ function hideStudentMenuItems() {
     const careerMenu = document.getElementById('careerMenu');
     
     if (counselingMenu) counselingMenu.style.display = 'none';
+    if (careerMenu) careerMenu.style.display = 'none';
+}
+
+function hideCareerMenuForTeacher() {
+    const careerMenu = document.getElementById('careerMenu');
     if (careerMenu) careerMenu.style.display = 'none';
 }
 

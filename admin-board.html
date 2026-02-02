@@ -3,160 +3,432 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시??관�?- JJOBB</title>
+    <title>게시판 관리 - 관리자</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-    <header id="mainHeader">
-        <nav>
-            <div class="logo">
-                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
-            </div>
-            <ul class="nav-links">
-                <li><a href="dashboard.html">?�?�보??/a></li>
-            </ul>
-            <div class="user-menu">
-                <span class="user-name" id="userName"></span>
-                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
-            </div>
-        </nav>
-    </header>
-
     <div class="dashboard-container">
         <aside class="sidebar">
             <div class="sidebar-menu">
                 <a href="dashboard.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�?�보??/span>
+                    <span class="icon">🏠</span>
+                    <span>대시보드</span>
                 </a>
-                <div class="menu-divider"></div>
-                <div class="menu-section-title">관리자 메뉴</div>
+                <div style="border-top: 1px solid #e5e7eb; margin: 1rem 0; padding-top: 1rem;">
+                    <p style="padding: 0 1rem; color: #6b7280; font-size: 0.875rem; font-weight: 600;">관리자 메뉴</p>
+                </div>
                 <a href="admin-users.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�원 관�?/span>
+                    <span class="icon">👥</span>
+                    <span>회원 관리</span>
                 </a>
-                <a href="education-programs.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>교육 ?�로그램 관�?/span>
+                <a href="admin-jobs.html" class="menu-item">
+                    <span class="icon">💼</span>
+                    <span>채용공고 관리</span>
                 </a>
                 <a href="admin-board.html" class="menu-item active">
-                    <span class="icon">?��</span>
-                    <span>게시??관�?/span>
+                    <span class="icon">📋</span>
+                    <span>게시판 관리</span>
                 </a>
+                <a href="admin-codes.html" class="menu-item">
+                    <span class="icon">⚙️</span>
+                    <span>코드 관리</span>
+                </a>
+            </div>
+            <div class="sidebar-footer">
+                <button onclick="auth.logout()" class="btn-logout">로그아웃</button>
             </div>
         </aside>
 
         <main class="main-content">
-            <div class="page-container">
-                <div class="page-header">
-                    <h1>?�� 게시??관�?/h1>
-                    <p>공�??�항 �?게시글??관리합?�다</p>
+            <header class="content-header">
+                <h1>게시판 관리</h1>
+                <div class="user-info">
+                    <span id="userName"></span>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <!-- 탭 메뉴 -->
+                <div class="tab-menu" style="display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid #e5e7eb;">
+                    <button onclick="switchTab('news')" id="newsTab" class="tab-btn active" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid #3b82f6; font-weight: 600;">최근 소식</button>
+                    <button onclick="switchTab('education')" id="educationTab" class="tab-btn" style="padding: 1rem 2rem; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; font-weight: 600;">평생교육프로그램</button>
                 </div>
 
-                <div class="page-actions">
-                    <button class="btn btn-primary" onclick="openAddPostModal()">
-                        ??게시글 ?�록
-                    </button>
-                </div>
-
-                <div class="search-section">
-                    <div class="search-bar">
-                        <input type="text" id="searchPost" placeholder="?�목, ?�용?�로 검??..">
-                        <button class="btn-search" onclick="searchPosts()">?�� 검??/button>
+                <!-- 최근 소식 관리 -->
+                <div id="newsSection" class="tab-content">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2>최근 소식 관리</h2>
+                        <button onclick="showNewsModal()" class="btn btn-primary">소식 등록</button>
                     </div>
-                    <div class="filter-bar">
-                        <select id="filterCategory" onchange="applyFilters()">
-                            <option value="">?�체 카테고리</option>
-                            <option value="공�??�항">공�??�항</option>
-                            <option value="?�스">?�스</option>
-                            <option value="?�벤??>?�벤??/option>
-                            <option value="채용?�보">채용?�보</option>
-                        </select>
+
+                    <div class="board-table" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead style="background: #f9fafb;">
+                                <tr>
+                                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">ID</th>
+                                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">제목</th>
+                                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">작성일</th>
+                                    <th style="padding: 1rem; text-align: center; border-bottom: 2px solid #e5e7eb;">관리</th>
+                                </tr>
+                            </thead>
+                            <tbody id="newsTableBody">
+                                <!-- News will be loaded here -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th width="80">번호</th>
-                                <th width="120">카테고리</th>
-                                <th>?�목</th>
-                                <th width="120">?�성??/th>
-                                <th width="100">조회??/th>
-                                <th width="120">?�성??/th>
-                                <th width="150">관�?/th>
-                            </tr>
-                        </thead>
-                        <tbody id="postsTableBody">
-                            <!-- 게시글 목록???�기???�시?�니??-->
-                        </tbody>
-                    </table>
+                <!-- 평생교육프로그램 관리 -->
+                <div id="educationSection" class="tab-content" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2>평생교육프로그램 관리</h2>
+                        <button onclick="showEducationModal()" class="btn btn-primary">프로그램 등록</button>
+                    </div>
+
+                    <div class="board-table" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead style="background: #f9fafb;">
+                                <tr>
+                                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">ID</th>
+                                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">프로그램명</th>
+                                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">기간</th>
+                                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">신청 마감일</th>
+                                    <th style="padding: 1rem; text-align: center; border-bottom: 2px solid #e5e7eb;">관리</th>
+                                </tr>
+                            </thead>
+                            <tbody id="educationTableBody">
+                                <!-- Education programs will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- 게시글 ?�록/?�정 모달 -->
-    <div id="postModal" class="modal" style="display: none;">
-        <div class="modal-content" style="max-width: 800px;">
+    <!-- 최근 소식 모달 -->
+    <div id="newsModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 700px;">
             <div class="modal-header">
-                <h2 id="postModalTitle">게시글 ?�록</h2>
-                <span class="close" onclick="closePostModal()">&times;</span>
+                <h2 id="newsModalTitle">소식 등록</h2>
+                <span class="close" onclick="closeNewsModal()">&times;</span>
             </div>
             <div class="modal-body">
-                <form id="postForm" onsubmit="savePost(event)">
-                    <input type="hidden" id="postId">
-                    
-                    <div class="form-section">
-                        <label for="postCategory">카테고리 *</label>
-                        <select id="postCategory" required>
-                            <option value="">?�택?�세??/option>
-                            <option value="공�??�항">공�??�항</option>
-                            <option value="?�스">?�스</option>
-                            <option value="?�벤??>?�벤??/option>
-                            <option value="채용?�보">채용?�보</option>
-                        </select>
+                <form id="newsForm">
+                    <input type="hidden" id="newsId">
+                    <div class="form-group">
+                        <label>제목 *</label>
+                        <input type="text" id="newsTitle" required>
                     </div>
-
-                    <div class="form-section">
-                        <label for="postTitle">?�목 *</label>
-                        <input type="text" id="postTitle" required>
+                    <div class="form-group">
+                        <label>내용 *</label>
+                        <textarea id="newsContent" rows="8" required></textarea>
                     </div>
-
-                    <div class="form-section">
-                        <label for="postContent">?�용 *</label>
-                        <textarea id="postContent" rows="10" required></textarea>
-                    </div>
-
-                    <div class="form-section">
-                        <label>
-                            <input type="checkbox" id="postImportant">
-                            중요 공�? (?�단 고정)
-                        </label>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" onclick="closePostModal()">취소</button>
-                        <button type="submit" class="btn btn-primary">?�??/button>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">저장</button>
+                        <button type="button" onclick="closeNewsModal()" class="btn btn-secondary">취소</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-about">
-                <h3>?�주공업고등?�교</h3>
-                <p>?�� ?�북?�별?�치???�주???�진�??�산�?101</p>
+    <!-- 평생교육프로그램 모달 -->
+    <div id="educationModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 id="educationModalTitle">프로그램 등록</h2>
+                <span class="close" onclick="closeEducationModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="educationForm">
+                    <input type="hidden" id="educationId">
+                    <div class="form-group">
+                        <label>프로그램명 *</label>
+                        <input type="text" id="educationTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label>설명 *</label>
+                        <textarea id="educationDescription" rows="5" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>시작일 *</label>
+                        <input type="date" id="educationStartDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>종료일 *</label>
+                        <input type="date" id="educationEndDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>신청 마감일 *</label>
+                        <input type="date" id="educationDeadline" required>
+                    </div>
+                    <div class="form-group">
+                        <label>수강료</label>
+                        <input type="text" id="educationFee" placeholder="예: 무료, 50,000원">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">저장</button>
+                        <button type="button" onclick="closeEducationModal()" class="btn btn-secondary">취소</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </footer>
+    </div>
 
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
-    <script src="js/admin-board.js"></script>
+    <script>
+        let allNews = [];
+        let allEducation = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!auth.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const user = auth.getCurrentUser();
+            if (user.user_type !== 'admin') {
+                alert('관리자만 접근할 수 있습니다.');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            document.getElementById('userName').textContent = user.name;
+            loadNews();
+            loadEducation();
+
+            document.getElementById('newsForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveNews();
+            });
+
+            document.getElementById('educationForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveEducation();
+            });
+        });
+
+        function switchTab(tab) {
+            const newsTab = document.getElementById('newsTab');
+            const educationTab = document.getElementById('educationTab');
+            const newsSection = document.getElementById('newsSection');
+            const educationSection = document.getElementById('educationSection');
+
+            if (tab === 'news') {
+                newsTab.classList.add('active');
+                educationTab.classList.remove('active');
+                newsTab.style.borderBottom = '3px solid #3b82f6';
+                educationTab.style.borderBottom = '3px solid transparent';
+                newsSection.style.display = 'block';
+                educationSection.style.display = 'none';
+            } else {
+                educationTab.classList.add('active');
+                newsTab.classList.remove('active');
+                educationTab.style.borderBottom = '3px solid #3b82f6';
+                newsTab.style.borderBottom = '3px solid transparent';
+                educationSection.style.display = 'block';
+                newsSection.style.display = 'none';
+            }
+        }
+
+        // 최근 소식 관리
+        function loadNews() {
+            allNews = JSON.parse(localStorage.getItem('recentNews') || '[]');
+            displayNews();
+        }
+
+        function displayNews() {
+            const tbody = document.getElementById('newsTableBody');
+            
+            if (allNews.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem;">등록된 소식이 없습니다.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = allNews.map(news => `
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                    <td style="padding: 1rem;">${news.id}</td>
+                    <td style="padding: 1rem;">${news.title}</td>
+                    <td style="padding: 1rem;">${new Date(news.createdAt).toLocaleDateString('ko-KR')}</td>
+                    <td style="padding: 1rem; text-align: center;">
+                        <button onclick="editNews(${news.id})" class="btn btn-sm btn-primary" style="margin-right: 0.5rem;">수정</button>
+                        <button onclick="deleteNews(${news.id})" class="btn btn-sm btn-danger">삭제</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showNewsModal() {
+            document.getElementById('newsModalTitle').textContent = '소식 등록';
+            document.getElementById('newsForm').reset();
+            document.getElementById('newsId').value = '';
+            document.getElementById('newsModal').style.display = 'flex';
+        }
+
+        function editNews(newsId) {
+            const news = allNews.find(n => n.id === newsId);
+            if (!news) return;
+
+            document.getElementById('newsModalTitle').textContent = '소식 수정';
+            document.getElementById('newsId').value = news.id;
+            document.getElementById('newsTitle').value = news.title;
+            document.getElementById('newsContent').value = news.content;
+
+            document.getElementById('newsModal').style.display = 'flex';
+        }
+
+        function closeNewsModal() {
+            document.getElementById('newsModal').style.display = 'none';
+            document.getElementById('newsForm').reset();
+        }
+
+        function saveNews() {
+            const newsId = document.getElementById('newsId').value;
+            const news = JSON.parse(localStorage.getItem('recentNews') || '[]');
+
+            const newsData = {
+                title: document.getElementById('newsTitle').value,
+                content: document.getElementById('newsContent').value
+            };
+
+            if (newsId) {
+                const newsIndex = news.findIndex(n => n.id == newsId);
+                if (newsIndex !== -1) {
+                    news[newsIndex] = { ...news[newsIndex], ...newsData };
+                }
+            } else {
+                const newNews = {
+                    id: Date.now(),
+                    ...newsData,
+                    createdAt: new Date().toISOString()
+                };
+                news.unshift(newNews);
+            }
+
+            localStorage.setItem('recentNews', JSON.stringify(news));
+            
+            alert(newsId ? '소식이 수정되었습니다.' : '소식이 등록되었습니다.');
+            closeNewsModal();
+            loadNews();
+        }
+
+        function deleteNews(newsId) {
+            if (!confirm('정말 이 소식을 삭제하시겠습니까?')) return;
+
+            const news = JSON.parse(localStorage.getItem('recentNews') || '[]');
+            const filtered = news.filter(n => n.id !== newsId);
+            
+            localStorage.setItem('recentNews', JSON.stringify(filtered));
+            
+            alert('소식이 삭제되었습니다.');
+            loadNews();
+        }
+
+        // 평생교육프로그램 관리
+        function loadEducation() {
+            allEducation = JSON.parse(localStorage.getItem('educationPrograms') || '[]');
+            displayEducation();
+        }
+
+        function displayEducation() {
+            const tbody = document.getElementById('educationTableBody');
+            
+            if (allEducation.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem;">등록된 프로그램이 없습니다.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = allEducation.map(edu => `
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                    <td style="padding: 1rem;">${edu.id}</td>
+                    <td style="padding: 1rem;">${edu.title}</td>
+                    <td style="padding: 1rem;">${edu.startDate} ~ ${edu.endDate}</td>
+                    <td style="padding: 1rem;">${edu.deadline}</td>
+                    <td style="padding: 1rem; text-align: center;">
+                        <button onclick="editEducation(${edu.id})" class="btn btn-sm btn-primary" style="margin-right: 0.5rem;">수정</button>
+                        <button onclick="deleteEducation(${edu.id})" class="btn btn-sm btn-danger">삭제</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showEducationModal() {
+            document.getElementById('educationModalTitle').textContent = '프로그램 등록';
+            document.getElementById('educationForm').reset();
+            document.getElementById('educationId').value = '';
+            document.getElementById('educationModal').style.display = 'flex';
+        }
+
+        function editEducation(eduId) {
+            const edu = allEducation.find(e => e.id === eduId);
+            if (!edu) return;
+
+            document.getElementById('educationModalTitle').textContent = '프로그램 수정';
+            document.getElementById('educationId').value = edu.id;
+            document.getElementById('educationTitle').value = edu.title;
+            document.getElementById('educationDescription').value = edu.description;
+            document.getElementById('educationStartDate').value = edu.startDate;
+            document.getElementById('educationEndDate').value = edu.endDate;
+            document.getElementById('educationDeadline').value = edu.deadline;
+            document.getElementById('educationFee').value = edu.fee;
+
+            document.getElementById('educationModal').style.display = 'flex';
+        }
+
+        function closeEducationModal() {
+            document.getElementById('educationModal').style.display = 'none';
+            document.getElementById('educationForm').reset();
+        }
+
+        function saveEducation() {
+            const eduId = document.getElementById('educationId').value;
+            const education = JSON.parse(localStorage.getItem('educationPrograms') || '[]');
+
+            const eduData = {
+                title: document.getElementById('educationTitle').value,
+                description: document.getElementById('educationDescription').value,
+                startDate: document.getElementById('educationStartDate').value,
+                endDate: document.getElementById('educationEndDate').value,
+                deadline: document.getElementById('educationDeadline').value,
+                fee: document.getElementById('educationFee').value || '무료'
+            };
+
+            if (eduId) {
+                const eduIndex = education.findIndex(e => e.id == eduId);
+                if (eduIndex !== -1) {
+                    education[eduIndex] = { ...education[eduIndex], ...eduData };
+                }
+            } else {
+                const newEdu = {
+                    id: Date.now(),
+                    ...eduData,
+                    createdAt: new Date().toISOString()
+                };
+                education.unshift(newEdu);
+            }
+
+            localStorage.setItem('educationPrograms', JSON.stringify(education));
+            
+            alert(eduId ? '프로그램이 수정되었습니다.' : '프로그램이 등록되었습니다.');
+            closeEducationModal();
+            loadEducation();
+        }
+
+        function deleteEducation(eduId) {
+            if (!confirm('정말 이 프로그램을 삭제하시겠습니까?')) return;
+
+            const education = JSON.parse(localStorage.getItem('educationPrograms') || '[]');
+            const filtered = education.filter(e => e.id !== eduId);
+            
+            localStorage.setItem('educationPrograms', JSON.stringify(filtered));
+            
+            alert('프로그램이 삭제되었습니다.');
+            loadEducation();
+        }
+    </script>
 </body>
 </html>

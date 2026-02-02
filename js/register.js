@@ -1,11 +1,13 @@
 // Register functionality
 document.addEventListener('DOMContentLoaded', function() {
     const registerForm = document.getElementById('registerForm');
-    const graduationYearSelect = document.getElementById('graduationYear');
     const registerError = document.getElementById('registerError');
     const registerSuccess = document.getElementById('registerSuccess');
     const studentFields = document.getElementById('studentFields');
     const userTypeRadios = document.querySelectorAll('input[name="userType"]');
+
+    // Load schools from localStorage
+    loadSchools();
 
     // Populate graduation years
     populateGraduationYears();
@@ -13,16 +15,34 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle user type change
     userTypeRadios.forEach(radio => {
         radio.addEventListener('change', function() {
+            const studentFields = document.getElementById('studentFields');
+            
             if (this.value === 'teacher') {
+                // 선생님: 이름, 이메일, 비밀번호, 학교만 표시
                 studentFields.style.display = 'none';
+                
                 // Remove required from student fields
-                document.getElementById('graduationYear').removeAttribute('required');
-                document.getElementById('major').removeAttribute('required');
+                const phoneInput = document.getElementById('phone');
+                const graduationYearInput = document.getElementById('graduationYear');
+                const majorInput = document.getElementById('major');
+                const studentIdInput = document.getElementById('studentId');
+                
+                if (phoneInput) phoneInput.removeAttribute('required');
+                if (graduationYearInput) graduationYearInput.removeAttribute('required');
+                if (majorInput) majorInput.removeAttribute('required');
+                if (studentIdInput) studentIdInput.removeAttribute('required');
             } else {
+                // 학생/졸업생: 모든 필드 표시
                 studentFields.style.display = 'block';
+                
                 // Add required to student fields
-                document.getElementById('graduationYear').setAttribute('required', 'required');
-                document.getElementById('major').setAttribute('required', 'required');
+                const phoneInput = document.getElementById('phone');
+                const graduationYearInput = document.getElementById('graduationYear');
+                const majorInput = document.getElementById('major');
+                
+                if (phoneInput) phoneInput.setAttribute('required', 'required');
+                if (graduationYearInput) graduationYearInput.setAttribute('required', 'required');
+                if (majorInput) majorInput.setAttribute('required', 'required');
             }
         });
     });
@@ -41,18 +61,20 @@ document.addEventListener('DOMContentLoaded', function() {
             password: document.getElementById('password').value,
             confirmPassword: document.getElementById('confirmPassword').value,
             schoolName: document.getElementById('schoolName').value,
-            phone: document.getElementById('phone').value,
-            agreeTerms: document.getElementById('agreeTerms').checked,
-            agreePrivacy: document.getElementById('agreePrivacy').checked,
-            agreeMarketing: document.getElementById('agreeMarketing').checked
+            agreeTerms: document.getElementById('agreeTerms').checked
         };
 
         // Add student-specific fields only if student type
         if (userType === 'student') {
-            formData.graduationYear = graduationYearSelect.value;
-            formData.major = document.getElementById('major').value;
-            formData.company = document.getElementById('company').value;
-            formData.position = document.getElementById('position').value;
+            const phoneInput = document.getElementById('phone');
+            const graduationYearInput = document.getElementById('graduationYear');
+            const majorInput = document.getElementById('major');
+            const studentIdInput = document.getElementById('studentId');
+            
+            formData.phone = phoneInput ? phoneInput.value : '';
+            formData.graduationYear = graduationYearInput ? graduationYearInput.value : '';
+            formData.major = majorInput ? majorInput.value : '';
+            formData.studentId = studentIdInput ? studentIdInput.value : '';
         }
 
         // Validation
@@ -84,8 +106,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 email: formData.email,
                 password: formData.password,
                 name: formData.name,
-                user_type: formData.userType === 'teacher' ? 'teacher' : 'graduate',
-                phone: formData.phone,
+                user_type: formData.userType === 'teacher' ? 'teacher' : (formData.userType === 'student' ? 'student' : 'graduate'),
+                phone: formData.phone || '',
                 schoolName: formData.schoolName,
                 registeredAt: new Date().toISOString()
             };
@@ -102,7 +124,11 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('graduateNetwork_users', JSON.stringify(users));
 
             // Show success message
-            showSuccess('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다...');
+            showSuccess('🎉 회원가입이 완료되었습니다! 로그인 페이지로 이동합니다...');
+            
+            // Reset button state
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
 
             // Redirect to login page after 2 seconds
             setTimeout(() => {
@@ -117,30 +143,40 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function populateGraduationYears() {
-        console.log('Populating graduation years...');
-        console.log('graduationYearSelect:', graduationYearSelect);
-        const currentYear = 2026;
-        const startYear = 2022;
-        for (let year = currentYear; year >= startYear; year--) {
-            const option = document.createElement('option');
-            option.value = year;
-            option.textContent = year + '년';
-            graduationYearSelect.appendChild(option);
+        const graduationYearInput = document.getElementById('graduationYear');
+        
+        // graduationYear is now an input type="number", not a select
+        // So we don't need to populate options
+        if (graduationYearInput && graduationYearInput.tagName === 'SELECT') {
+            const currentYear = 2026;
+            const startYear = 1980;
+            for (let year = currentYear; year >= startYear; year--) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year + '년';
+                graduationYearInput.appendChild(option);
+            }
         }
-        console.log('Graduation years populated:', graduationYearSelect.options.length);
     }
 
     function validateForm(data) {
         // Check required fields (common for all users)
-        if (!data.name || !data.email || !data.password || !data.schoolName || !data.phone) {
+        if (!data.name || !data.email || !data.password || !data.schoolName) {
             showError('필수 항목을 모두 입력해주세요.');
             return false;
         }
 
         // Check student-specific required fields
         if (data.userType === 'student') {
-            if (!data.graduationYear || !data.major) {
+            if (!data.phone || !data.graduationYear || !data.major) {
                 showError('필수 항목을 모두 입력해주세요.');
+                return false;
+            }
+            
+            // Check phone format only for students
+            const phoneRegex = /^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$/;
+            if (!phoneRegex.test(data.phone.replace(/-/g, ''))) {
+                showError('올바른 연락처 형식이 아닙니다. (예: 010-1234-5678)');
                 return false;
             }
         }
@@ -164,15 +200,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
 
-        // Check phone format
-        const phoneRegex = /^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$/;
-        if (!phoneRegex.test(data.phone.replace(/-/g, ''))) {
-            showError('올바른 연락처 형식이 아닙니다. (예: 010-1234-5678)');
-            return false;
-        }
-
         // Check agreement
-        if (!data.agreeTerms || !data.agreePrivacy) {
+        if (!data.agreeTerms) {
             showError('필수 약관에 동의해주세요.');
             return false;
         }
@@ -192,5 +221,36 @@ document.addEventListener('DOMContentLoaded', function() {
         registerSuccess.style.display = 'block';
         registerError.style.display = 'none';
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function loadSchools() {
+        const schoolSelect = document.getElementById('schoolName');
+        if (!schoolSelect) return;
+
+        // localStorage에서 학교 목록 가져오기
+        let schools = JSON.parse(localStorage.getItem('schools') || '[]');
+        
+        // 기본 학교가 없으면 전주공업고등학교 추가
+        if (schools.length === 0) {
+            schools = [{
+                id: 1,
+                name: '전주공업고등학교',
+                createdAt: new Date().toISOString()
+            }];
+            localStorage.setItem('schools', JSON.stringify(schools));
+        }
+
+        // 기존 옵션 제거 (첫 번째 "학교 선택" 옵션 제외)
+        while (schoolSelect.options.length > 1) {
+            schoolSelect.remove(1);
+        }
+
+        // 학교 목록을 드롭다운에 추가
+        schools.forEach(school => {
+            const option = document.createElement('option');
+            option.value = school.name;
+            option.textContent = school.name;
+            schoolSelect.appendChild(option);
+        });
     }
 });
