@@ -72,33 +72,43 @@
                 </div>
             </div>
 
-            <form id="loginForm" style="display: none;">
-                <div class="form-group">
-                    <label for="email">이메일</label>
-                    <input type="email" id="email" name="email" required 
-                           placeholder="example@email.com">
+            <div id="loginFormContainer" style="display: none;">
+                <div class="selected-type">
+                    <span>로그인 유형: <strong id="selectedUserTypeName"></strong></span>
+                    <button type="button" id="changeTypeBtn" class="btn btn-secondary btn-sm">변경</button>
                 </div>
 
-                <div class="form-group">
-                    <label for="password">비밀번호</label>
-                    <input type="password" id="password" name="password" required 
-                           placeholder="비밀번호를 입력하세요">
-                </div>
+                <div id="testAccountInfo" class="info-message" style="margin-bottom: 1rem;"></div>
 
-                <div class="form-options">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="rememberMe">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">이메일</label>
+                        <input type="email" id="email" name="email" required 
+                               placeholder="example@email.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">비밀번호</label>
+                        <input type="password" id="password" name="password" required 
+                               placeholder="비밀번호를 입력하세요">
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe">
                         <span>로그인 상태 유지</span>
                     </label>
                     <a href="#" class="link">비밀번호 찾기</a>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-block">로그인</button>
+                <button type="button" id="testLoginBtn" class="btn btn-secondary btn-block">테스트 계정으로 로그인</button>
 
                 <div class="auth-footer">
                     <p>계정이 없으신가요? <a href="register.html" class="link">회원가입</a></p>
                 </div>
             </form>
+            </div>
         </div>
 
         <div class="auth-info">
