@@ -4,6 +4,13 @@
 
 전주공업고등학교 졸업생들을 위한 종합 네트워크 플랫폼입니다. 채용 정보, 동문 네트워킹, 진로 상담, 증명서 발급 등의 기능을 제공합니다.
 
+### 버전 정보
+- **v1.0**: 초기 릴리스 (2024) - 핵심 기능 완성
+- **v1.1**: 보안 개선 및 매뉴얼 추가 (현재)
+  - 테스트 계정 정보 보안 제거
+  - 사용자 매뉴얼 및 웹 도움말 추가
+  - AWS 배포 가이드 및 자동 설치 스크립트 추가
+
 ### 주요 기능
 - 🔐 **회원 관리**: 학생, 졸업생, 교사, 기업, 관리자 계정
 - 💼 **채용 정보**: 기업 채용 공고 등록 및 지원
@@ -63,102 +70,99 @@ graduate-network/
 
 ## 🚀 빠른 시작
 
-### 사전 요구사항
-- Docker
-- Docker Compose
+### 로컬 개발 환경
+
+#### 사전 요구사항
+- Docker Desktop
 - Git
 
-### Docker Compose로 실행 (권장)
+#### Docker Compose로 실행 (권장)
 
 ```bash
 # 1. 저장소 클론
-git clone https://github.com/your-username/graduate-network.git
+git clone https://github.com/jsyang9455/graduate-network.git
 cd graduate-network
 
 # 2. Docker Compose로 모든 서비스 실행
-docker-compose up -d
+docker compose up -d
 
 # 3. 브라우저에서 접속
 # http://localhost
 ```
 
-### 서비스 중지
+#### 서비스 관리
 ```bash
-docker-compose down
+# 서비스 중지
+docker compose down
+
+# 로그 확인
+docker compose logs -f
+
+# 재시작
+docker compose restart
 ```
 
-### 로그 확인
-```bash
-docker-compose logs -f
-```
+### AWS Ubuntu 배포
 
-## 🌩 AWS Ubuntu 서버 배포
+#### 자동 설치 (권장 ⭐)
 
-AWS EC2에서 Ubuntu 서버에 배포하는 방법입니다.
-
-### 지원 Ubuntu 버전
-- Ubuntu 20.04 LTS
-- Ubuntu 22.04 LTS
-- Ubuntu 24.04 LTS
-
-### 자동 설치 (가장 쉬운 방법)
+AWS EC2 Ubuntu 인스턴스에서 다음 명령어로 자동 설치:
 
 ```bash
-# 1. 프로젝트 클론
-git clone https://github.com/your-username/graduate-network.git
-cd graduate-network
-
-# 2. 설치 스크립트 실행 (Docker, Docker Compose 자동 설치)
-chmod +x setup-aws.sh
-./setup-aws.sh
+# 스크립트 다운로드 및 실행
+curl -fsSL https://raw.githubusercontent.com/jsyang9455/graduate-network/v1.1/deploy-aws.sh -o deploy-aws.sh
+chmod +x deploy-aws.sh
+./deploy-aws.sh
 ```
 
-설치 스크립트가 자동으로:
+이 스크립트는 다음을 자동으로 수행합니다:
 - 시스템 업데이트
-- Docker 설치
-- Docker Compose 설치
-- 프로젝트 실행
-- 서비스 상태 확인
+- Docker 및 필수 패키지 설치
+- 애플리케이션 클론 및 설정
+- 환경 변수 자동 생성
+- 방화벽 설정
+- 서비스 시작
 
-### 상세 가이드
+#### 수동 설치
 
-더 자세한 AWS 설정 방법은 [AWS-SETUP.md](./AWS-SETUP.md)를 참고하세요.
-
-### 수동 설치
-
-```bash
-# 1. 시스템 업데이트
-sudo apt update && sudo apt upgrade -y
-
-# 2. Docker 설치
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-sudo usermod -aG docker $USER
-
-# 3. Docker Compose 설치
-sudo apt install docker-compose-plugin -y
-
-# 4. 프로젝트 클론 및 실행
-git clone https://github.com/your-username/graduate-network.git
-cd graduate-network
-docker compose up -d
+상세한 단계별 가이드는 [AWS-DEPLOYMENT.md](AWS-DEPLOYMENT.md)를 참조하세요.
 ```
 
-### AWS EC2 보안 그룹 설정
+## 📚 문서 및 가이드
 
-EC2 인스턴스의 보안 그룹에서 다음 포트를 열어주세요:
-- **HTTP**: 80 (0.0.0.0/0)
-- **HTTPS**: 443 (0.0.0.0/0) - SSL 사용 시
-- **SSH**: 22 (본인 IP만)
+### 사용자 가이드
+- [**사용자 매뉴얼**](MANUAL.md) - 학생, 교사, 관리자를 위한 상세 가이드
+- **웹 도움말** - 앱 실행 후 우측 상단 "📚 도움말" 메뉴 클릭
 
-### 방화벽 설정 (UFW)
+### 개발자 가이드
+- [빠른 시작 가이드](QUICKSTART.md) - 로컬 개발 환경 설정
+- [Docker 가이드](DOCKER.md) - Docker 사용법
+- [테스트 계정 정보](TEST-ACCOUNTS.md) ⚠️ 개발 전용 (프로덕션 사용 금지)
 
-```bash
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
-sudo ufw allow 22/tcp
-sudo ufw enable
-```
+### 배포 가이드
+- [**AWS Ubuntu 배포 가이드**](AWS-DEPLOYMENT.md) - EC2 인스턴스 배포 (v1.1)
+  - 시스템 요구사항 및 EC2 인스턴스 설정
+  - Docker 설치 가이드
+  - 애플리케이션 배포 단계
+  - 환경 변수 설정
+  - 방화벽 및 보안 설정
+  - 도메인 연결 및 SSL 인증서 설정
+  - 문제 해결 및 유지보수
+- [자동 설치 스크립트](deploy-aws.sh) - 원클릭 AWS 배포
+
+## 🔧 시스템 요구사항
+
+### 로컬 개발
+- Docker Desktop (Windows/Mac) 또는 Docker Engine (Linux)
+- 최소 4GB RAM
+- 10GB 디스크 공간
+
+### AWS 프로덕션
+- EC2 인스턴스: t2.small 이상 (2 vCPU, 2GB RAM)
+- Ubuntu 22.04 LTS 또는 24.04 LTS
+- 최소 20GB EBS 스토리지
+- Elastic IP (고정 IP)
+- 보안 그룹 설정: 포트 22(SSH), 80(HTTP), 443(HTTPS)
 
 ## 🔑 API 엔드포인트
 
