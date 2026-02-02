@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?åÏõêÍ∞Ä??- ?ÑÏ£ºÍ≥µÏóÖÍ≥†Îì±?ôÍµê Ï°∏ÏóÖ???§Ìä∏?åÌÅ¨</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-box register-box">
+            <div class="auth-header">
+                <h1>?éì ?åÏõêÍ∞Ä??/h1>
+                <p>?ÑÏ£ºÍ≥µÍ≥† Ï°∏ÏóÖ???§Ìä∏?åÌÅ¨??Í∞Ä?ÖÌïò?∏Ïöî</p>
+            </div>
+            
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label>?åÏõê ?†Ìòï *</label>
+                    <div style="display: flex; gap: 20px; margin-top: 0.5rem;">
+                        <label class="radio-label">
+                            <input type="radio" name="userType" value="student" checked>
+                            <span>?ôÏÉù/Ï°∏ÏóÖ??/span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="userType" value="teacher">
+                            <span>?†ÏÉù??/span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">?¥Î¶Ñ *</label>
+                    <input type="text" id="name" name="name" required placeholder="?§Î™Ö???ÖÎ†•?òÏÑ∏??>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">?¥Î©î??*</label>
+                    <input type="email" id="email" name="email" required placeholder="example@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">ÎπÑÎ?Î≤àÌò∏ *</label>
+                    <input type="password" id="password" name="password" required placeholder="8???¥ÏÉÅ ?ÖÎ†•">
+                    <small>?ÅÎ¨∏, ?´Ïûê, ?πÏàòÎ¨∏Ïûê Ï°∞Ìï© 8???¥ÏÉÅ</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">ÎπÑÎ?Î≤àÌò∏ ?ïÏù∏ *</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="ÎπÑÎ?Î≤àÌò∏Î•??§Ïãú ?ÖÎ†•">
+                </div>
+                
+                <div class="form-group">
+                    <label for="schoolName">?ôÍµêÎ™?*</label>
+                    <select id="schoolName" name="schoolName" required>
+                        <option value="">?†ÌÉù?òÏÑ∏??/option>
+                        <option value="?ÑÏ£ºÍ≥µÏóÖÍ≥†Îì±?ôÍµê" selected>?ÑÏ£ºÍ≥µÏóÖÍ≥†Îì±?ôÍµê</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">?∞ÎùΩÏ≤?*</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="010-1234-5678">
+                </div>
+
+                <!-- ?ôÏÉù/Ï°∏ÏóÖ???ÑÏö© ?ÑÎìú -->
+                <div id="studentFields" style="display: block;">
+                    <div class="form-group">
+                        <label for="graduationYear">Ï°∏ÏóÖ?ÑÎèÑ *</label>
+                        <select id="graduationYear" name="graduationYear">
+                            <option value="">?†ÌÉù?òÏÑ∏??/option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="major">?ÑÍ≥µ *</label>
+                        <select id="major" name="major">
+                            <option value="">?†ÌÉù?òÏÑ∏??/option>
+                            <option value="Í∏∞Í≥Ñ">Í∏∞Í≥ÑÍ≥?/option>
+                            <option value="?ÑÏûê">?ÑÏûêÍ≥?/option>
+                            <option value="?ÑÍ∏∞">?ÑÍ∏∞Í≥?/option>
+                            <option value="Í±¥Ï∂ï">Í±¥Ï∂ïÍ≥?/option>
+                            <option value="?îÍ≥µ">?îÌïôÍ≥µÏóÖÍ≥?/option>
+                            <option value="Ïª¥Ìì®??>Ïª¥Ìì®?∞Ïùë?©Í≥º</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="company">?ÑÏû¨ Í∑ºÎ¨¥Ï≤?(?†ÌÉù)</label>
+                        <input type="text" id="company" name="company" placeholder="?åÏÇ¨Î™ÖÏùÑ ?ÖÎ†•?òÏÑ∏??>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="position">ÏßÅÏ±Ö (?†ÌÉù)</label>
+                        <input type="text" id="position" name="position" placeholder="ÏßÅÏ±Ö???ÖÎ†•?òÏÑ∏??>
+                    </div>
+                </div>
+                
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <span>?úÎπÑ???¥Ïö©?ΩÍ????ôÏùò?©Îãà??*</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="agreePrivacy" required>
+                        <span>Í∞úÏù∏?ïÎ≥¥ Ï≤òÎ¶¨Î∞©Ïπ®???ôÏùò?©Îãà??*</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="agreeMarketing">
+                        <span>ÎßàÏ????ïÎ≥¥ ?òÏã†???ôÏùò?©Îãà??(?†ÌÉù)</span>
+                    </label>
+                </div>
+                
+                <div id="registerError" class="error-message" style="display: none;"></div>
+                <div id="registerSuccess" class="success-message" style="display: none;"></div>
+                
+                <button type="submit" class="btn btn-primary btn-full">Í∞Ä?ÖÌïòÍ∏?/button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>?¥Î? ?åÏõê?¥Ïã†Í∞Ä?? <a href="login.html">Î°úÍ∑∏??/a></p>
+                <a href="index.html" class="back-home">???àÏúºÎ°??åÏïÑÍ∞ÄÍ∏?/a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/register.js"></script>
+</body>
+</html>

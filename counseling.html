@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ì§„ë¡œ ?ë‹´ - JJOBB</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/counseling.css">
+</head>
+<body>
+    <header id="mainHeader">
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">?€?œë³´??/a></li>
+                <li><a href="jobs.html">ì±„ìš© ?•ë³´</a></li>
+                <li><a href="networking.html">?™ë¬¸ ?¤íŠ¸?Œí‚¹</a></li>
+                <li><a href="counseling.html" class="active">ì§„ë¡œ ?ë‹´</a></li>
+            </ul>
+            <div class="user-menu">
+                <span class="user-name" id="userName"></span>
+                <button onclick="auth.logout()" class="btn-logout">ë¡œê·¸?„ì›ƒ</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <span class="icon">?“Š</span>
+                    <span>?€?œë³´??/span>
+                </a>
+                <a href="profile.html" class="menu-item">
+                    <span class="icon">?‘¤</span>
+                    <span>???„ë¡œ??/span>
+                </a>
+                <a href="jobs.html" class="menu-item">
+                    <span class="icon">?’¼</span>
+                    <span>ì±„ìš© ?•ë³´</span>
+                </a>
+                <a href="networking.html" class="menu-item">
+                    <span class="icon">?¤</span>
+                    <span>?™ë¬¸ ?¤íŠ¸?Œí‚¹</span>
+                </a>
+                <a href="counseling.html" class="menu-item active" id="counselingMenu">
+                    <span class="icon">?’¬</span>
+                    <span>ì§„ë¡œ ?ë‹´</span>
+                </a>
+                <a href="career.html" class="menu-item" id="careerMenu">
+                    <span class="icon">?“ˆ</span>
+                    <span>ê²½ë ¥ ê´€ë¦?/span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1>?’¬ ì§„ë¡œ ?ë‹´ ?œë¹„??/h1>
+                <p id="pageSubtitle">?„ë¬¸ ?ë‹´êµì‚¬?€ 1:1 ?ë‹´???µí•´ ì§„ë¡œë¥??¤ê³„?˜ì„¸??/p>
+            </div>
+
+            <!-- ?™ìƒ????ë©”ë‰´ -->
+            <div class="counseling-tabs" id="studentTabs">
+                <button class="tab-btn active" data-tab="apply">?ë‹´ ? ì²­</button>
+                <button class="tab-btn" data-tab="my">???ë‹´</button>
+                <button class="tab-btn" data-tab="message">ë©”ì‹œì§€</button>
+                <button class="tab-btn" data-tab="teachers">?ë‹´êµì‚¬</button>
+            </div>
+
+            <!-- ? ìƒ?˜ìš© ??ë©”ë‰´ -->
+            <div class="counseling-tabs" id="teacherTabs" style="display: none;">
+                <button class="tab-btn active" data-tab="requests">?ë‹´ ? ì²­ ?´ì—­</button>
+                <button class="tab-btn" data-tab="schedule">???¼ì •</button>
+                <button class="tab-btn" data-tab="message">ë©”ì‹œì§€</button>
+            </div>
+
+            <!-- ? ìƒ?˜ìš©: ?ë‹´ ? ì²­ ?´ì—­ ??-->
+            <div class="tab-content" id="requests-tab" style="display: none;">
+                <div class="content-section">
+                    <h2>?“‹ ?™ìƒ ?ë‹´ ? ì²­ ?´ì—­</h2>
+                    <div id="counselingRequestsList">
+                        <p style="text-align: center; color: #6b7280; padding: 2rem;">?ë‹´ ? ì²­ ?´ì—­???†ìŠµ?ˆë‹¤.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ? ìƒ?˜ìš©: ???¼ì • ??-->
+            <div class="tab-content" id="schedule-tab" style="display: none;">
+                <div class="content-section">
+                    <h2>?“… ???ë‹´ ?¼ì •</h2>
+                    <div id="scheduleList" class="schedule-list">
+                        <p style="text-align: center; color: #6b7280; padding: 2rem;">?ˆì •???ë‹´???†ìŠµ?ˆë‹¤.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ?ë‹´ ? ì²­ ??-->
+            <div class="tab-content active" id="apply-tab">
+                <div class="counseling-form-container">
+                    <h2>+ ???ë‹´ ? ì²­</h2>
+                    <p class="form-subtitle">?„ë¬¸ ?ë‹´êµì‚¬?ê²Œ 1:1 ?ë‹´???µí•´ ì§„ë¡œë¥??¤ê³„?˜ì„¸??/p>
+
+                    <form id="counselingForm" class="counseling-form">
+                        <div class="form-row-grid">
+                            <div class="form-group">
+                                <label>?ë‹´ ? í˜•</label>
+                                <select id="counselingType" required>
+                                    <option value="ì§„ë¡œ ?ë‹´">ì§„ë¡œ ?ë‹´</option>
+                                    <option value="ì·¨ì—… ?ë‹´">ì·¨ì—… ?ë‹´</option>
+                                    <option value="?™ì—… ?ë‹´">?™ì—… ?ë‹´</option>
+                                    <option value="ì§„í•™ ?ë‹´">ì§„í•™ ?ë‹´</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>?ë‹´êµì‚¬ ? íƒ</label>
+                                <select id="counselor" required>
+                                    <option value="">?ë‹´êµì‚¬ë¥?? íƒ?˜ì„¸??/option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>?ë‹´ ?œëª©</label>
+                            <input type="text" id="counselingTitle" placeholder="?ë‹´ ?œëª©???…ë ¥?˜ì„¸?? required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>?ë‹´ ?´ìš©</label>
+                            <textarea id="counselingContent" rows="5" placeholder="?ë‹´ë°›ê³  ?¶ì? ?´ìš©???ì„¸???‘ì„±?´ì£¼?¸ìš”" required></textarea>
+                        </div>
+
+                        <div class="form-row-grid">
+                            <div class="form-group">
+                                <label>?¬ë§ ? ì§œ</label>
+                                <input type="date" id="counselingDate" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>?¬ë§ ?œê°„</label>
+                                <select id="counselingTime" required>
+                                    <option value="09:00">09:00</option>
+                                    <option value="10:00">10:00</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="14:00" selected>14:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="16:00">16:00</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>?ë‹´ ë°©ì‹</label>
+                            <select id="counselingMethod" required>
+                                <option value="?”ìƒ?ë‹´">?”ìƒ?ë‹´</option>
+                                <option value="?€ë©´ìƒ??>?€ë©´ìƒ??/option>
+                                <option value="?„í™”?ë‹´">?„í™”?ë‹´</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-submit">?ë‹´ ? ì²­?˜ê¸°</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ???ë‹´ ??-->
+            <div class="tab-content" id="my-tab">
+                <div class="counseling-list">
+                    <h2>???ë‹´ ?´ì—­</h2>
+                    <div id="myCounselingList">
+                        <p style="text-align: center; color: #6b7280; padding: 2rem;">? ì²­???ë‹´???†ìŠµ?ˆë‹¤.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ë©”ì‹œì§€ ??-->
+            <div class="tab-content" id="message-tab">
+                <div class="message-container">
+                    <h2>?ë‹´ ë©”ì‹œì§€</h2>
+                    <p class="empty-state">ë©”ì‹œì§€ê°€ ?†ìŠµ?ˆë‹¤.</p>
+                </div>
+            </div>
+
+            <!-- ?ë‹´êµì‚¬ ??-->
+            <div class="tab-content" id="teachers-tab">
+                <div class="teachers-grid">
+                    <h2>?ë‹´êµì‚¬ ?Œê°œ</h2>
+                    <div id="teachersListContainer">
+                        <p style="text-align: center; color: #6b7280; padding: 2rem;">?±ë¡???ë‹´êµì‚¬ê°€ ?†ìŠµ?ˆë‹¤.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/counseling.js"></script>
+    <script>
+        // ?¬ìš©???•ì¸ ë°?UI ì´ˆê¸°??
+        const currentUser = auth.getCurrentUser();
+        const isTeacher = currentUser && currentUser.user_type === 'teacher';
+
+        // ? ìƒ?˜ì¸ ê²½ìš° UI ë³€ê²?
+        if (isTeacher) {
+            document.getElementById('pageSubtitle').textContent = '?™ìƒ?¤ì˜ ?ë‹´ ? ì²­???•ì¸?˜ê³  ê´€ë¦¬í•˜?¸ìš”';
+            
+            // ?™ìƒ????³¼ ì»¨í…ì¸??¨ê¸°ê¸?
+            document.getElementById('studentTabs').style.display = 'none';
+            document.getElementById('apply-tab').classList.remove('active');
+            document.getElementById('apply-tab').style.display = 'none';
+            document.getElementById('my-tab').style.display = 'none';
+            document.getElementById('teachers-tab').style.display = 'none';
+            
+            // ? ìƒ?˜ìš© ??³¼ ì»¨í…ì¸??œì‹œ
+            document.getElementById('teacherTabs').style.display = 'flex';
+            document.getElementById('requests-tab').style.display = 'block';
+            document.getElementById('requests-tab').classList.add('active');
+            
+            // ?ë‹´ ? ì²­ ?´ì—­ ë¡œë“œ
+            loadCounselingRequests();
+            
+            // ???¼ì • ë¡œë“œ
+            loadMySchedule();
+        } else {
+            // ?™ìƒ??ê²½ìš° ? ìƒ?˜ìš© ?¨ê¸°ê¸?
+            document.getElementById('teacherTabs').style.display = 'none';
+            document.getElementById('requests-tab').style.display = 'none';
+            document.getElementById('schedule-tab').style.display = 'none';
+        }
+
+        // ? ìƒ?˜ìš©: ???¼ì • ë¡œë“œ
+        function loadMySchedule() {
+            const scheduleList = document.getElementById('scheduleList');
+            if (!scheduleList) return;
+            
+            let counselingRequests = JSON.parse(localStorage.getItem('counselingRequests') || '[]');
+            
+            // ?„ì¬ ? ìƒ?˜ì˜ ?¹ì¸/ê±°ì ˆ???ë‹´ë§??„í„°ë§?
+            const mySchedules = counselingRequests.filter(req => 
+                req.teacherId === currentUser.id && (req.status === 'approved' || req.status === 'rejected')
+            );
+            
+            if (mySchedules.length === 0) {
+                scheduleList.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">ì²˜ë¦¬???ë‹´ ?´ì—­???†ìŠµ?ˆë‹¤.</p>';
+                return;
+            }
+            
+            const statusMap = {
+                'approved': { text: '?¹ì¸??, color: '#d1fae5', textColor: '#065f46', icon: '?? },
+                'rejected': { text: 'ê±°ì ˆ??, color: '#fee2e2', textColor: '#991b1b', icon: '?? }
+            };
+            
+            scheduleList.innerHTML = mySchedules.map(req => {
+                const status = statusMap[req.status];
+                return `
+                    <div class="schedule-card" style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-left: 4px solid ${req.status === 'approved' ? '#10b981' : '#ef4444'};">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                            <div>
+                                <h3 style="margin: 0 0 0.5rem 0; color: var(--primary-color);">${req.title}</h3>
+                                <p style="margin: 0; color: #6b7280;">?™ìƒ: ${req.studentName} | ? í˜•: ${req.type}</p>
+                            </div>
+                            <span style="padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem; background: ${status.color}; color: ${status.textColor}; font-weight: 600;">
+                                ${status.icon} ${status.text}
+                            </span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem; padding: 1rem; background: #f9fafb; border-radius: 4px;">
+                            <div>
+                                <label style="font-size: 0.85rem; color: #6b7280;">? ì§œ</label>
+                                <p style="margin: 0.25rem 0 0 0; font-weight: 600;">${req.date}</p>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.85rem; color: #6b7280;">?œê°„</label>
+                                <p style="margin: 0.25rem 0 0 0; font-weight: 600;">${req.time}</p>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.85rem; color: #6b7280;">ë°©ë²•</label>
+                                <p style="margin: 0.25rem 0 0 0; font-weight: 600;">${req.method}</p>
+                            </div>
+                        </div>
+                        ${req.status === 'rejected' ? `
+                            <div style="padding: 1rem; background: #fee2e2; border-radius: 4px;">
+                                <p style="margin: 0; font-weight: 600; color: #991b1b; margin-bottom: 0.5rem;">ê±°ì ˆ ?¬ìœ </p>
+                                <p style="margin: 0; color: #7f1d1d;">${req.rejectReason}</p>
+                            </div>
+                        ` : ''}
+                        ${req.status === 'approved' ? `
+                            <div style="padding: 1rem; background: #d1fae5; border-radius: 4px;">
+                                <p style="margin: 0; color: #065f46;">
+                                    <strong>???¹ì¸??/strong> - ?ˆì •???ë‹´?…ë‹ˆ?? ?™ìƒ???¼ì •?ë„ ?œì‹œ?©ë‹ˆ??
+                                </p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ? ìƒ?˜ìš©: ?ë‹´ ? ì²­ ?´ì—­ ë¡œë“œ
+        function loadCounselingRequests() {
+            const requestsList = document.getElementById('counselingRequestsList');
+            
+            // localStorage?ì„œ ?ë‹´ ? ì²­ ?°ì´??ê°€?¸ì˜¤ê¸?
+            let counselingRequests = JSON.parse(localStorage.getItem('counselingRequests') || '[]');
+            
+            // ì´ˆê¸° ?˜í”Œ ?°ì´???ì„± ?ˆí•¨ - ?¤ì œ ? ì²­ë§??œì‹œ
+            // (?˜í”Œ ?°ì´?°ê? ?„ìš”?˜ë©´ ë¸Œë¼?°ì? ì½˜ì†”?ì„œ ì§ì ‘ ì¶”ê?)
+            
+            // ?„ì¬ ? ìƒ?˜ì—ê²????€ê¸°ì¤‘??? ì²­ë§??„í„°ë§?
+            const myRequests = counselingRequests.filter(req => 
+                req.teacherId === currentUser.id && req.status === 'pending'
+            );
+
+            if (myRequests.length === 0) {
+                requestsList.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">?ë‹´ ? ì²­ ?´ì—­???†ìŠµ?ˆë‹¤.</p>';
+                return;
+            }
+
+            requestsList.innerHTML = myRequests.map(req => `
+                <div class="counseling-request-card" style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        <div>
+                            <h3 style="margin: 0 0 0.5rem 0; color: var(--primary-color);">${req.title}</h3>
+                            <p style="margin: 0; color: #6b7280;">? ì²­?? ${req.studentName} | ? í˜•: ${req.type}</p>
+                        </div>
+                        <span class="status-badge" style="padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem; background: #fef3c7; color: #92400e;">?€ê¸°ì¤‘</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem; padding: 1rem; background: #f9fafb; border-radius: 4px;">
+                        <div>
+                            <label style="font-size: 0.85rem; color: #6b7280;">?ë‹´ ? ì§œ</label>
+                            <p style="margin: 0.25rem 0 0 0; font-weight: 600;">${req.date}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; color: #6b7280;">?ë‹´ ?œê°„</label>
+                            <p style="margin: 0.25rem 0 0 0; font-weight: 600;">${req.time}</p>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem; color: #6b7280;">?ë‹´ ë°©ë²•</label>
+                            <p style="margin: 0.25rem 0 0 0; font-weight: 600;">${req.method}</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                        <button class="btn btn-secondary" onclick="viewRequestDetail(${req.id})" style="padding: 0.5rem 1rem;">?ì„¸ë³´ê¸°</button>
+                        <button class="btn btn-primary" onclick="approveRequest(${req.id})" style="padding: 0.5rem 1rem;">?¹ì¸</button>
+                        <button class="btn" onclick="rejectRequest(${req.id})" style="padding: 0.5rem 1rem; background: #ef4444; color: white;">ê±°ì ˆ</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewRequestDetail(id) {
+            alert('?ë‹´ ? ì²­ ?ì„¸ë³´ê¸° (ID: ' + id + ')');
+        }
+
+        function approveRequest(id) {
+            if (confirm('???ë‹´ ? ì²­???¹ì¸?˜ì‹œê² ìŠµ?ˆê¹Œ?')) {
+                let counselingRequests = JSON.parse(localStorage.getItem('counselingRequests') || '[]');
+                const requestIndex = counselingRequests.findIndex(req => req.id === id);
+                
+                if (requestIndex !== -1) {
+                    counselingRequests[requestIndex].status = 'approved';
+                    counselingRequests[requestIndex].approvedAt = new Date().toISOString();
+                    localStorage.setItem('counselingRequests', JSON.stringify(counselingRequests));
+                    
+                    alert('?ë‹´???¹ì¸?˜ì—ˆ?µë‹ˆ?? ?™ìƒ???¼ì •???ë™?¼ë¡œ ì¶”ê??©ë‹ˆ??');
+                    loadCounselingRequests();
+                    loadMySchedule(); // ???¼ì •???…ë°?´íŠ¸
+                }
+            }
+        }
+
+        function rejectRequest(id) {
+            const reason = prompt('ê±°ì ˆ ?¬ìœ ë¥??…ë ¥?´ì£¼?¸ìš”:');
+            
+            if (reason === null) {
+                return; // ì·¨ì†Œ
+            }
+            
+            if (reason.trim() === '') {
+                alert('ê±°ì ˆ ?¬ìœ ë¥??…ë ¥?´ì£¼?¸ìš”.');
+                return;
+            }
+            
+            let counselingRequests = JSON.parse(localStorage.getItem('counselingRequests') || '[]');
+            const requestIndex = counselingRequests.findIndex(req => req.id === id);
+            
+            if (requestIndex !== -1) {
+                counselingRequests[requestIndex].status = 'rejected';
+                counselingRequests[requestIndex].rejectedAt = new Date().toISOString();
+                counselingRequests[requestIndex].rejectReason = reason;
+                localStorage.setItem('counselingRequests', JSON.stringify(counselingRequests));
+                
+                alert('?ë‹´??ê±°ì ˆ?˜ì—ˆ?µë‹ˆ??');
+                loadCounselingRequests();
+                loadMySchedule(); // ???¼ì •???…ë°?´íŠ¸
+            }
+        }
+
+        // ???„í™˜ ê¸°ëŠ¥
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const parentTabs = btn.closest('.counseling-tabs');
+                parentTabs.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                btn.classList.add('active');
+                const tabName = btn.getAttribute('data-tab');
+                const targetTab = document.getElementById(tabName + '-tab');
+                if (targetTab) {
+                    targetTab.classList.add('active');
+                }
+            });
+        });
+
+        // ?ë‹´êµì‚¬ ëª©ë¡ ë¡œë“œ
+        function loadTeachersList() {
+            const counselorSelect = document.getElementById('counselor');
+            if (!counselorSelect) return;
+            
+            const users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
+            const teachers = users.filter(u => u.user_type === 'teacher');
+            
+            // ê¸°ì¡´ ?µì…˜ ? ì??˜ê³  teacher ì¶”ê?
+            counselorSelect.innerHTML = '<option value="">?ë‹´êµì‚¬ë¥?? íƒ?˜ì„¸??/option>';
+            
+            if (teachers.length === 0) {
+                counselorSelect.innerHTML += '<option value="" disabled>?±ë¡??? ìƒ?˜ì´ ?†ìŠµ?ˆë‹¤</option>';
+            } else {
+                teachers.forEach(teacher => {
+                    const option = document.createElement('option');
+                    option.value = teacher.id; // teacher IDë¥?ê°’ìœ¼ë¡??¬ìš©
+                    option.textContent = `${teacher.name} (${teacher.email})`;
+                    option.dataset.teacherName = teacher.name; // ?´ë¦„ ?€??
+                    counselorSelect.appendChild(option);
+                });
+            }
+        }
+
+        // ?ë‹´êµì‚¬ ?„ë¡œ???œì‹œ
+        function loadTeachersProfile() {
+            const container = document.getElementById('teachersListContainer');
+            if (!container) return;
+            
+            const users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
+            const teachers = users.filter(u => u.user_type === 'teacher');
+            
+            if (teachers.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">?±ë¡???ë‹´êµì‚¬ê°€ ?†ìŠµ?ˆë‹¤.</p>';
+                return;
+            }
+            
+            container.innerHTML = teachers.map(teacher => `
+                <div class="teacher-card" style="background: white; border-radius: 12px; padding: 2rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div class="teacher-avatar" style="font-size: 4rem; margin-bottom: 1rem;">?‘¨?ğŸ?/div>
+                    <h3 style="margin: 0 0 0.5rem 0; color: var(--primary-color);">${teacher.name}</h3>
+                    <p style="margin: 0 0 0.5rem 0; color: #6b7280; font-size: 0.9rem;">${teacher.email}</p>
+                    <p style="margin: 0 0 1rem 0; color: #4b5563;">${teacher.schoolName || '?„ì£¼ê³µì—…ê³ ë“±?™êµ'}</p>
+                    <div style="padding: 1rem; background: #f3f4f6; border-radius: 8px; margin-top: 1rem;">
+                        <p style="margin: 0; font-size: 0.9rem; color: #374151;">
+                            <strong>?°ë½ì²?</strong> ${teacher.phone || '?•ë³´ ?†ìŒ'}
+                        </p>
+                    </div>
+                    <button onclick="contactTeacher(${teacher.id})" class="btn btn-primary" style="margin-top: 1rem; width: 100%;">
+                        ?ë‹´ ? ì²­?˜ê¸°
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function contactTeacher(teacherId) {
+            // ?ë‹´ ? ì²­ ??œ¼ë¡??´ë™?˜ê³  ?´ë‹¹ ? ìƒ???ë™ ? íƒ
+            const applyTab = document.querySelector('.tab-btn[data-tab="apply"]');
+            if (applyTab) {
+                applyTab.click();
+                setTimeout(() => {
+                    const counselorSelect = document.getElementById('counselor');
+                    if (counselorSelect) {
+                        counselorSelect.value = teacherId;
+                        counselorSelect.focus();
+                    }
+                }, 100);
+            }
+        }
+
+        // ?™ìƒ?? ???ë‹´ ?´ì—­ ë¡œë“œ
+        function loadMyCounseling() {
+            const myList = document.getElementById('myCounselingList');
+            if (!myList) return;
+            
+            let counselingRequests = JSON.parse(localStorage.getItem('counselingRequests') || '[]');
+            const myRequests = counselingRequests.filter(req => req.studentId === currentUser.id);
+            
+            if (myRequests.length === 0) {
+                myList.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">? ì²­???ë‹´???†ìŠµ?ˆë‹¤.</p>';
+                return;
+            }
+            
+            const statusMap = {
+                'pending': { text: '?€ê¸°ì¤‘', color: '#fef3c7', textColor: '#92400e' },
+                'approved': { text: '?¹ì¸??, color: '#d1fae5', textColor: '#065f46' },
+                'rejected': { text: 'ê±°ì ˆ??, color: '#fee2e2', textColor: '#991b1b' }
+            };
+            
+            myList.innerHTML = myRequests.map(req => {
+                const status = statusMap[req.status] || statusMap['pending'];
+                return `
+                    <div class="counseling-card" style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                            <div>
+                                <h3 style="margin: 0 0 0.5rem 0; color: var(--primary-color);">${req.title}</h3>
+                                <p style="margin: 0; color: #6b7280;">?ë‹´êµì‚¬: ${req.teacherName} | ? í˜•: ${req.type}</p>
+                            </div>
+                            <span style="padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.85rem; background: ${status.color}; color: ${status.textColor};">${status.text}</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; padding: 1rem; background: #f9fafb; border-radius: 4px;">
+                            <div>
+                                <label style="font-size: 0.85rem; color: #6b7280;">? ì§œ</label>
+                                <p style="margin: 0.25rem 0 0 0; font-weight: 600;">${req.date}</p>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.85rem; color: #6b7280;">?œê°„</label>
+                                <p style="margin: 0.25rem 0 0 0; font-weight: 600;">${req.time}</p>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.85rem; color: #6b7280;">ë°©ë²•</label>
+                                <p style="margin: 0.25rem 0 0 0; font-weight: 600;">${req.method}</p>
+                            </div>
+                        </div>
+                        ${req.status === 'rejected' ? `
+                            <div style="margin-top: 1rem; padding: 1rem; background: #fee2e2; border-radius: 4px; border-left: 4px solid #dc2626;">
+                                <p style="margin: 0; font-weight: 600; color: #991b1b; margin-bottom: 0.5rem;">ê±°ì ˆ ?¬ìœ </p>
+                                <p style="margin: 0; color: #7f1d1d;">${req.rejectReason}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ?™ìƒ?????œì¶œ
+        const counselingForm = document.getElementById('counselingForm');
+        if (counselingForm && !isTeacher) {
+            // ?ë‹´êµì‚¬ ëª©ë¡ ë¡œë“œ
+            loadTeachersList();
+            
+            // ???ë‹´ ?´ì—­ ë¡œë“œ
+            loadMyCounseling();
+            
+            counselingForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // ? ìƒ???•ë³´ ì°¾ê¸°
+                const counselorSelect = document.getElementById('counselor');
+                const teacherId = parseInt(counselorSelect.value);
+                const selectedOption = counselorSelect.options[counselorSelect.selectedIndex];
+                const teacherName = selectedOption.dataset.teacherName || selectedOption.text;
+                
+                const newRequest = {
+                    id: Date.now(),
+                    studentId: currentUser.id,
+                    studentName: currentUser.name,
+                    teacherId: teacherId,
+                    teacherName: teacherName,
+                    type: document.getElementById('counselingType').value,
+                    title: document.getElementById('counselingTitle').value,
+                    content: document.getElementById('counselingContent').value,
+                    date: document.getElementById('counselingDate').value,
+                    time: document.getElementById('counselingTime').value,
+                    method: document.getElementById('counselingMethod').value,
+                    status: 'pending',
+                    createdAt: new Date().toISOString()
+                };
+                
+                let counselingRequests = JSON.parse(localStorage.getItem('counselingRequests') || '[]');
+                counselingRequests.push(newRequest);
+                localStorage.setItem('counselingRequests', JSON.stringify(counselingRequests));
+
+                alert('?ë‹´ ? ì²­???„ë£Œ?˜ì—ˆ?µë‹ˆ??');
+                e.target.reset();
+                
+                // ???ë‹´ ?´ì—­ ?ˆë¡œê³ ì¹¨
+                loadMyCounseling();
+            });
+        }
+
+        // ?¬ìš©???´ë¦„ ?œì‹œ
+        if (currentUser) {
+            document.getElementById('userName').textContent = currentUser.name;
+        }
+
+        // ???„í™˜ ê¸°ëŠ¥
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const parentTabs = btn.closest('.counseling-tabs');
+                parentTabs.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                btn.classList.add('active');
+                const tabName = btn.getAttribute('data-tab');
+                const targetTab = document.getElementById(tabName + '-tab');
+                if (targetTab) {
+                    targetTab.classList.add('active');
+                    
+                    // ???¼ì • ???´ë¦­ ???°ì´??ë¡œë“œ
+                    if (tabName === 'schedule' && isTeacher) {
+                        loadMySchedule();
+                    }
+                    // ???ë‹´ ???´ë¦­ ???°ì´??ë¡œë“œ (?™ìƒ)
+                    if (tabName === 'my' && !isTeacher) {
+                        loadMyCounseling();
+                    }
+                    // ?ë‹´êµì‚¬ ???´ë¦­ ???„ë¡œ??ë¡œë“œ (?™ìƒ)
+                    if (tabName === 'teachers' && !isTeacher) {
+                        loadTeachersProfile();
+                    }
+                }
+            });
+        });
+
+        // ?¤ëŠ˜ ? ì§œë¥?ìµœì†Œ ? ì§œë¡??¤ì •
+        const dateInput = document.getElementById('counselingDate');
+        if (dateInput) {
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.setAttribute('min', today);
+        }
+    </script>
+</body>
+</html>

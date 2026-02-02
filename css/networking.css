@@ -1,0 +1,402 @@
+.networking-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.stat-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.stat-box h3 {
+    color: var(--text-light);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.alumni-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.alumni-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    transition: all 0.3s;
+}
+
+.alumni-card:hover {
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+}
+
+.alumni-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.alumni-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.btn-connect {
+    padding: 0.5rem 1.2rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-connect:hover {
+    background: var(--secondary-color);
+}
+
+.btn-connect.connected {
+    background: var(--success-color);
+}
+
+.alumni-info h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.alumni-company {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.alumni-position {
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+.alumni-details {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.detail-tag {
+    padding: 0.3rem 0.8rem;
+    background: var(--bg-light);
+    border-radius: 15px;
+    font-size: 0.85rem;
+}
+
+.alumni-bio {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.alumni-actions {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.alumni-actions button {
+    flex: 1;
+    padding: 0.7rem;
+    border-radius: 8px;
+}
+
+.mentoring-section {
+    background: white;
+    padding: 3rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.mentoring-section h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.mentoring-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.mentoring-card {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.mentoring-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.mentoring-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.mentoring-card p {
+    margin-bottom: 1.5rem;
+    opacity: 0.95;
+}
+
+.mentoring-card .btn {
+    background: white;
+    color: var(--primary-color);
+}
+
+/* Search and Filter Styles */
+.search-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.search-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 0.8rem 1.5rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 30px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.search-bar input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.btn-search {
+    padding: 0.8rem 2rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.btn-search:hover {
+    background: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.filter-bar {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filter-bar select {
+    flex: 1;
+    min-width: 150px;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.filter-bar select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.filter-bar select:hover {
+    border-color: #ccc;
+}
+
+@media (max-width: 768px) {
+    .networking-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .alumni-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .search-bar {
+        flex-direction: column;
+    }
+
+    .search-bar input,
+    .btn-search {
+        width: 100%;
+    }
+
+    .filter-bar {
+        flex-direction: column;
+    }
+
+    .filter-bar select {
+        width: 100%;
+        min-width: auto;
+    }
+}
+
+/* 메시지 리스트 스타일 */
+.message-item {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.message-item:hover {
+    background: #f9fafb;
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+}
+
+.message-item.unread {
+    background: #eff6ff;
+    border-left: 4px solid var(--primary-color);
+}
+
+.message-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.message-user {
+    color: var(--text-color);
+    font-size: 0.95rem;
+}
+
+.message-user strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.message-date {
+    color: var(--text-light);
+    font-size: 0.85rem;
+}
+
+.message-preview {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.new-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--primary-color);
+    color: white;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* 메시지 상세보기 스타일 */
+.message-detail {
+    background: white;
+}
+
+.message-detail-header {
+    background: #f9fafb;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.message-detail-row {
+    display: flex;
+    margin-bottom: 0.8rem;
+}
+
+.message-detail-row:last-child {
+    margin-bottom: 0;
+}
+
+.message-label {
+    color: var(--text-light);
+    font-weight: 600;
+    min-width: 100px;
+}
+
+.message-value {
+    color: var(--text-color);
+}
+
+.message-detail-body {
+    padding: 1.5rem;
+    background: #f9fafb;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    min-height: 150px;
+}
+
+.message-detail-body p {
+    color: var(--text-color);
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.message-detail-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+/* stat-box에 호버 효과 추가 */
+.stat-box {
+    transition: all 0.3s;
+}
+
+.stat-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+}

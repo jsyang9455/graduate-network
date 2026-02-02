@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ì§€?ì ?ì„¸ ?•ë³´ - JJOBB</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .applicant-detail-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .applicant-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .applicant-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1.5rem;
+        }
+
+        .applicant-info h1 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .applicant-info p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .applicant-status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .applicant-status-badge.applied {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .applicant-status-badge.interview {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .applicant-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .meta-icon {
+            font-size: 1.5rem;
+        }
+
+        .meta-info h3 {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .meta-info p {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .applicant-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .section-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .info-row {
+            display: flex;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            width: 150px;
+            color: var(--text-dark);
+        }
+
+        .info-value {
+            flex: 1;
+            color: var(--text-light);
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .skill-badge {
+            padding: 0.5rem 1rem;
+            background: #e0e7ff;
+            color: #4c51bf;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-approve {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background: #059669;
+        }
+
+        .btn-reject {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background: #dc2626;
+        }
+
+        .btn-contact {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-contact:hover {
+            background: var(--secondary-color);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.65rem;
+            top: 0.25rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            border: 2px solid white;
+        }
+
+        .timeline-date {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-content {
+            font-weight: 600;
+        }
+
+        .notes-area {
+            width: 100%;
+            min-height: 100px;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            resize: vertical;
+        }
+
+        .btn-save-note {
+            margin-top: 0.5rem;
+            padding: 0.5rem 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-save-note:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <header id="mainHeader">
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">?€?œë³´??/a></li>
+                <li><a href="jobs.html">ì±„ìš© ?•ë³´</a></li>
+                <li><a href="networking.html">?™ë¬¸ ?¤íŠ¸?Œí‚¹</a></li>
+                <li><a href="profile.html">???„ë¡œ??/a></li>
+            </ul>
+            <div class="user-menu">
+                <span class="user-name" id="userName"></span>
+                <button onclick="auth.logout()" class="btn-logout">ë¡œê·¸?„ì›ƒ</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="applicant-detail-container">
+        <a href="dashboard.html" class="back-link">???€?œë³´?œë¡œ ?Œì•„ê°€ê¸?/a>
+
+        <div class="applicant-header">
+            <div class="applicant-header-top">
+                <div class="applicant-info">
+                    <h1 id="applicantName">ê¹€ì² ìˆ˜</h1>
+                    <p id="applicantPosition">?„ë¡ ?¸ì—”??ê°œë°œ??ì§€??/p>
+                </div>
+                <span class="applicant-status-badge applied" id="statusBadge">ì§€?ì¤‘</span>
+            </div>
+
+            <div class="applicant-meta">
+                <div class="meta-item">
+                    <span class="meta-icon">?“§</span>
+                    <div class="meta-info">
+                        <h3>?´ë©”??/h3>
+                        <p id="applicantEmail">kim@example.com</p>
+                    </div>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-icon">?“±</span>
+                    <div class="meta-info">
+                        <h3>?°ë½ì²?/h3>
+                        <p id="applicantPhone">010-1234-5678</p>
+                    </div>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-icon">?“…</span>
+                    <div class="meta-info">
+                        <h3>ì§€?ì¼</h3>
+                        <p id="appliedDate">2024-09-30</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="applicant-content">
+            <div class="main-content">
+                <!-- ê¸°ë³¸ ?•ë³´ -->
+                <div class="section-card">
+                    <h2>ê¸°ë³¸ ?•ë³´</h2>
+                    <div class="info-row">
+                        <div class="info-label">?™ë ¥</div>
+                        <div class="info-value">?„ì£¼ê³µì—…ê³ ë“±?™êµ ì¡¸ì—… (2020)</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">ê²½ë ¥</div>
+                        <div class="info-value">3??(2020-2023)</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">ì£¼ìš” ê¸°ìˆ </div>
+                        <div class="info-value">
+                            <div class="skills-list">
+                                <span class="skill-badge">React</span>
+                                <span class="skill-badge">TypeScript</span>
+                                <span class="skill-badge">Vue.js</span>
+                                <span class="skill-badge">HTML/CSS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ?ê¸°?Œê°œ??-->
+                <div class="section-card">
+                    <h2>?ê¸°?Œê°œ??/h2>
+                    <p>?ˆë…•?˜ì„¸?? ?„ë¡ ?¸ì—”??ê°œë°œ?ë¡œ ì§€?í•˜ê²???ê¹€ì² ìˆ˜?…ë‹ˆ?? ?„ì£¼ê³µì—…ê³ ë“±?™êµë¥?ì¡¸ì—…?˜ê³  3?„ê°„ ??ê°œë°œ ë¶„ì•¼?ì„œ ê²½ë ¥???“ì•„?”ìŠµ?ˆë‹¤. React?€ TypeScriptë¥?ì£¼ë¡œ ?¬ìš©?˜ë©°, ?¬ìš©??ê²½í—˜??ì¤‘ì‹œ?˜ëŠ” ?¸í„°?˜ì´??ê°œë°œ???´ì •??ê°€ì§€ê³??ˆìŠµ?ˆë‹¤.</p>
+                    <br>
+                    <p>ìµœê·¼?ëŠ” ?€ê·œëª¨ ?„ë¡œ?íŠ¸?ì„œ ì»´í¬?ŒíŠ¸ ?¼ì´ë¸ŒëŸ¬ë¦?êµ¬ì¶•???´ë‹¹?˜ì—¬ ê°œë°œ ?¨ìœ¨?±ì„ 30% ?¥ìƒ?œí‚¨ ê²½í—˜???ˆìŠµ?ˆë‹¤. ê·€?¬ì˜ ?ì‹ ?ì¸ ?„ë¡œ?íŠ¸??ê¸°ì—¬?˜ê³  ?¶ìŠµ?ˆë‹¤.</p>
+                </div>
+
+                <!-- ë©”ëª¨ -->
+                <div class="section-card">
+                    <h2>ì±„ìš© ?´ë‹¹??ë©”ëª¨</h2>
+                    <textarea class="notes-area" id="notes" placeholder="ì§€?ì???€??ë©”ëª¨ë¥??‘ì„±?˜ì„¸??..">ê¸°ìˆ  ?¤íƒ???°ìˆ˜?? ë©´ì ‘ ???„ë¡œ?íŠ¸ ê²½í—˜ êµ¬ì²´?ìœ¼ë¡?ì§ˆë¬¸??ê²?</textarea>
+                    <button class="btn-save-note" onclick="saveNote()">ë©”ëª¨ ?€??/button>
+                </div>
+            </div>
+
+            <div class="sidebar-content">
+                <!-- ì§„í–‰ ?íƒœ -->
+                <div class="section-card">
+                    <h2>ì§„í–‰ ?íƒœ</h2>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">2024-09-30</div>
+                            <div class="timeline-content">ì§€?ì„œ ?‘ìˆ˜</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">2024-10-02</div>
+                            <div class="timeline-content">?œë¥˜ ê²€? ì¤‘</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ?¡ì…˜ -->
+                <div class="section-card">
+                    <h2>?¡ì…˜</h2>
+                    <div class="action-buttons">
+                        <button class="btn-action btn-approve" onclick="approveApplicant()">???¹ì¸</button>
+                        <button class="btn-action btn-reject" onclick="rejectApplicant()">??ê±°ì ˆ</button>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-action btn-contact" onclick="contactApplicant()">?“§ ?°ë½?˜ê¸°</button>
+                    </div>
+                </div>
+
+                <!-- ì²¨ë? ?Œì¼ -->
+                <div class="section-card">
+                    <h2>ì²¨ë? ?Œì¼</h2>
+                    <div style="padding: 1rem 0;">
+                        <a href="#" style="display: block; margin-bottom: 0.5rem; color: var(--primary-color);">?“„ ?´ë ¥??pdf</a>
+                        <a href="#" style="display: block; color: var(--primary-color);">?“„ ?¬íŠ¸?´ë¦¬??pdf</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Check authentication
+        if (!auth.requireAuth()) {
+            window.location.href = 'login.html';
+        }
+
+        // Update user name
+        const user = auth.getCurrentUser();
+        if (user) {
+            document.getElementById('userName').textContent = user.name;
+        }
+
+        // Get applicant ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const applicantId = urlParams.get('id');
+
+        if (applicantId) {
+            // Load applicant data (?˜í”Œ ?°ì´???¬ìš©)
+            console.log('Loading applicant:', applicantId);
+        }
+
+        function saveNote() {
+            const notes = document.getElementById('notes').value;
+            localStorage.setItem(`applicant_note_${applicantId}`, notes);
+            alert('ë©”ëª¨ê°€ ?€?¥ë˜?ˆìŠµ?ˆë‹¤.');
+        }
+
+        function approveApplicant() {
+            if (confirm('??ì§€?ìë¥??¹ì¸?˜ì‹œê² ìŠµ?ˆê¹Œ?')) {
+                alert('ì§€?ìê°€ ?¹ì¸?˜ì—ˆ?µë‹ˆ??');
+                // TODO: Update status
+            }
+        }
+
+        function rejectApplicant() {
+            if (confirm('??ì§€?ìë¥?ê±°ì ˆ?˜ì‹œê² ìŠµ?ˆê¹Œ?')) {
+                alert('ì§€?ìê°€ ê±°ì ˆ?˜ì—ˆ?µë‹ˆ??');
+                // TODO: Update status
+            }
+        }
+
+        function contactApplicant() {
+            const email = document.getElementById('applicantEmail').textContent;
+            window.location.href = `mailto:${email}`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?€?¥ì†Œ ?•ì¸</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        pre {
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .danger {
+            background: #f44336;
+        }
+        .danger:hover {
+            background: #da190b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LocalStorage ?•ì¸ ?„êµ¬</h1>
+        
+        <h2>?±ë¡???¬ìš©??ëª©ë¡</h2>
+        <pre id="usersData">Loading...</pre>
+        
+        <h2>?„ì¬ ë¡œê·¸???•ë³´</h2>
+        <pre id="currentUser">Loading...</pre>
+        
+        <h2>? í°</h2>
+        <pre id="token">Loading...</pre>
+        
+        <div>
+            <button onclick="refreshData()">?ˆë¡œê³ ì¹¨</button>
+            <button onclick="clearStorage()" class="danger">?€?¥ì†Œ ì´ˆê¸°??/button>
+            <button onclick="testLogin()">?ŒìŠ¤??ë¡œê·¸??/button>
+        </div>
+    </div>
+
+    <script>
+        function refreshData() {
+            // Get users
+            const users = localStorage.getItem('graduateNetwork_users');
+            document.getElementById('usersData').textContent = users ? JSON.stringify(JSON.parse(users), null, 2) : '?±ë¡???¬ìš©???†ìŒ';
+            
+            // Get current user
+            const currentUser = localStorage.getItem('graduateNetwork_user');
+            document.getElementById('currentUser').textContent = currentUser || 'ë¡œê·¸?¸í•˜ì§€ ?ŠìŒ';
+            
+            // Get token
+            const token = localStorage.getItem('token');
+            document.getElementById('token').textContent = token || '? í° ?†ìŒ';
+        }
+
+        function clearStorage() {
+            if (confirm('ëª¨ë“  ë¡œì»¬ ?°ì´?°ë? ?? œ?˜ì‹œê² ìŠµ?ˆê¹Œ?')) {
+                localStorage.clear();
+                alert('?€?¥ì†Œê°€ ì´ˆê¸°?”ë˜?ˆìŠµ?ˆë‹¤.');
+                refreshData();
+            }
+        }
+
+        function testLogin() {
+            const users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
+            console.log('?„ì²´ ?¬ìš©??', users);
+            
+            const testEmail = 'aa@aa.com';
+            const testPassword = prompt('ë¹„ë?ë²ˆí˜¸ë¥??…ë ¥?˜ì„¸??');
+            
+            console.log('ê²€??ì¤? email =', testEmail, 'password =', testPassword);
+            
+            const foundUser = users.find(u => {
+                console.log('ë¹„êµ:', u.email, '===', testEmail, '&&', u.password, '===', testPassword);
+                return u.email === testEmail && u.password === testPassword;
+            });
+            
+            if (foundUser) {
+                alert('?¬ìš©??ì°¾ìŒ: ' + JSON.stringify(foundUser, null, 2));
+                console.log('ì°¾ì? ?¬ìš©??', foundUser);
+            } else {
+                alert('?¬ìš©?ë? ì°¾ì„ ???†ìŠµ?ˆë‹¤.\n\n?±ë¡???¬ìš©??ëª©ë¡:\n' + JSON.stringify(users, null, 2));
+                console.log('?¬ìš©?ë? ì°¾ì„ ???†ìŒ');
+            }
+        }
+
+        // Initial load
+        refreshData();
+    </script>
+</body>
+</html>

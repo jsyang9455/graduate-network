@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?�주공업고등?�교 졸업???�트?�크</title>    <link rel="icon" type="image/png" href="images/favicon.png">    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header id="mainHeader">
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">??/a></li>
+                <li><a href="jobs.html">채용 ?�보</a></li>
+                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
+                <li><a href="counseling.html">진로 ?�담</a></li>
+            </ul>
+            <div class="auth-buttons" id="authButtons">
+                <a href="login.html" class="btn-login">로그??/a>
+                <a href="register.html" class="btn-register">?�원가??/a>
+            </div>
+            <div class="user-menu" id="userMenu" style="display: none;">
+                <span class="user-name" id="userName"></span>
+                <button onclick="logout()" class="btn-logout">로그?�웃</button>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>미래�??�께 만들?��???br>졸업???�트?�크</h1>
+                <p>?�주공고 졸업?�의 ?�공?�인 진로?� 지?�적???�장??지?�합?�다. ?��????�트?�크�??�해 ?�로??기회�?발견?�세??</p>
+                <div class="hero-buttons">
+                    <a href="register.html" class="btn btn-primary">졸업???�록?�기</a>
+                    <a href="login.html?type=company&returnUrl=company-profile.html" class="btn btn-secondary">?�사 ?�보 ?�록</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" alt="Modern industrial facility">
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section fade-in-up">
+        <div class="stats-header">
+            <h2>?�재 주요 ?�황</h2>
+            <p class="stats-subtitle">
+                <span>?�시�??�데?�트 (5초마???�동 갱신)</span>
+                <span>?��</span>
+            </p>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalStudents">0</div>
+                <div class="stat-label">?�록 ?�생</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="employmentRate">94.2%</div>
+                <div class="stat-label">취업�?/div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activeMembers">0</div>
+                <div class="stat-label">?�동 ?�원</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services-section">
+        <div class="section-title">
+            <h2>주요 ?�비??/h2>
+            <p class="section-subtitle">졸업?�들???�공?�인 진로�??�한 ?�양??지???�비?��? ?�공?�니??/p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card" onclick="navigateToService('jobs.html')">
+                <div class="service-icon">?��</div>
+                <h3>취업 ?�보 ?�비??/h3>
+                <p>최신 채용 ?�보?� 맞춤???�자�?추천??받아보세??</p>
+                <a href="jobs.html" class="service-link">?�세??보기 ??/a>
+            </div>
+            <div class="service-card" onclick="navigateToService('networking.html')">
+                <div class="service-icon">?��</div>
+                <h3>?�문 ?�트?�킹</h3>
+                <p>?�후�?졸업?�들�??�결?�어 멘토�?기회�?만들?�보?�요.</p>
+                <a href="networking.html" class="service-link">?�세??보기 ??/a>
+            </div>
+            <div class="service-card" onclick="navigateToService('counseling.html')">
+                <div class="service-icon">?��</div>
+                <h3>진로 ?�담 ?�비??/h3>
+                <p>?�문 ?�담?��???1:1 진로 ?�담??지?�합?�다.</p>
+                <a href="counseling.html" class="service-link">?�세??보기 ??/a>
+            </div>
+            <div class="service-card" onclick="navigateToService('education.html')">
+                <div class="service-icon">?��</div>
+                <h3>?�생 교육 ?�로그램</h3>
+                <p>기술 ?�렌?��? ?�무 ??�� ?�상 교육???�공?�니??</p>
+                <a href="education.html" class="service-link">?�세??보기 ??/a>
+            </div>
+            <div class="service-card" onclick="navigateToService('certificates.html')">
+                <div class="service-icon">?��</div>
+                <h3>증명??발급</h3>
+                <p>각종 증명?��? ?�라?�으�??�청?�고 발급받으?�요.</p>
+                <a href="certificates.html" class="service-link">?�세??보기 ??/a>
+            </div>
+            <div class="service-card" onclick="navigateToService('career.html')">
+                <div class="service-icon">?��</div>
+                <h3>경력 관�?/h3>
+                <p>개인 ?�력�?경력 ?�황??체계?�으�?관리합?�다.</p>
+                <a href="career.html" class="service-link">?�세??보기 ??/a>
+            </div>
+        </div>
+    </section>
+
+    <section class="stories-section">
+        <div class="stories-content">
+            <div class="stories-header">
+                <div class="section-title">
+                    <h2>?�공 ?�토�?/h2>
+                    <p class="section-subtitle">졸업?�들???�양???�공 ?��?�?만나보세??/p>
+                </div>
+            </div>
+            <div class="stories-grid">
+                <div class="story-card">
+                    <div class="story-profile">
+                        <div class="profile-img">김</div>
+                        <div class="profile-info">
+                            <h3>김민수 ('18??졸업)</h3>
+                            <p class="role">?��??�동�??�산기술?� ?�??/p>
+                        </div>
+                    </div>
+                    <p class="story-text">"?�교?�서 배운 기계?�계 기초가 ?�재 ?�무?????��????�고 ?�습?�다."</p>
+                    <p class="story-date">2025.08.10</p>
+                </div>
+                <div class="story-card">
+                    <div class="story-profile">
+                        <div class="profile-img">�?/div>
+                        <div class="profile-info">
+                            <h3>박�???('19??졸업)</h3>
+                            <p class="role">LG?�자 ?�질관�??�임?�구??/p>
+                        </div>
+                    </div>
+                    <p class="story-text">"지?�적???�습�?기술 개발�??�장?�고 ?�습?�다."</p>
+                    <p class="story-date">2025.08.08</p>
+                </div>
+                <div class="story-card">
+                    <div class="story-profile">
+                        <div class="profile-img">??/div>
+                        <div class="profile-info">
+                            <h3>?��???('16??졸업)</h3>
+                            <p class="role">?�크?��??�업 (�?메카???�??/p>
+                        </div>
+                    </div>
+                    <p class="story-text">"?�무 중심 교육?�로 창업??꿈을 ?�룰 ???�었?�니??"</p>
+                    <p class="story-date">2025.08.05</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about">
+                <h3>?�주공업고등?�교</h3>
+                <p>직업교육???�도?�는 ?�계 최고??명품 ?�성?�고</p>
+                <p>?�� ?�북?�별?�치???�주???�진�??�산�?101</p>
+                <p>?�� 063-210-9390</p>
+            </div>
+            <div class="footer-links">
+                <h4>빠른 링크</h4>
+                <ul>
+                    <li><a href="#">?�교 ?�페?��?</a></li>
+                    <li><a href="#">취업 ?�황</a></li>
+                    <li><a href="#">?�문??/a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>지???�비??/h4>
+                <ul>
+                    <li><a href="#">?�용 가?�드</a></li>
+                    <li><a href="#">?�주 묻는 질문</a></li>
+                    <li><a href="#">개인?�보처리방침</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 ?�주공업고등?�교. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

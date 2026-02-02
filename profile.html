@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>???ÑÎ°ú??- JJOBB</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <header id="mainHeader">
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">?Ä?úÎ≥¥??/a></li>
+                <li><a href="jobs.html">Ï±ÑÏö© ?ïÎ≥¥</a></li>
+                <li><a href="networking.html">?ôÎ¨∏ ?§Ìä∏?åÌÇπ</a></li>
+                <li><a href="counseling.html">ÏßÑÎ°ú ?ÅÎã¥</a></li>
+            </ul>
+            <div class="user-menu">
+                <span class="user-name" id="userName"></span>
+                <button onclick="auth.logout()" class="btn-logout">Î°úÍ∑∏?ÑÏõÉ</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <span class="icon">?ìä</span>
+                    <span>?Ä?úÎ≥¥??/span>
+                </a>
+                <a href="profile.html" class="menu-item active">
+                    <span class="icon">?ë§</span>
+                    <span>???ÑÎ°ú??/span>
+                </a>
+                <a href="jobs.html" class="menu-item">
+                    <span class="icon">?íº</span>
+                    <span>Ï±ÑÏö© ?ïÎ≥¥</span>
+                </a>
+                <a href="networking.html" class="menu-item">
+                    <span class="icon">?§ù</span>
+                    <span>?ôÎ¨∏ ?§Ìä∏?åÌÇπ</span>
+                </a>
+                <a href="counseling.html" class="menu-item" id="counselingMenu">
+                    <span class="icon">?í¨</span>
+                    <span>ÏßÑÎ°ú ?ÅÎã¥</span>
+                </a>
+                <a href="career.html" class="menu-item" id="careerMenu">
+                    <span class="icon">?ìà</span>
+                    <span>Í≤ΩÎ†• Í¥ÄÎ¶?/span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1>?ë§ ???ÑÎ°ú??/h1>
+                <button class="btn btn-primary" onclick="alert('?ÑÎ°ú???òÏ†ï Í∏∞Îä•?Ä Ï§ÄÎπ?Ï§ëÏûÖ?àÎã§.')">?ÑÎ°ú???òÏ†ï</button>
+            </div>
+
+            <div class="profile-section">
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <span style="font-size: 4rem;">?ë§</span>
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="profileName">ÍπÄ?¨Ìïô</h2>
+                        <p id="profileType" class="profile-badge">?¨Ìïô??/p>
+                        <p id="profileEmail">student@JJOBB.com</p>
+                        <p id="profilePhone">010-1234-5678</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Í∏∞Î≥∏ ?ïÎ≥¥</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>?¥Î¶Ñ</label>
+                        <p id="infoName">-</p>
+                    </div>
+                    <div class="info-item">
+                        <label>?¥Î©î??/label>
+                        <p id="infoEmail">-</p>
+                    </div>
+                    <div class="info-item">
+                        <label>?ÑÌôîÎ≤àÌò∏</label>
+                        <p id="infoPhone">-</p>
+                    </div>
+                    <div class="info-item">
+                        <label>?¨Ïö©???†Ìòï</label>
+                        <p id="infoUserType">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section" id="studentInfo" style="display:none;">
+                <h2>?ôÏÉù ?ïÎ≥¥</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>?ôÎÖÑ</label>
+                        <p>2?ôÎÖÑ</p>
+                    </div>
+                    <div class="info-item">
+                        <label>?ôÍ≥º</label>
+                        <p>?ÑÍ∏∞Í≥?/p>
+                    </div>
+                    <div class="info-item">
+                        <label>?ôÎ≤à</label>
+                        <p>20240101</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section" id="graduateInfo" style="display:none;">
+                <h2>Ï°∏ÏóÖ???ïÎ≥¥</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Ï°∏ÏóÖ?ÑÎèÑ</label>
+                        <p id="graduationYear">-</p>
+                    </div>
+                    <div class="info-item">
+                        <label>?ÑÍ≥µ</label>
+                        <p id="major">-</p>
+                    </div>
+                    <div class="info-item">
+                        <label>?ÑÏû¨ ÏßÅÏû•</label>
+                        <p id="currentCompany">-</p>
+                    </div>
+                    <div class="info-item">
+                        <label>?ÑÏû¨ ÏßÅÍ∏â</label>
+                        <p id="currentPosition">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section" id="teacherInfo" style="display:none;">
+                <h2>?†ÏÉù???ïÎ≥¥</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>?ôÍµê</label>
+                        <p id="schoolName">-</p>
+                    </div>
+                    <div class="info-item">
+                        <label>?¥Îãπ Í≥ºÎ™©/Î∂ÑÏïº</label>
+                        <p id="teacherSubject">ÏßÑÎ°ú?ÅÎã¥</p>
+                    </div>
+                    <div class="info-item">
+                        <label>?ÅÎã¥ Í∞Ä???úÍ∞Ñ</label>
+                        <p id="counselingTime">?âÏùº 09:00-17:00</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Require authentication
+        auth.requireAuth();
+
+        // Check user type immediately and redirect if company
+        const currentUser = auth.getCurrentUser();
+        if (currentUser && currentUser.user_type === 'company') {
+            window.location.href = 'company-profile.html';
+        }
+
+        // Display user name in header
+        if (currentUser) {
+            document.getElementById('userName').textContent = currentUser.name;
+        }
+
+        // Load profile data
+        async function loadProfile() {
+            const user = auth.getCurrentUser();
+            if (user) {
+                // Double check - redirect company users to company-profile.html
+                if (user.user_type === 'company') {
+                    window.location.href = 'company-profile.html';
+                    return;
+                }
+                
+                // Display basic info
+                document.getElementById('profileName').textContent = user.name;
+                document.getElementById('profileEmail').textContent = user.email;
+                document.getElementById('profilePhone').textContent = user.phone || '?ïÎ≥¥ ?ÜÏùå';
+                
+                // User type in Korean
+                const typeMap = {
+                    'student': '?¨Ìïô??,
+                    'graduate': 'Ï°∏ÏóÖ??,
+                    'teacher': 'ÍµêÏÇ¨',
+                    'company': 'Í∏∞ÏóÖ',
+                    'admin': 'Í¥ÄÎ¶¨Ïûê'
+                };
+                const userTypeKo = typeMap[user.user_type] || user.user_type;
+                document.getElementById('profileType').textContent = userTypeKo;
+                document.getElementById('infoUserType').textContent = userTypeKo;
+                
+                // Fill info grid
+                document.getElementById('infoName').textContent = user.name;
+                document.getElementById('infoEmail').textContent = user.email;
+                document.getElementById('infoPhone').textContent = user.phone || '?ïÎ≥¥ ?ÜÏùå';
+
+                // Show specific info based on user type
+                if (user.user_type === 'student') {
+                    document.getElementById('studentInfo').style.display = 'block';
+                } else if (user.user_type === 'graduate') {
+                    document.getElementById('graduateInfo').style.display = 'block';
+                    
+                    // Try to load graduate profile from localStorage or user data
+                    if (user.graduationYear) {
+                        document.getElementById('graduationYear').textContent = user.graduationYear;
+                    }
+                    if (user.major) {
+                        document.getElementById('major').textContent = user.major;
+                    }
+                    if (user.company) {
+                        document.getElementById('currentCompany').textContent = user.company;
+                    }
+                    if (user.position) {
+                        document.getElementById('currentPosition').textContent = user.position;
+                    }
+                } else if (user.user_type === 'teacher') {
+                    document.getElementById('teacherInfo').style.display = 'block';
+                    
+                    // Display teacher info
+                    if (user.schoolName) {
+                        document.getElementById('schoolName').textContent = user.schoolName;
+                    }
+                }
+            }
+        }
+
+        loadProfile();
+    </script>
+</body>
+</html>

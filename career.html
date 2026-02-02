@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Í≤ΩÎ†• Í¥ÄÎ¶?- JJOBB</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <header id="mainHeader">
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">?Ä?úÎ≥¥??/a></li>
+                <li><a href="jobs.html">Ï±ÑÏö© ?ïÎ≥¥</a></li>
+                <li><a href="networking.html">?ôÎ¨∏ ?§Ìä∏?åÌÇπ</a></li>
+                <li><a href="counseling.html">ÏßÑÎ°ú ?ÅÎã¥</a></li>
+            </ul>
+            <div class="user-menu">
+                <span class="user-name" id="userName"></span>
+                <button onclick="auth.logout()" class="btn-logout">Î°úÍ∑∏?ÑÏõÉ</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <span class="icon">?ìä</span>
+                    <span>?Ä?úÎ≥¥??/span>
+                </a>
+                <a href="#" class="menu-item" onclick="alert('?ÑÎ°ú???òÏù¥ÏßÄ??Ï§ÄÎπ?Ï§ëÏûÖ?àÎã§.'); return false;">
+                    <span class="icon">?ë§</span>
+                    <span>???ÑÎ°ú??/span>
+                </a>
+                <a href="jobs.html" class="menu-item">
+                    <span class="icon">?íº</span>
+                    <span>Ï±ÑÏö© ?ïÎ≥¥</span>
+                </a>
+                <a href="networking.html" class="menu-item">
+                    <span class="icon">?§ù</span>
+                    <span>?ôÎ¨∏ ?§Ìä∏?åÌÇπ</span>
+                </a>
+                <a href="counseling.html" class="menu-item" id="counselingMenu">
+                    <span class="icon">?í¨</span>
+                    <span>ÏßÑÎ°ú ?ÅÎã¥</span>
+                </a>
+                <a href="career.html" class="menu-item active" id="careerMenu">
+                    <span class="icon">?ìà</span>
+                    <span>Í≤ΩÎ†• Í¥ÄÎ¶?/span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1>?ìà Í≤ΩÎ†• Í¥ÄÎ¶?/h1>
+                <p>?òÏùò Í≤ΩÎ†•Í≥??±Ïû• Í≥ºÏ†ï??Í¥ÄÎ¶¨Ìïò?∏Ïöî</p>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2>?¥Î†•??Í¥ÄÎ¶?/h2>
+                </div>
+                <div class="resume-upload-section">
+                    <div class="upload-area">
+                        <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" style="display: none;" onchange="uploadResume()">
+                        <button class="btn btn-secondary" onclick="document.getElementById('resumeFile').click()">?¥Î†•???ÖÎ°ú??/button>
+                        <p class="upload-info">PDF, DOC, DOCX ?ïÏãù ÏßÄ??(ÏµúÎ? 5MB)</p>
+                        <div id="currentResume" class="current-resume" style="display: none;">
+                            <p>?ìÑ <span id="resumeFileName"></span></p>
+                            <button class="btn btn-sm btn-danger" onclick="deleteResume()">??†ú</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2>Í≤ΩÎ†• ?Ä?ÑÎùº??/h2>
+                    <button class="btn btn-primary" onclick="openAddCareerModal()">+ Í≤ΩÎ†• Ï∂îÍ?</button>
+                </div>
+
+                <div class="timeline" id="careerTimeline">
+                    <!-- Í≤ΩÎ†• Î™©Î°ù???¨Í∏∞???ôÏ†Å?ºÎ°ú ?úÏãú?©Îãà??-->
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Î≥¥Ïú† Í∏∞Ïà† Î∞??êÍ≤©Ï¶?/h2>
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <h3>Í∏∞Ïà† ?§ÌÉù</h3>
+                        <div class="skill-input-group">
+                            <input type="text" id="skillInput" placeholder="Í∏∞Ïà† ?§ÌÉù???ÖÎ†•?òÏÑ∏?? onkeypress="if(event.key==='Enter') addSkill()">
+                            <button class="btn btn-primary btn-sm" onclick="addSkill()">+ Ï∂îÍ?</button>
+                        </div>
+                        <div class="tag-list" id="skillList">
+                            <!-- Í∏∞Ïà† ?§ÌÉù???¨Í∏∞???ôÏ†Å?ºÎ°ú ?úÏãú?©Îãà??-->
+                        </div>
+                    </div>
+                    <div class="skill-card">
+                        <h3>?êÍ≤©Ï¶?/h3>
+                        <div class="certificate-list" id="certificateList">
+                            <!-- ?êÍ≤©Ï¶?Î™©Î°ù???¨Í∏∞???ôÏ†Å?ºÎ°ú ?úÏãú?©Îãà??-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>ÍµêÏú° Î∞??àÎ†®</h2>
+                <div class="education-list" id="educationList">
+                    <!-- ÍµêÏú° Î™©Î°ù???¨Í∏∞???ôÏ†Å?ºÎ°ú ?úÏãú?©Îãà??-->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Í≤ΩÎ†• Ï∂îÍ? Î™®Îã¨ -->
+    <div id="addCareerModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>?ìà Í≤ΩÎ†• Ï∂îÍ?</h2>
+                <span class="close" onclick="closeAddCareerModal()">&times;</span>
+            </div>
+            <form id="addCareerForm" onsubmit="addCareer(event)">
+                <div class="modal-body">
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="careerType">?†Ìòï <span class="required">*</span></label>
+                            <select id="careerType" required>
+                                <option value="">?†ÌÉù?òÏÑ∏??/option>
+                                <option value="work">?íº ?§Î¨¥ Í≤ΩÎ†•</option>
+                                <option value="education">?éì ÍµêÏú°</option>
+                                <option value="project">?? ?ÑÎ°ú?ùÌä∏</option>
+                                <option value="activity">?åü ?Ä?∏Ìôú??/option>
+                                <option value="certificate">?ìú ?êÍ≤©Ï¶?/option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="careerTitle">?úÎ™© <span class="required">*</span></label>
+                            <input type="text" id="careerTitle" required placeholder="?? ?ÑÎ??êÎèôÏ∞??∏ÌÑ¥">
+                        </div>
+                        <div class="form-group">
+                            <label for="careerCompany">?åÏÇ¨/Í∏∞Í?</label>
+                            <input type="text" id="careerCompany" placeholder="?? ?ÑÎ??êÎèôÏ∞?>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Í∏∞Í∞Ñ</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="careerStartDate">?úÏûë??<span class="required">*</span></label>
+                                <input type="date" id="careerStartDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="careerEndDate">Ï¢ÖÎ£å??/label>
+                                <input type="date" id="careerEndDate">
+                            </div>
+                        </div>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="careerOngoing" onchange="toggleEndDate()">
+                                <span>?ÑÏû¨ ÏßÑÌñâ Ï§?/span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="careerDescription">?ÅÏÑ∏ ?§Î™Ö</label>
+                            <textarea id="careerDescription" rows="4" placeholder="?¥Îãπ ?ÖÎ¨¥, Ï£ºÏöî ?±Í≥º, ?¨Ïö© Í∏∞Ïà† ?±ÏùÑ ?ëÏÑ±?òÏÑ∏??></textarea>
+                            <span class="form-hint">Í≤ΩÎ†•???Ä??Íµ¨Ï≤¥?ÅÏù∏ ?§Î™Ö???ëÏÑ±?òÎ©¥ ?îÏö± ?®Í≥º?ÅÏûÖ?àÎã§.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeAddCareerModal()">Ï∑®ÏÜå</button>
+                    <button type="submit" class="btn btn-primary">Í≤ΩÎ†• Ï∂îÍ?</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Initialize auth
+        auth.requireAuth();
+
+        let currentUser = null;
+
+        // Display user name
+        const user = auth.getCurrentUser();
+        if (user) {
+            currentUser = user;
+            // Redirect company users
+            if (user.user_type === 'company') {
+                alert('Í∏∞ÏóÖ Í≥ÑÏ†ï?Ä Í≤ΩÎ†• Í¥ÄÎ¶??úÎπÑ?§Î? ?¥Ïö©?????ÜÏäµ?àÎã§.');
+                window.location.href = 'dashboard.html';
+            } else {
+                document.getElementById('userName').textContent = user.name;
+                loadUserResume();
+                loadCareers();
+                loadCertificates();
+                loadEducation();
+                loadSkills();
+            }
+        }
+
+        // ?¥Î†•???ÖÎ°ú??
+        function uploadResume() {
+            const fileInput = document.getElementById('resumeFile');
+            const file = fileInput.files[0];
+            
+            if (!file) return;
+            
+            // ?åÏùº ?¨Í∏∞ Ï≤¥ÌÅ¨ (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('?åÏùº ?¨Í∏∞??5MBÎ•?Ï¥àÍ≥º?????ÜÏäµ?àÎã§.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const resumeData = {
+                    fileName: file.name,
+                    fileType: file.type,
+                    fileSize: file.size,
+                    fileData: e.target.result,
+                    uploadedAt: new Date().toISOString()
+                };
+                
+                localStorage.setItem(`graduateNetwork_resume_${currentUser.id}`, JSON.stringify(resumeData));
+                displayResume(resumeData);
+                alert('?¥Î†•?úÍ? ?ÖÎ°ú?úÎêò?àÏäµ?àÎã§.');
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // ?¥Î†•??Î°úÎìú
+        function loadUserResume() {
+            const resumeData = localStorage.getItem(`graduateNetwork_resume_${currentUser.id}`);
+            if (resumeData) {
+                displayResume(JSON.parse(resumeData));
+            }
+        }
+        
+        // ?¥Î†•???úÏãú
+        function displayResume(resumeData) {
+            const currentResumeDiv = document.getElementById('currentResume');
+            const fileNameSpan = document.getElementById('resumeFileName');
+            fileNameSpan.textContent = resumeData.fileName;
+            currentResumeDiv.style.display = 'block';
+        }
+        
+        // ?¥Î†•????†ú
+        function deleteResume() {
+            if (confirm('?¥Î†•?úÎ? ??†ú?òÏãúÍ≤†Ïäµ?àÍπå?')) {
+                localStorage.removeItem(`graduateNetwork_resume_${currentUser.id}`);
+                document.getElementById('currentResume').style.display = 'none';
+                document.getElementById('resumeFile').value = '';
+                alert('?¥Î†•?úÍ? ??†ú?òÏóà?µÎãà??');
+            }
+        }
+
+        // Í≤ΩÎ†• Î™©Î°ù Î°úÎìú
+        function loadCareers() {
+            const careersData = localStorage.getItem(`graduateNetwork_careers_${currentUser.id}`);
+            const careers = careersData ? JSON.parse(careersData) : [];
+            
+            // ?†Ïßú Í∏∞Ï? ?ïÎ†¨ (ÏµúÏã†??
+            careers.sort((a, b) => {
+                const dateA = a.endDate || a.startDate;
+                const dateB = b.endDate || b.startDate;
+                return new Date(dateB) - new Date(dateA);
+            });
+            
+            displayCareers(careers);
+        }
+        
+        // Í≤ΩÎ†• Î™©Î°ù ?úÏãú
+        function displayCareers(careers) {
+            const timeline = document.getElementById('careerTimeline');
+            
+            if (careers.length === 0) {
+                timeline.innerHTML = '<p style="text-align: center; color: #999; padding: 40px;">?ÑÏßÅ ?±Î°ù??Í≤ΩÎ†•???ÜÏäµ?àÎã§. Í≤ΩÎ†•??Ï∂îÍ??¥Î≥¥?∏Ïöî!</p>';
+                return;
+            }
+            
+            timeline.innerHTML = careers.map(career => {
+                const typeEmoji = {
+                    work: '?íº',
+                    education: '?éì',
+                    project: '??',
+                    activity: '?åü',
+                    certificate: '?ìú'
+                }[career.type] || '?ìå';
+                
+                const startDate = new Date(career.startDate).toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit'});
+                const endDate = career.endDate ? new Date(career.endDate).toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit'}) : '?ÑÏû¨';
+                
+                return `
+                    <div class="timeline-item">
+                        <div class="timeline-marker">${typeEmoji}</div>
+                        <div class="timeline-content">
+                            <h3>${career.title}</h3>
+                            ${career.company ? `<p class="company-name">${career.company}</p>` : ''}
+                            <p class="timeline-date">${startDate} - ${endDate}</p>
+                            ${career.description ? `<p class="career-description">${career.description}</p>` : ''}
+                            <button class="btn btn-sm btn-danger" onclick="deleteCareer('${career.id}')">??†ú</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Í≤ΩÎ†• Ï∂îÍ? Î™®Îã¨ ?¥Í∏∞
+        function openAddCareerModal() {
+            document.getElementById('addCareerModal').style.display = 'block';
+        }
+        
+        // Í≤ΩÎ†• Ï∂îÍ? Î™®Îã¨ ?´Í∏∞
+        function closeAddCareerModal() {
+            document.getElementById('addCareerModal').style.display = 'none';
+            document.getElementById('addCareerForm').reset();
+        }
+        
+        // Ï¢ÖÎ£å???†Í?
+        function toggleEndDate() {
+            const endDateInput = document.getElementById('careerEndDate');
+            const ongoingCheckbox = document.getElementById('careerOngoing');
+            endDateInput.disabled = ongoingCheckbox.checked;
+            if (ongoingCheckbox.checked) {
+                endDateInput.value = '';
+            }
+        }
+        
+        // Í≤ΩÎ†• Ï∂îÍ?
+        function addCareer(event) {
+            event.preventDefault();
+            
+            const careerData = {
+                id: Date.now().toString(),
+                type: document.getElementById('careerType').value,
+                title: document.getElementById('careerTitle').value,
+                company: document.getElementById('careerCompany').value,
+                startDate: document.getElementById('careerStartDate').value,
+                endDate: document.getElementById('careerOngoing').checked ? null : document.getElementById('careerEndDate').value,
+                description: document.getElementById('careerDescription').value,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Í∏∞Ï°¥ Í≤ΩÎ†• Î°úÎìú
+            const careersData = localStorage.getItem(`graduateNetwork_careers_${currentUser.id}`);
+            const careers = careersData ? JSON.parse(careersData) : [];
+            
+            // ??Í≤ΩÎ†• Ï∂îÍ?
+            careers.push(careerData);
+            
+            // ?Ä??
+            localStorage.setItem(`graduateNetwork_careers_${currentUser.id}`, JSON.stringify(careers));
+            
+            // Î™©Î°ù ?àÎ°úÍ≥†Ïπ®
+            loadCareers();
+            
+            // ?êÍ≤©Ï¶ùÏù¥??ÍµêÏú° ?Ä?ÖÏù¥Î©??¥Îãπ ?πÏÖò???ÖÎç∞?¥Ìä∏
+            if (careerData.type === 'certificate') {
+                loadCertificates();
+            } else if (careerData.type === 'education') {
+                loadEducation();
+            }
+            
+            // Î™®Îã¨ ?´Í∏∞
+            closeAddCareerModal();
+            
+            alert('Í≤ΩÎ†•??Ï∂îÍ??òÏóà?µÎãà??');
+        }
+        
+        // Í≤ΩÎ†• ??†ú
+        function deleteCareer(careerId) {
+            if (!confirm('??Í≤ΩÎ†•????†ú?òÏãúÍ≤†Ïäµ?àÍπå?')) return;
+            
+            const careersData = localStorage.getItem(`graduateNetwork_careers_${currentUser.id}`);
+            let careers = careersData ? JSON.parse(careersData) : [];
+            
+            const deletedCareer = careers.find(c => c.id === careerId);
+            
+            careers = careers.filter(c => c.id !== careerId);
+            
+            localStorage.setItem(`graduateNetwork_careers_${currentUser.id}`, JSON.stringify(careers));
+            loadCareers();
+            
+            // ?êÍ≤©Ï¶ùÏù¥??ÍµêÏú° ?Ä?ÖÏù¥Î©??¥Îãπ ?πÏÖò???ÖÎç∞?¥Ìä∏
+            if (deletedCareer) {
+                if (deletedCareer.type === 'certificate') {
+                    loadCertificates();
+                } else if (deletedCareer.type === 'education') {
+                    loadEducation();
+                }
+            }
+            
+            alert('Í≤ΩÎ†•????†ú?òÏóà?µÎãà??');
+        }
+        
+        // ?êÍ≤©Ï¶?Î™©Î°ù Î°úÎìú
+        function loadCertificates() {
+            const careersData = localStorage.getItem(`graduateNetwork_careers_${currentUser.id}`);
+            const careers = careersData ? JSON.parse(careersData) : [];
+            
+            const certificates = careers.filter(c => c.type === 'certificate');
+            
+            const certificateList = document.getElementById('certificateList');
+            
+            if (certificates.length === 0) {
+                certificateList.innerHTML = '<p style="color: #999; padding: 1rem; text-align: center;">?±Î°ù???êÍ≤©Ï¶ùÏù¥ ?ÜÏäµ?àÎã§.</p>';
+                return;
+            }
+            
+            // ?†Ïßú Í∏∞Ï? ?ïÎ†¨ (ÏµúÏã†??
+            certificates.sort((a, b) => {
+                const dateA = a.endDate || a.startDate;
+                const dateB = b.endDate || b.startDate;
+                return new Date(dateB) - new Date(dateA);
+            });
+            
+            certificateList.innerHTML = certificates.map(cert => {
+                const date = cert.endDate || cert.startDate;
+                const year = new Date(date).getFullYear();
+                return `<p>${cert.title} (${year})</p>`;
+            }).join('');
+        }
+        
+        // ÍµêÏú° Î™©Î°ù Î°úÎìú
+        function loadEducation() {
+            const careersData = localStorage.getItem(`graduateNetwork_careers_${currentUser.id}`);
+            const careers = careersData ? JSON.parse(careersData) : [];
+            
+            const educations = careers.filter(c => c.type === 'education');
+            
+            const educationList = document.getElementById('educationList');
+            
+            if (educations.length === 0) {
+                educationList.innerHTML = '<p style="color: #999; padding: 1rem; text-align: center;">?±Î°ù??ÍµêÏú° ?¥Î†•???ÜÏäµ?àÎã§.</p>';
+                return;
+            }
+            
+            // ?†Ïßú Í∏∞Ï? ?ïÎ†¨ (ÏµúÏã†??
+            educations.sort((a, b) => {
+                const dateA = a.endDate || a.startDate;
+                const dateB = b.endDate || b.startDate;
+                return new Date(dateB) - new Date(dateA);
+            });
+            
+            educationList.innerHTML = educations.map(edu => {
+                const startDate = new Date(edu.startDate).toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit'});
+                const endDate = edu.endDate ? new Date(edu.endDate).toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit'}) : '?ÑÏû¨';
+                
+                return `
+                    <div class="education-item">
+                        <h3>${edu.title}</h3>
+                        ${edu.company ? `<p>${edu.company} (${startDate} - ${endDate})</p>` : `<p>${startDate} - ${endDate}</p>`}
+                        ${edu.description ? `<p>${edu.description}</p>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Í∏∞Ïà† ?§ÌÉù Î°úÎìú
+        function loadSkills() {
+            const skillsData = localStorage.getItem(`graduateNetwork_skills_${currentUser.id}`);
+            const skills = skillsData ? JSON.parse(skillsData) : [];
+            
+            displaySkills(skills);
+        }
+        
+        // Í∏∞Ïà† ?§ÌÉù ?úÏãú
+        function displaySkills(skills) {
+            const skillList = document.getElementById('skillList');
+            
+            if (skills.length === 0) {
+                skillList.innerHTML = '<p style="color: #999; text-align: center; padding: 1rem;">Í∏∞Ïà† ?§ÌÉù??Ï∂îÍ??¥Î≥¥?∏Ïöî!</p>';
+                return;
+            }
+            
+            skillList.innerHTML = skills.map(skill => {
+                return `<span class="tag">${skill} <button class="tag-remove" onclick="removeSkill('${skill}')">√ó</button></span>`;
+            }).join('');
+        }
+        
+        // Í∏∞Ïà† ?§ÌÉù Ï∂îÍ?
+        function addSkill() {
+            const input = document.getElementById('skillInput');
+            const skillName = input.value.trim();
+            
+            if (!skillName) {
+                alert('Í∏∞Ïà† ?§ÌÉù???ÖÎ†•?òÏÑ∏??');
+                return;
+            }
+            
+            const skillsData = localStorage.getItem(`graduateNetwork_skills_${currentUser.id}`);
+            let skills = skillsData ? JSON.parse(skillsData) : [];
+            
+            // Ï§ëÎ≥µ Ï≤¥ÌÅ¨
+            if (skills.includes(skillName)) {
+                alert('?¥Î? Ï∂îÍ???Í∏∞Ïà† ?§ÌÉù?ÖÎãà??');
+                input.value = '';
+                return;
+            }
+            
+            skills.push(skillName);
+            localStorage.setItem(`graduateNetwork_skills_${currentUser.id}`, JSON.stringify(skills));
+            
+            loadSkills();
+            input.value = '';
+        }
+        
+        // Í∏∞Ïà† ?§ÌÉù ??†ú
+        function removeSkill(skillName) {
+            if (!confirm(`"${skillName}"??Î•? ??†ú?òÏãúÍ≤†Ïäµ?àÍπå?`)) return;
+            
+            const skillsData = localStorage.getItem(`graduateNetwork_skills_${currentUser.id}`);
+            let skills = skillsData ? JSON.parse(skillsData) : [];
+            
+            skills = skills.filter(s => s !== skillName);
+            localStorage.setItem(`graduateNetwork_skills_${currentUser.id}`, JSON.stringify(skills));
+            
+            loadSkills();
+        }
+        
+        // Î™®Îã¨ ?∏Î? ?¥Î¶≠ ???´Í∏∞
+        window.onclick = function(event) {
+            const modal = document.getElementById('addCareerModal');
+            if (event.target === modal) {
+                closeAddCareerModal();
+            }
+        }
+    </script>
+</body>
+</html>

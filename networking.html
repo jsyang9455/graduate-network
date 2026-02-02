@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?ôÎ¨∏ ?§Ìä∏?åÌÇπ - JJOBB</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/networking.css">
+</head>
+<body>
+    <header id="mainHeader">
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">?Ä?úÎ≥¥??/a></li>
+                <li><a href="jobs.html">Ï±ÑÏö© ?ïÎ≥¥</a></li>
+                <li><a href="networking.html" class="active">?ôÎ¨∏ ?§Ìä∏?åÌÇπ</a></li>
+                <li><a href="counseling.html">ÏßÑÎ°ú ?ÅÎã¥</a></li>
+            </ul>
+            <div class="user-menu">
+                <span class="user-name" id="userName"></span>
+                <button onclick="auth.logout()" class="btn-logout">Î°úÍ∑∏?ÑÏõÉ</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <span class="icon">?ìä</span>
+                    <span>?Ä?úÎ≥¥??/span>
+                </a>
+                <a href="profile.html" class="menu-item">
+                    <span class="icon">?ë§</span>
+                    <span>???ÑÎ°ú??/span>
+                </a>
+                <a href="jobs.html" class="menu-item">
+                    <span class="icon">?íº</span>
+                    <span>Ï±ÑÏö© ?ïÎ≥¥</span>
+                </a>
+                <a href="networking.html" class="menu-item active">
+                    <span class="icon">?§ù</span>
+                    <span>?ôÎ¨∏ ?§Ìä∏?åÌÇπ</span>
+                </a>
+                <a href="counseling.html" class="menu-item" id="counselingMenu">
+                    <span class="icon">?í¨</span>
+                    <span>ÏßÑÎ°ú ?ÅÎã¥</span>
+                </a>
+                <a href="career.html" class="menu-item" id="careerMenu">
+                    <span class="icon">?ìà</span>
+                    <span>Í≤ΩÎ†• Í¥ÄÎ¶?/span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+        <div class="page-container">
+        <div class="page-header">
+            <h1>?§ù ?ôÎ¨∏ ?§Ìä∏?åÌÇπ</h1>
+            <p>?†ÌõÑÎ∞?Ï°∏ÏóÖ?ùÎì§Í≥??∞Í≤∞?òÏñ¥ Î©òÌÜ†ÎßÅÍ≥º ?§Ìä∏?åÌÇπ Í∏∞ÌöåÎ•?ÎßåÎì§?¥Î≥¥?∏Ïöî</p>
+        </div>
+
+        <div class="search-section">
+            <div class="search-bar">
+                <input type="text" id="searchAlumni" placeholder="?¥Î¶Ñ, ?åÏÇ¨, ÏßÅÏ±Ö?ºÎ°ú Í≤Ä??..">
+                <button class="btn-search">?îç Í≤Ä??/button>
+            </div>
+            <div class="filter-bar">
+                <select id="filterGradYear">
+                    <option value="">Ï°∏ÏóÖ?ÑÎèÑ</option>
+                    <option value="2020-2025">2020-2025</option>
+                    <option value="2015-2019">2015-2019</option>
+                    <option value="2010-2014">2010-2014</option>
+                    <option value="2005-2009">2005-2009</option>
+                </select>
+                <select id="filterMajor">
+                    <option value="">?ÑÍ≥µ</option>
+                    <option value="Í∏∞Í≥Ñ">Í∏∞Í≥ÑÍ≥?/option>
+                    <option value="?ÑÏûê">?ÑÏûêÍ≥?/option>
+                    <option value="?ÑÍ∏∞">?ÑÍ∏∞Í≥?/option>
+                    <option value="Í±¥Ï∂ï">Í±¥Ï∂ïÍ≥?/option>
+                </select>
+                <select id="filterIndustry">
+                    <option value="">?ÖÏ¢Ö</option>
+                    <option value="?úÏ°∞">?úÏ°∞??/option>
+                    <option value="IT">IT/?åÌîÑ?∏Ïõ®??/option>
+                    <option value="Í±¥ÏÑ§">Í±¥ÏÑ§</option>
+                    <option value="Í∏∞Ì?">Í∏∞Ì?</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="networking-stats">
+            <div class="stat-box" onclick="showMessages('received')" style="cursor: pointer;">
+                <h3>Î∞õÏ? Î©îÏãúÏßÄ</h3>
+                <p class="stat-number" id="receivedMessages">0Í±?/p>
+            </div>
+            <div class="stat-box" onclick="showMessages('sent')" style="cursor: pointer;">
+                <h3>Î≥¥ÎÇ∏ Î©îÏãúÏßÄ</h3>
+                <p class="stat-number" id="sentMessages">0Í±?/p>
+            </div>
+        </div>
+
+        <div class="alumni-grid" id="alumniGrid">
+            <!-- ?ôÎ¨∏ Î™©Î°ù???¨Í∏∞???ôÏ†Å?ºÎ°ú ?úÏãú?©Îãà??-->
+        </div>
+
+        <div class="mentoring-section">
+            <h2>Î©òÌÜ†Îß??ÑÎ°úÍ∑∏Îû®</h2>
+            <div class="mentoring-grid">
+                <div class="mentoring-card">
+                    <h3>?éØ Ï∑®ÏóÖ Î©òÌÜ†Îß?/h3>
+                    <p>?¥Î†•???ëÏÑ±Î∂Ä??Î©¥Ï†ë Ï§ÄÎπÑÍπåÏßÄ 1:1 Î©òÌÜ†Îß?/p>
+                    <button class="btn btn-primary">?†Ï≤≠?òÍ∏∞</button>
+                </div>
+                <div class="mentoring-card">
+                    <h3>?íº Ïª§Î¶¨??Ïª®ÏÑ§??/h3>
+                    <p>Í≤ΩÎ†• Í∞úÎ∞ú Î∞??¥ÏßÅ ?ÑÎûµ ?ÅÎã¥</p>
+                    <button class="btn btn-primary">?†Ï≤≠?òÍ∏∞</button>
+                </div>
+                <div class="mentoring-card">
+                    <h3>?? Ï∞ΩÏóÖ Î©òÌÜ†Îß?/h3>
+                    <p>Ï∞ΩÏóÖ ?ÑÏù¥?îÏñ¥Î∂Ä???¨ÏóÖ?îÍπåÏßÄ ÏßÄ??/p>
+                    <button class="btn btn-primary">?†Ï≤≠?òÍ∏∞</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Î©îÏãúÏßÄ Î™®Îã¨ -->
+    <div id="messageModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2 id="messageModalTitle">Î©îÏãúÏßÄ??/h2>
+                <span class="close" onclick="closeMessageModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="messageListContainer">
+                    <!-- Î©îÏãúÏßÄ Î¶¨Ïä§?∏Í? ?¨Í∏∞???úÏãú?©Îãà??-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Î©îÏãúÏßÄ ?ÅÏÑ∏Î≥¥Í∏∞ Î™®Îã¨ -->
+    <div id="messageDetailModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 id="messageDetailTitle">Î©îÏãúÏßÄ ?ÅÏÑ∏</h2>
+                <span class="close" onclick="closeMessageDetailModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="messageDetailContainer">
+                    <!-- Î©îÏãúÏßÄ ?ÅÏÑ∏ ?¥Ïö©???¨Í∏∞???úÏãú?©Îãà??-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about">
+                <h3>?ÑÏ£ºÍ≥µÏóÖÍ≥†Îì±?ôÍµê</h3>
+                <p>?ìç ?ÑÎ∂Å?πÎ≥Ñ?êÏπò???ÑÏ£º???ïÏßÑÍµ??¨ÏÇ∞Î°?101</p>
+            </div>
+        </div>
+    </footer>
+        </div>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/networking.js"></script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?åÏõê Í¥ÄÎ¶?- JJOBB</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <header id="mainHeader">
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">?Ä?úÎ≥¥??/a></li>
+            </ul>
+            <div class="user-menu">
+                <span class="user-name" id="userName"></span>
+                <button onclick="auth.logout()" class="btn-logout">Î°úÍ∑∏?ÑÏõÉ</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <span class="icon">?ìä</span>
+                    <span>?Ä?úÎ≥¥??/span>
+                </a>
+                <div class="menu-divider"></div>
+                <div class="menu-section-title">Í¥ÄÎ¶¨Ïûê Î©îÎâ¥</div>
+                <a href="admin-users.html" class="menu-item active">
+                    <span class="icon">?ë•</span>
+                    <span>?åÏõê Í¥ÄÎ¶?/span>
+                </a>
+                <a href="education-programs.html" class="menu-item">
+                    <span class="icon">?éì</span>
+                    <span>ÍµêÏú° ?ÑÎ°úÍ∑∏Îû® Í¥ÄÎ¶?/span>
+                </a>
+                <a href="admin-board.html" class="menu-item">
+                    <span class="icon">?ìã</span>
+                    <span>Í≤åÏãú??Í¥ÄÎ¶?/span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-container">
+                <div class="page-header">
+                    <h1>?ë• ?åÏõê Í¥ÄÎ¶?/h1>
+                    <p>?úÏä§?úÏóê ?±Î°ù??Î™®Îì† ?åÏõê??Í¥ÄÎ¶¨Ìï©?àÎã§</p>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <h3>?ÑÏ≤¥ ?åÏõê</h3>
+                        <p class="stat-number" id="totalUsers">0Î™?/p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>?ôÏÉù</h3>
+                        <p class="stat-number" id="studentCount">0Î™?/p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>ÍµêÏÇ¨</h3>
+                        <p class="stat-number" id="teacherCount">0Î™?/p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Í∏∞ÏóÖ</h3>
+                        <p class="stat-number" id="companyCount">0Î™?/p>
+                    </div>
+                </div>
+
+                <div class="search-section">
+                    <div class="search-bar">
+                        <input type="text" id="searchUser" placeholder="?¥Î¶Ñ, ?¥Î©î?ºÎ°ú Í≤Ä??..">
+                        <button class="btn-search" onclick="searchUsers()">?îç Í≤Ä??/button>
+                    </div>
+                    <div class="filter-bar">
+                        <select id="filterUserType" onchange="applyFilters()">
+                            <option value="">?ÑÏ≤¥ ?åÏõê ?†Ìòï</option>
+                            <option value="student">?ôÏÉù</option>
+                            <option value="graduate">Ï°∏ÏóÖ??/option>
+                            <option value="teacher">ÍµêÏÇ¨</option>
+                            <option value="company">Í∏∞ÏóÖ</option>
+                            <option value="admin">Í¥ÄÎ¶¨Ïûê</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>?¥Î¶Ñ</th>
+                                <th>?¥Î©î??/th>
+                                <th>?†Ìòï</th>
+                                <th>?ôÍµê/?åÏÇ¨</th>
+                                <th>?ÑÍ≥µ/?ÖÏ¢Ö</th>
+                                <th>Í∞Ä?ÖÏùº</th>
+                                <th>Í¥ÄÎ¶?/th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- ?åÏõê Î™©Î°ù???¨Í∏∞???úÏãú?©Îãà??-->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ?åÏõê ?òÏ†ï Î™®Îã¨ -->
+    <div id="editUserModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>?åÏõê ?ïÎ≥¥ ?òÏ†ï</h2>
+                <span class="close" onclick="closeEditUserModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm" onsubmit="saveUser(event)">
+                    <input type="hidden" id="editUserId">
+                    
+                    <div class="form-section">
+                        <label for="editUserName">?¥Î¶Ñ *</label>
+                        <input type="text" id="editUserName" required>
+                    </div>
+
+                    <div class="form-section">
+                        <label for="editUserEmail">?¥Î©î??*</label>
+                        <input type="email" id="editUserEmail" required>
+                    </div>
+
+                    <div class="form-section">
+                        <label for="editUserType">?åÏõê ?†Ìòï *</label>
+                        <select id="editUserType" required>
+                            <option value="student">?ôÏÉù</option>
+                            <option value="graduate">Ï°∏ÏóÖ??/option>
+                            <option value="teacher">ÍµêÏÇ¨</option>
+                            <option value="company">Í∏∞ÏóÖ</option>
+                        </select>
+                    </div>
+
+                    <div class="form-section">
+                        <label for="editSchoolName">?ôÍµêÎ™??åÏÇ¨Î™?/label>
+                        <input type="text" id="editSchoolName">
+                    </div>
+
+                    <div class="form-section">
+                        <label for="editMajor">?ÑÍ≥µ/?ÖÏ¢Ö</label>
+                        <input type="text" id="editMajor">
+                    </div>
+
+                    <div class="form-section">
+                        <label for="editGraduationYear">Ï°∏ÏóÖ?ÑÎèÑ</label>
+                        <input type="text" id="editGraduationYear" placeholder="?? 2020">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeEditUserModal()">Ï∑®ÏÜå</button>
+                        <button type="submit" class="btn btn-primary">?Ä??/button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about">
+                <h3>?ÑÏ£ºÍ≥µÏóÖÍ≥†Îì±?ôÍµê</h3>
+                <p>?ìç ?ÑÎ∂Å?πÎ≥Ñ?êÏπò???ÑÏ£º???ïÏßÑÍµ??¨ÏÇ∞Î°?101</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin-users.js"></script>
+</body>
+</html>

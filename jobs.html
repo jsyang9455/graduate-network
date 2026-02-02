@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ï±ÑÏö© ?ïÎ≥¥ - JJOBB</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/jobs.css">
+</head>
+<body>
+    <header id="mainHeader">
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">?Ä?úÎ≥¥??/a></li>
+                <li><a href="jobs.html" class="active">Ï±ÑÏö© ?ïÎ≥¥</a></li>
+                <li><a href="networking.html">?ôÎ¨∏ ?§Ìä∏?åÌÇπ</a></li>
+                <li><a href="counseling.html">ÏßÑÎ°ú ?ÅÎã¥</a></li>
+            </ul>
+            <div class="user-menu">
+                <span class="user-name" id="userName"></span>
+                <button onclick="auth.logout()" class="btn-logout">Î°úÍ∑∏?ÑÏõÉ</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <span class="icon">?ìä</span>
+                    <span>?Ä?úÎ≥¥??/span>
+                </a>
+                <a href="profile.html" class="menu-item">
+                    <span class="icon">?ë§</span>
+                    <span>???ÑÎ°ú??/span>
+                </a>
+                <a href="jobs.html" class="menu-item active">
+                    <span class="icon">?íº</span>
+                    <span>Ï±ÑÏö© ?ïÎ≥¥</span>
+                </a>
+                <a href="networking.html" class="menu-item">
+                    <span class="icon">?§ù</span>
+                    <span>?ôÎ¨∏ ?§Ìä∏?åÌÇπ</span>
+                </a>
+                <a href="counseling.html" class="menu-item" id="counselingMenu">
+                    <span class="icon">?í¨</span>
+                    <span>ÏßÑÎ°ú ?ÅÎã¥</span>
+                </a>
+                <a href="career.html" class="menu-item" id="careerMenu">
+                    <span class="icon">?ìà</span>
+                    <span>Í≤ΩÎ†• Í¥ÄÎ¶?/span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+        <div class="page-container">
+        <div class="page-header">
+            <h1>?íº Ï±ÑÏö© ?ïÎ≥¥</h1>
+            <p>?ÑÏ£ºÍ≥µÍ≥† Ï°∏ÏóÖ?ùÏùÑ ?ÑÌïú ÎßûÏ∂§ Ï±ÑÏö© ?ïÎ≥¥Î•??ïÏù∏?òÏÑ∏??/p>
+        </div>
+
+        <div class="search-section">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Í∏∞ÏóÖÎ™? ÏßÅÎ¨¥, ?§Ïõå??Í≤Ä??..">
+                <button class="btn-search">?îç Í≤Ä??/button>
+            </div>
+            <div class="filter-bar">
+                <select id="filterCompany">
+                    <option value="">?ÑÏ≤¥ Í∏∞ÏóÖ</option>
+                    <option value="?ÄÍ∏∞ÏóÖ">?ÄÍ∏∞ÏóÖ</option>
+                    <option value="Ï§ëÍ≤¨Í∏∞ÏóÖ">Ï§ëÍ≤¨Í∏∞ÏóÖ</option>
+                    <option value="Ï§ëÏÜåÍ∏∞ÏóÖ">Ï§ëÏÜåÍ∏∞ÏóÖ</option>
+                    <option value="?§Ì??∏ÏóÖ">?§Ì??∏ÏóÖ</option>
+                </select>
+                <select id="filterExperience">
+                    <option value="">Í≤ΩÎ†• Î¨¥Í?</option>
+                    <option value="?†ÏûÖ">?†ÏûÖ</option>
+                    <option value="1-3??>1-3??/option>
+                    <option value="3-5??>3-5??/option>
+                    <option value="5?ÑÏù¥??>5???¥ÏÉÅ</option>
+                </select>
+                <select id="filterLocation">
+                    <option value="">?ÑÏ≤¥ ÏßÄ??/option>
+                    <option value="?úÏö∏">?úÏö∏</option>
+                    <option value="Í≤ΩÍ∏∞">Í≤ΩÍ∏∞</option>
+                    <option value="?ÑÎ∂Å">?ÑÎ∂Å</option>
+                    <option value="Í∏∞Ì?">Í∏∞Ì?</option>
+                </select>
+                <button class="btn-filter">?ÑÌÑ∞ ?ÅÏö©</button>
+            </div>
+        </div>
+
+        <div class="jobs-container">
+            <!-- Ï±ÑÏö© Í≥µÍ≥†??JavaScriptÎ°??ôÏ†Å ?ùÏÑ±?©Îãà??-->
+            <p style="text-align: center; padding: 3rem; color: #6b7280;">Ï±ÑÏö© Í≥µÍ≥†Î•?Î∂àÎü¨?§Îäî Ï§?..</p>
+        </div>
+                <div class="job-card-header">
+                    <div class="company-logo-large">H</div>
+                    <div class="job-title-section">
+                        <h2>?ÑÎ??êÎèôÏ∞?/h2>
+                        <h3>?ùÏÇ∞Í∏∞Ïà† ?îÏ??àÏñ¥</h3>
+                    </div>
+                    <button class="btn-bookmark">‚≠?/button>
+                </div>
+                <div class="job-card-body">
+                    <div class="job-tags">
+                        <span class="tag">?ÄÍ∏∞ÏóÖ</span>
+                        <span class="tag">?ïÍ∑úÏß?/span>
+                        <span class="tag">Í≤ΩÎ†• 3-5??/span>
+                    </div>
+                    <div class="job-info-grid">
+                        <div class="info-item">
+                            <span class="info-label">?ìç Í∑ºÎ¨¥ÏßÄ</span>
+                            <span class="info-value">?∏ÏÇ∞Í¥ëÏó≠??/span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">?í∞ ?∞Î¥â</span>
+                            <span class="info-value">5,000ÎßåÏõê ?¥ÏÉÅ</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">?ìÖ ÎßàÍ∞ê??/span>
+                            <span class="info-value">2026-02-05 (D-15)</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">?ë• Ï±ÑÏö©?∏Ïõê</span>
+                            <span class="info-value">5Î™?/span>
+                        </div>
+                    </div>
+                    <p class="job-description">
+                        ?êÎèôÏ∞??ùÏÇ∞ Í≥µÏ†ï??Í∏∞Ïà† Í∞úÎ∞ú Î∞?Í∞úÏÑ† ?ÖÎ¨¥Î•??¥Îãπ?©Îãà?? 
+                        ?§Îßà???©ÌÜ†Î¶?Íµ¨Ï∂ï Í≤ΩÌóò???∞Î??©Îãà??
+                    </p>
+                </div>
+                <div class="job-card-footer">
+                    <button class="btn btn-secondary">?ÅÏÑ∏Î≥¥Í∏∞</button>
+                    <button class="btn btn-primary">ÏßÄ?êÌïòÍ∏?/button>
+                </div>
+            </div>
+
+            <div class="job-card">
+                <div class="job-card-header">
+                    <div class="company-logo-large">L</div>
+                    <div class="job-title-section">
+                        <h2>LG?ÑÏûê</h2>
+                        <h3>?àÏßàÍ¥ÄÎ¶??¥Îãπ??/h3>
+                    </div>
+                    <button class="btn-bookmark">‚≠?/button>
+                </div>
+                <div class="job-card-body">
+                    <div class="job-tags">
+                        <span class="tag">?ÄÍ∏∞ÏóÖ</span>
+                        <span class="tag">?ïÍ∑úÏß?/span>
+                        <span class="tag">Í≤ΩÎ†• 2-4??/span>
+                    </div>
+                    <div class="job-info-grid">
+                        <div class="info-item">
+                            <span class="info-label">?ìç Í∑ºÎ¨¥ÏßÄ</span>
+                            <span class="info-value">Í≤ΩÍ∏∞???âÌÉù??/span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">?í∞ ?∞Î¥â</span>
+                            <span class="info-value">4,500ÎßåÏõê ?¥ÏÉÅ</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">?ìÖ ÎßàÍ∞ê??/span>
+                            <span class="info-value">2026-02-12 (D-22)</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">?ë• Ï±ÑÏö©?∏Ïõê</span>
+                            <span class="info-value">3Î™?/span>
+                        </div>
+                    </div>
+                    <p class="job-description">
+                        Í∞Ä?ÑÏ†ú???àÏßà Í≤Ä??Î∞?Í∞úÏÑ† ?ÖÎ¨¥Î•??òÌñâ?©Îãà?? 
+                        ISO 9001 ?∏Ï¶ù Í≤ΩÌóò???∞Î??©Îãà??
+                    </p>
+                </div>
+                <div class="job-card-footer">
+                    <button class="btn btn-secondary">?ÅÏÑ∏Î≥¥Í∏∞</button>
+                    <button class="btn btn-primary">ÏßÄ?êÌïòÍ∏?/button>
+                </div>
+            </div>
+
+            <div class="job-card">
+                <div class="job-card-header">
+                    <div class="company-logo-large">S</div>
+                    <div class="job-title-section">
+                        <h2>?ºÏÑ±?ÑÏûê</h2>
+                        <h3>Î∞òÎèÑÏ≤?Í≥µÏ†ï ?îÏ??àÏñ¥</h3>
+                    </div>
+                    <button class="btn-bookmark">‚≠?/button>
+                </div>
+                <div class="job-card-body">
+                    <div class="job-tags">
+                        <span class="tag">?ÄÍ∏∞ÏóÖ</span>
+                        <span class="tag">?ïÍ∑úÏß?/span>
+                        <span class="tag">Í≤ΩÎ†• 1-3??/span>
+                    </div>
+                    <div class="job-info-grid">
+                        <div class="info-item">
+                            <span class="info-label">?ìç Í∑ºÎ¨¥ÏßÄ</span>
+                            <span class="info-value">Í≤ΩÍ∏∞???îÏÑ±??/span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">?í∞ ?∞Î¥â</span>
+                            <span class="info-value">5,500ÎßåÏõê ?¥ÏÉÅ</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">?ìÖ ÎßàÍ∞ê??/span>
+                            <span class="info-value">2026-02-28 (D-38)</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">?ë• Ï±ÑÏö©?∏Ïõê</span>
+                            <span class="info-value">10Î™?/span>
+                        </div>
+                    </div>
+                    <p class="job-description">
+                        Î∞òÎèÑÏ≤??ùÏÇ∞ Í≥µÏ†ï Í¥ÄÎ¶?Î∞??§ÎπÑ ?¥ÏòÅ???¥Îãπ?©Îãà?? 
+                        ?ÑÍ∏∞/?ÑÏûê Í¥Ä???ÑÍ≥µ???∞Î??©Îãà??
+                    </p>
+                </div>
+                <div class="job-card-footer">
+                    <button class="btn btn-secondary">?ÅÏÑ∏Î≥¥Í∏∞</button>
+                    <button class="btn btn-primary">ÏßÄ?êÌïòÍ∏?/button>
+                </div>
+            </div>
+
+            <div class="job-card">
+                <div class="job-card-header">
+                    <div class="company-logo-large">P</div>
+                    <div class="job-title-section">
+                        <h2>?¨Ïä§ÏΩ?/h2>
+                        <h3>?úÏ≤† Í≥µÏ†ï Í¥ÄÎ¶?/h3>
+                    </div>
+                    <button class="btn-bookmark">‚≠?/button>
+                </div>
+                <div class="job-card-body">
+                    <div class="job-tags">
+                        <span class="tag">?ÄÍ∏∞ÏóÖ</span>
+                        <span class="tag">?ïÍ∑úÏß?/span>
+                        <span class="tag">?†ÏûÖ/Í≤ΩÎ†•</span>
+                    </div>
+                    <div class="job-info-grid">
+                        <div class="info-item">
+                            <span class="info-label">?ìç Í∑ºÎ¨¥ÏßÄ</span>
+                            <span class="info-value">?ÑÎ∂Å Íµ∞ÏÇ∞??/span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">?í∞ ?∞Î¥â</span>
+                            <span class="info-value">4,000ÎßåÏõê ?¥ÏÉÅ</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">?ìÖ ÎßàÍ∞ê??/span>
+                            <span class="info-value">2026-02-20 (D-30)</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">?ë• Ï±ÑÏö©?∏Ïõê</span>
+                            <span class="info-value">7Î™?/span>
+                        </div>
+                    </div>
+                    <p class="job-description">
+                        ?úÏ≤†???ùÏÇ∞ Í≥µÏ†ï Î™®Îãà?∞ÎßÅ Î∞??àÏßà Í¥ÄÎ¶??ÖÎ¨¥Î•??òÌñâ?©Îãà??
+                    </p>
+                </div>
+                <div class="job-card-footer">
+                    <button class="btn btn-secondary">?ÅÏÑ∏Î≥¥Í∏∞</button>
+                    <button class="btn btn-primary">ÏßÄ?êÌïòÍ∏?/button>
+                </div>
+            </div>
+        </div>
+
+        <div class="pagination">
+            <button class="page-btn">???¥Ï†Ñ</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <button class="page-btn">5</button>
+            <button class="page-btn">?§Ïùå ??/button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about">
+                <h3>?ÑÏ£ºÍ≥µÏóÖÍ≥†Îì±?ôÍµê</h3>
+                <p>?ìç ?ÑÎ∂Å?πÎ≥Ñ?êÏπò???ÑÏ£º???ïÏßÑÍµ??¨ÏÇ∞Î°?101</p>
+                <p>?ìû 063-210-9390</p>
+            </div>
+        </div>
+    </footer>
+        </div>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/jobs.js"></script>
+</body>
+</html>

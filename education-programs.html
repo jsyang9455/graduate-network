@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ï∂îÏ≤ú ÍµêÏú° ?ÑÎ°úÍ∑∏Îû® - JJOBB</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <header id="mainHeader">
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">?Ä?úÎ≥¥??/a></li>
+                <li><a href="jobs.html">Ï±ÑÏö© ?ïÎ≥¥</a></li>
+                <li><a href="networking.html">?ôÎ¨∏ ?§Ìä∏?åÌÇπ</a></li>
+                <li><a href="counseling.html">ÏßÑÎ°ú ?ÅÎã¥</a></li>
+            </ul>
+            <div class="user-menu">
+                <span class="user-name" id="userName"></span>
+                <button onclick="auth.logout()" class="btn-logout">Î°úÍ∑∏?ÑÏõÉ</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <span class="icon">?ìä</span>
+                    <span>?Ä?úÎ≥¥??/span>
+                </a>
+                <a href="profile.html" class="menu-item">
+                    <span class="icon">?ë§</span>
+                    <span>???ÑÎ°ú??/span>
+                </a>
+                <a href="jobs.html" class="menu-item">
+                    <span class="icon">?íº</span>
+                    <span>Ï±ÑÏö© ?ïÎ≥¥</span>
+                </a>
+                <a href="networking.html" class="menu-item">
+                    <span class="icon">?§ù</span>
+                    <span>?ôÎ¨∏ ?§Ìä∏?åÌÇπ</span>
+                </a>
+                <a href="counseling.html" class="menu-item" id="counselingMenu">
+                    <span class="icon">?í¨</span>
+                    <span>ÏßÑÎ°ú ?ÅÎã¥</span>
+                </a>
+                <a href="career.html" class="menu-item" id="careerMenu">
+                    <span class="icon">?ìà</span>
+                    <span>Í≤ΩÎ†• Í¥ÄÎ¶?/span>
+                </a>
+                <a href="education-programs.html" class="menu-item active">
+                    <span class="icon">?éì</span>
+                    <span>ÍµêÏú° ?ÑÎ°úÍ∑∏Îû®</span>
+                </a>
+                
+                <!-- Í¥ÄÎ¶¨Ïûê Î©îÎâ¥ -->
+                <div id="adminMenuSection" style="display: none;">
+                    <div class="menu-divider"></div>
+                    <div class="menu-section-title">Í¥ÄÎ¶¨Ïûê Î©îÎâ¥</div>
+                    <a href="admin-users.html" class="menu-item">
+                        <span class="icon">?ë•</span>
+                        <span>?åÏõê Í¥ÄÎ¶?/span>
+                    </a>
+                    <a href="education-programs.html" class="menu-item active">
+                        <span class="icon">?éì</span>
+                        <span>ÍµêÏú° ?ÑÎ°úÍ∑∏Îû® Í¥ÄÎ¶?/span>
+                    </a>
+                    <a href="admin-board.html" class="menu-item">
+                        <span class="icon">?ìã</span>
+                        <span>Í≤åÏãú??Í¥ÄÎ¶?/span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-container">
+                <div class="page-header">
+                    <h1>?éì Ï∂îÏ≤ú ÍµêÏú° ?ÑÎ°úÍ∑∏Îû®</h1>
+                    <p>?§Ïñë??ÍµêÏú° ?ÑÎ°úÍ∑∏Îû®???µÌï¥ ÏßÄ?çÏ†Å???±Ïû•???¥Ïñ¥Í∞Ä?∏Ïöî</p>
+                </div>
+
+                <div class="page-actions" id="adminActions" style="display: none;">
+                    <button class="btn btn-primary" onclick="openAddProgramModal()">
+                        ???ÑÎ°úÍ∑∏Îû® ?±Î°ù
+                    </button>
+                </div>
+
+                <div class="search-section">
+                    <div class="search-bar">
+                        <input type="text" id="searchProgram" placeholder="?ÑÎ°úÍ∑∏Îû®Î™? ?¥Ïö©?ºÎ°ú Í≤Ä??..">
+                        <button class="btn-search" onclick="searchPrograms()">?îç Í≤Ä??/button>
+                    </div>
+                    <div class="filter-bar">
+                        <select id="filterCategory" onchange="applyFilters()">
+                            <option value="">?ÑÏ≤¥ Ïπ¥ÌÖåÍ≥†Î¶¨</option>
+                            <option value="IT">IT/?åÌîÑ?∏Ïõ®??/option>
+                            <option value="?úÏ°∞">?úÏ°∞/?ùÏÇ∞</option>
+                            <option value="?ÑÍ∏∞?ÑÏûê">?ÑÍ∏∞/?ÑÏûê</option>
+                            <option value="Í±¥Ï∂ï">Í±¥Ï∂ï/Í±¥ÏÑ§</option>
+                            <option value="?êÍ≤©Ï¶?>?êÍ≤©Ï¶?/option>
+                            <option value="Í∏∞Ì?">Í∏∞Ì?</option>
+                        </select>
+                        <select id="filterType" onchange="applyFilters()">
+                            <option value="">?ÑÏ≤¥ ?†Ìòï</option>
+                            <option value="?®Îùº??>?®Îùº??/option>
+                            <option value="?§ÌîÑ?ºÏù∏">?§ÌîÑ?ºÏù∏</option>
+                            <option value="?ºÌï©">?ºÌï©</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="programs-grid" id="programsGrid">
+                    <!-- ?ÑÎ°úÍ∑∏Îû® Î™©Î°ù???¨Í∏∞???ôÏ†Å?ºÎ°ú ?úÏãú?©Îãà??-->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ?ÑÎ°úÍ∑∏Îû® ?±Î°ù/?òÏ†ï Î™®Îã¨ -->
+    <div id="programModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 id="programModalTitle">?ÑÎ°úÍ∑∏Îû® ?±Î°ù</h2>
+                <span class="close" onclick="closeProgramModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="programForm" onsubmit="saveProgram(event)">
+                    <input type="hidden" id="programId">
+                    
+                    <div class="form-section">
+                        <label for="programTitle">?ÑÎ°úÍ∑∏Îû®Î™?*</label>
+                        <input type="text" id="programTitle" required>
+                    </div>
+
+                    <div class="form-section">
+                        <label for="programCategory">Ïπ¥ÌÖåÍ≥†Î¶¨ *</label>
+                        <select id="programCategory" required>
+                            <option value="">?†ÌÉù?òÏÑ∏??/option>
+                            <option value="IT">IT/?åÌîÑ?∏Ïõ®??/option>
+                            <option value="?úÏ°∞">?úÏ°∞/?ùÏÇ∞</option>
+                            <option value="?ÑÍ∏∞?ÑÏûê">?ÑÍ∏∞/?ÑÏûê</option>
+                            <option value="Í±¥Ï∂ï">Í±¥Ï∂ï/Í±¥ÏÑ§</option>
+                            <option value="?êÍ≤©Ï¶?>?êÍ≤©Ï¶?/option>
+                            <option value="Í∏∞Ì?">Í∏∞Ì?</option>
+                        </select>
+                    </div>
+
+                    <div class="form-section">
+                        <label for="programType">ÍµêÏú° ?†Ìòï *</label>
+                        <select id="programType" required>
+                            <option value="">?†ÌÉù?òÏÑ∏??/option>
+                            <option value="?®Îùº??>?®Îùº??/option>
+                            <option value="?§ÌîÑ?ºÏù∏">?§ÌîÑ?ºÏù∏</option>
+                            <option value="?ºÌï©">?ºÌï©</option>
+                        </select>
+                    </div>
+
+                    <div class="form-section">
+                        <label for="programDuration">ÍµêÏú° Í∏∞Í∞Ñ *</label>
+                        <input type="text" id="programDuration" placeholder="?? 4Ï£? 8Ï£? 3Í∞úÏõî" required>
+                    </div>
+
+                    <div class="form-section">
+                        <label for="programDescription">?ÑÎ°úÍ∑∏Îû® ?§Î™Ö *</label>
+                        <textarea id="programDescription" rows="4" required></textarea>
+                    </div>
+
+                    <div class="form-section">
+                        <label for="programInstructor">Í∞ïÏÇ¨/Í∏∞Í?</label>
+                        <input type="text" id="programInstructor" placeholder="?? OO ?Ä?ôÍµê, OO ÍµêÏú°??>
+                    </div>
+
+                    <div class="form-section">
+                        <label for="programCost">ÍµêÏú° ÎπÑÏö©</label>
+                        <input type="text" id="programCost" placeholder="?? Î¨¥Î£å, 50ÎßåÏõê">
+                    </div>
+
+                    <div class="form-section">
+                        <label for="programLink">?†Ï≤≠ ÎßÅÌÅ¨</label>
+                        <input type="url" id="programLink" placeholder="https://">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeProgramModal()">Ï∑®ÏÜå</button>
+                        <button type="submit" class="btn btn-primary">?Ä??/button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ?ÑÎ°úÍ∑∏Îû® ?ÅÏÑ∏Î≥¥Í∏∞ Î™®Îã¨ -->
+    <div id="programDetailModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 id="programDetailTitle">?ÑÎ°úÍ∑∏Îû® ?ÅÏÑ∏</h2>
+                <span class="close" onclick="closeProgramDetailModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="programDetailContainer">
+                    <!-- ?ÑÎ°úÍ∑∏Îû® ?ÅÏÑ∏ ?¥Ïö©???¨Í∏∞???úÏãú?©Îãà??-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about">
+                <h3>?ÑÏ£ºÍ≥µÏóÖÍ≥†Îì±?ôÍµê</h3>
+                <p>?ìç ?ÑÎ∂Å?πÎ≥Ñ?êÏπò???ÑÏ£º???ïÏßÑÍµ??¨ÏÇ∞Î°?101</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/education-programs.js"></script>
+</body>
+</html>
