@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용 가이드 - 전주공업고등학교 졸업생 네트워크</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .help-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .help-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+        }
+
+        .help-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .help-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .account-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e5e7eb;
+            flex-wrap: wrap;
+        }
+
+        .account-tab {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            color: #6b7280;
+        }
+
+        .account-tab:hover {
+            color: #3b82f6;
+        }
+
+        .account-tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .help-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .help-section h2 {
+            color: #1f2937;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f3f4f6;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .help-section h3 {
+            color: #374151;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .help-section h4 {
+            color: #4b5563;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .help-section ol, .help-section ul {
+            margin-left: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .help-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .help-section p {
+            line-height: 1.8;
+            color: #4b5563;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card {
+            background: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .feature-card h4 {
+            margin-top: 0;
+            color: #1f2937;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .badge-student {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-teacher {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-admin {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .info-box {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #3b82f6;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .back-to-top:hover {
+            background: #2563eb;
+            transform: translateY(-5px);
+        }
+
+        .test-account-box {
+            background: #f3f4f6;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .test-account-box h4 {
+            margin-top: 0;
+            color: #1f2937;
+        }
+
+        .test-account {
+            background: white;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 0.5rem 0;
+        }
+
+        .test-account strong {
+            color: #3b82f6;
+        }
+
+        @media (max-width: 768px) {
+            .help-container {
+                padding: 1rem;
+            }
+
+            .help-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .account-tabs {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .account-tab {
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .account-tab.active {
+                background: #eff6ff;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="help-container">
+        <div class="help-header">
+            <h1>📚 사용 가이드</h1>
+            <p>전주공업고등학교 졸업생 네트워크 플랫폼 완벽 활용 가이드</p>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 궁금한 내용을 검색하세요... (예: 채용공고, 상담신청, 회원관리)">
+        </div>
+
+        <div class="account-tabs">
+            <button class="account-tab active" onclick="switchTab('student')">
+                👨‍🎓 학생 가이드
+            </button>
+            <button class="account-tab" onclick="switchTab('teacher')">
+                👨‍🏫 교사 가이드
+            </button>
+            <button class="account-tab" onclick="switchTab('admin')">
+                👨‍💼 관리자 가이드
+            </button>
+        </div>
+
+        <!-- 학생 가이드 -->
+        <div id="studentTab" class="tab-content active">
+            <div class="help-section">
+                <h2>🎯 학생 계정 개요</h2>
+                <p>학생 계정은 재학생과 졸업생이 사용하는 계정으로, 채용 정보 조회, 진로 상담 신청, 동문 네트워킹, 경력 관리 등의 기능을 제공합니다.</p>
+                
+                <div class="test-account-box">
+                    <h4>🔑 테스트 계정 정보</h4>
+                    <div class="test-account">
+                        <strong>이메일:</strong> student@test.com<br>
+                        <strong>비밀번호:</strong> student123<br>
+                        <strong>이름:</strong> 김학생
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h2>📝 1. 회원가입 및 로그인</h2>
+                
+                <h3>회원가입 방법</h3>
+                <ol>
+                    <li>메인 페이지에서 <strong>"회원가입"</strong> 버튼 클릭</li>
+                    <li>필수 정보 입력:
+                        <ul>
+                            <li>이름</li>
+                            <li>이메일 (로그인 ID로 사용)</li>
+                            <li>비밀번호 (8자 이상)</li>
+                            <li>전화번호</li>
+                            <li>학교 선택 (드롭다운에서 선택)</li>
+                            <li>사용자 유형 (재학생/졸업생)</li>
+                            <li>졸업년도 (졸업생만 입력)</li>
+                        </ul>
+                    </li>
+                    <li><strong>"가입하기"</strong> 버튼 클릭</li>
+                    <li>성공 메시지 확인 후 로그인</li>
+                </ol>
+
+                <h3>로그인 방법</h3>
+                <ol>
+                    <li>등록한 이메일과 비밀번호 입력</li>
+                    <li><strong>"로그인"</strong> 버튼 클릭</li>
+                    <li>대시보드로 자동 이동</li>
+                </ol>
+            </div>
+
+            <div class="help-section">
+                <h2>📊 2. 대시보드 활용하기</h2>
+                <p>로그인 후 첫 화면인 대시보드에서 모든 주요 정보를 한눈에 확인할 수 있습니다.</p>
+
+                <h3>통계 카드</h3>
+                <div class="feature-card">
+                    <ul>
+                        <li><strong>📊 신규 채용공고:</strong> 최근 등록된 채용공고 수</li>
+                        <li><strong>📝 지원한 공고:</strong> 내가 지원한 채용공고 수</li>
+                        <li><strong>🤝 네트워크:</strong> 연결된 동문 수</li>
+                        <li><strong>💬 메시지:</strong> 받은 메시지 수</li>
+                    </ul>
+                </div>
+
+                <h3>추천 채용공고</h3>
+                <p>최신 채용공고 3개를 미리보기로 확인할 수 있습니다.</p>
+                <ul>
+                    <li><strong>"지원하기"</strong> 버튼: 채용정보 페이지로 이동</li>
+                    <li><strong>"자세히보기"</strong> 버튼: 공고 상세 정보 확인</li>
+                </ul>
+
+                <h3>최근 소식</h3>
+                <p>학교 관리자가 등록한 공지사항을 확인할 수 있습니다.</p>
+                <ul>
+                    <li>항목 클릭 시 상세 내용 팝업으로 표시</li>
+                    <li>작성일 표시</li>
+                </ul>
+
+                <h3>평생교육프로그램</h3>
+                <p>등록된 교육 프로그램 목록을 확인할 수 있습니다.</p>
+                <ul>
+                    <li>프로그램 클릭 시 상세 정보 확인 (기간, 마감일, 수강료, 설명)</li>
+                    <li>신청 마감일 표시</li>
+                </ul>
+            </div>
+
+            <div class="help-section">
+                <h2>💼 3. 채용 정보 활용하기</h2>
+
+                <h3>채용공고 검색 및 필터링</h3>
+                <ol>
+                    <li>좌측 메뉴에서 <strong>"채용 정보"</strong> 클릭</li>
+                    <li>검색 및 필터 사용:
+                        <ul>
+                            <li>키워드 검색 (직무명, 회사명)</li>
+                            <li>지역별 필터</li>
+                            <li>근무형태 (정규직, 계약직, 인턴 등)</li>
+                            <li>경력 요구사항</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h3>채용공고 상세보기</h3>
+                <ol>
+                    <li>관심 있는 공고 클릭</li>
+                    <li>상세 정보 확인:
+                        <ul>
+                            <li>회사명 및 위치</li>
+                            <li>직무 설명</li>
+                            <li>자격 요건 및 우대 사항</li>
+                            <li>급여 및 복리후생</li>
+                            <li>마감일</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h3>채용공고 지원</h3>
+                <ol>
+                    <li>공고 상세 페이지에서 <strong>"지원하기"</strong> 버튼 클릭</li>
+                    <li>지원 양식 작성 (프로필 정보 자동 불러오기)</li>
+                    <li>제출 확인</li>
+                </ol>
+            </div>
+
+            <div class="help-section">
+                <h2>💬 4. 진로 상담 신청하기</h2>
+
+                <h3>상담 신청 방법</h3>
+                <ol>
+                    <li>좌측 메뉴에서 <strong>"진로 상담"</strong> 클릭</li>
+                    <li><strong>"상담 신청하기"</strong> 버튼 클릭</li>
+                    <li>상담 정보 입력:
+                        <ul>
+                            <li>상담 유형 선택 (진로, 취업, 학업, 기타)</li>
+                            <li>제목 입력</li>
+                            <li>상담 내용 상세 작성</li>
+                        </ul>
+                    </li>
+                    <li><strong>"신청하기"</strong> 버튼 클릭</li>
+                </ol>
+
+                <h3>상담 내역 확인</h3>
+                <ol>
+                    <li>진로 상담 페이지에서 <strong>"내 상담 내역"</strong> 탭 클릭</li>
+                    <li>상담 상태 확인:
+                        <ul>
+                            <li>🟡 <strong>대기중:</strong> 교사 승인 대기</li>
+                            <li>🟢 <strong>승인됨:</strong> 상담 승인 완료 (교사 답변 확인 가능)</li>
+                            <li>🔴 <strong>거절됨:</strong> 상담 거절 (사유 확인)</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <div class="info-box">
+                    <strong>💡 팁:</strong> 상담 신청 시 구체적인 질문과 상황을 작성하면 더 정확한 답변을 받을 수 있습니다.
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h2>🤝 5. 동문 네트워킹</h2>
+
+                <h3>동문 검색</h3>
+                <ol>
+                    <li>좌측 메뉴에서 <strong>"동문 네트워킹"</strong> 클릭</li>
+                    <li>검색 필터 사용:
+                        <ul>
+                            <li>이름 검색</li>
+                            <li>졸업년도별 필터</li>
+                            <li>재직 회사</li>
+                            <li>직무 분야</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h3>네트워크 연결</h3>
+                <ol>
+                    <li>연결하고 싶은 동문 프로필 클릭</li>
+                    <li><strong>"네트워크 추가"</strong> 버튼 클릭</li>
+                    <li>연결 요청 메시지 작성 (선택)</li>
+                    <li>상대방 승인 대기</li>
+                </ol>
+
+                <h3>메시지 보내기</h3>
+                <ol>
+                    <li>연결된 동문 목록에서 선택</li>
+                    <li><strong>"메시지 보내기"</strong> 버튼 클릭</li>
+                    <li>메시지 작성 및 전송</li>
+                </ol>
+            </div>
+
+            <div class="help-section">
+                <h2>👤 6. 내 프로필 관리</h2>
+
+                <h3>기본 정보 수정</h3>
+                <ol>
+                    <li>좌측 메뉴에서 <strong>"내 프로필"</strong> 클릭</li>
+                    <li><strong>"프로필 수정"</strong> 버튼 클릭</li>
+                    <li>수정 가능 항목:
+                        <ul>
+                            <li>프로필 사진</li>
+                            <li>전화번호</li>
+                            <li>자기소개</li>
+                            <li>관심 분야</li>
+                            <li>SNS 링크 (GitHub, LinkedIn 등)</li>
+                        </ul>
+                    </li>
+                    <li><strong>"저장"</strong> 버튼 클릭</li>
+                </ol>
+            </div>
+
+            <div class="help-section">
+                <h2>📈 7. 경력 관리</h2>
+
+                <h3>경력 사항 등록</h3>
+                <ol>
+                    <li>좌측 메뉴에서 <strong>"경력 관리"</strong> 클릭</li>
+                    <li><strong>"경력"</strong> 탭에서 <strong>"경력 추가"</strong> 버튼 클릭</li>
+                    <li>경력 정보 입력:
+                        <ul>
+                            <li>회사명</li>
+                            <li>직위</li>
+                            <li>근무 기간</li>
+                            <li>담당 업무</li>
+                        </ul>
+                    </li>
+                    <li><strong>"저장"</strong> 버튼 클릭</li>
+                </ol>
+
+                <h3>자격증 등록</h3>
+                <ol>
+                    <li><strong>"자격증"</strong> 탭 클릭</li>
+                    <li><strong>"자격증 추가"</strong> 버튼 클릭</li>
+                    <li>자격증 정보 입력:
+                        <ul>
+                            <li>자격증명</li>
+                            <li>발급 기관</li>
+                            <li>취득일</li>
+                            <li>유효기간 (선택)</li>
+                        </ul>
+                    </li>
+                    <li><strong>"저장"</strong> 버튼 클릭</li>
+                </ol>
+
+                <h3>교육 이력 등록</h3>
+                <ol>
+                    <li><strong>"교육"</strong> 탭 클릭</li>
+                    <li><strong>"교육 추가"</strong> 버튼 클릭</li>
+                    <li>교육 정보 입력 및 저장</li>
+                </ol>
+
+                <h3>포트폴리오 등록</h3>
+                <ol>
+                    <li><strong>"포트폴리오"</strong> 탭 클릭</li>
+                    <li><strong>"포트폴리오 추가"</strong> 버튼 클릭</li>
+                    <li>프로젝트 정보 입력:
+                        <ul>
+                            <li>프로젝트명</li>
+                            <li>프로젝트 설명</li>
+                            <li>참여 기간</li>
+                            <li>사용 기술</li>
+                            <li>프로젝트 링크 (GitHub, 웹사이트 등)</li>
+                        </ul>
+                    </li>
+                    <li><strong>"저장"</strong> 버튼 클릭</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 교사 가이드 -->
+        <div id="teacherTab" class="tab-content">
+            <div class="help-section">
+                <h2>🎓 교사 계정 개요</h2>
+                <p>교사 계정은 학생들의 진로 상담을 관리하고, 기업을 대신하여 채용공고를 등록·관리할 수 있는 계정입니다.</p>
+                
+                <div class="test-account-box">
+                    <h4>🔑 테스트 계정 정보</h4>
+                    <div class="test-account">
+                        <strong>이메일:</strong> teacher@test.com<br>
+                        <strong>비밀번호:</strong> teacher123<br>
+                        <strong>이름:</strong> 이선생
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h2>📊 1. 교사 대시보드</h2>
+                
+                <h3>대시보드 구성</h3>
+                <div class="feature-card">
+                    <ul>
+                        <li><strong>📝 활성 채용공고:</strong> 등록한 채용공고 수</li>
+                        <li><strong>👥 총 지원자:</strong> 채용공고에 지원한 학생 수</li>
+                        <li><strong>👁️ 조회수:</strong> 채용공고 조회 수</li>
+                        <li><strong>✅ 채용 완료:</strong> 채용이 완료된 건수</li>
+                    </ul>
+                </div>
+
+                <h3>주요 섹션</h3>
+                <ul>
+                    <li><strong>내 채용공고:</strong> 등록한 채용공고 목록</li>
+                    <li><strong>최근 지원자:</strong> 최근 지원한 학생 목록</li>
+                    <li><strong>상담 신청 내역:</strong> 학생들의 진로 상담 요청</li>
+                    <li><strong>최근 소식:</strong> 학교 공지사항</li>
+                    <li><strong>평생교육프로그램:</strong> 교육 프로그램 정보</li>
+                </ul>
+            </div>
+
+            <div class="help-section">
+                <h2>💼 2. 채용공고 관리</h2>
+
+                <h3>채용공고 등록</h3>
+                <ol>
+                    <li>대시보드에서 <strong>"공고 등록"</strong> 버튼 클릭</li>
+                    <li>채용 정보 입력:
+                        <ul>
+                            <li><strong>회사명:</strong> 채용 기업명</li>
+                            <li><strong>직무명:</strong> 채용 포지션</li>
+                            <li><strong>근무 지역:</strong> 근무지</li>
+                            <li><strong>급여:</strong> 급여 정보</li>
+                            <li><strong>고용 형태:</strong> 정규직, 계약직, 인턴 등</li>
+                            <li><strong>경력 요구:</strong> 신입/경력 및 년수</li>
+                            <li><strong>학력 요구:</strong> 최소 학력 요건</li>
+                            <li><strong>직무 설명:</strong> 상세 업무 내용</li>
+                            <li><strong>자격 요건:</strong> 필수 자격 요건</li>
+                            <li><strong>우대 사항:</strong> 우대 조건</li>
+                            <li><strong>복리후생:</strong> 복지 혜택</li>
+                            <li><strong>마감일:</strong> 지원 마감일</li>
+                        </ul>
+                    </li>
+                    <li><strong>"등록하기"</strong> 버튼 클릭</li>
+                    <li>등록 완료 메시지 확인 후 대시보드로 자동 이동</li>
+                </ol>
+
+                <h3>채용공고 수정</h3>
+                <ol>
+                    <li>대시보드의 "내 채용공고" 섹션에서 수정할 공고 선택</li>
+                    <li><strong>"수정"</strong> 버튼 클릭</li>
+                    <li>정보 수정 후 <strong>"저장"</strong> 버튼 클릭</li>
+                </ol>
+
+                <h3>채용공고 삭제</h3>
+                <ol>
+                    <li>수정 화면에서 <strong>"삭제"</strong> 버튼 클릭</li>
+                    <li>삭제 확인 후 완료</li>
+                </ol>
+
+                <div class="warning-box">
+                    <strong>⚠️ 주의:</strong> 채용공고를 삭제하면 해당 공고의 지원자 정보도 함께 삭제됩니다.
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h2>👥 3. 지원자 관리</h2>
+
+                <h3>지원자 목록 확인</h3>
+                <ol>
+                    <li>대시보드의 "최근 지원자" 섹션 확인</li>
+                    <li>각 지원자의 기본 정보:
+                        <ul>
+                            <li>이름</li>
+                            <li>지원 직무</li>
+                            <li>지원일</li>
+                            <li>상태 (검토중, 합격, 불합격)</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h3>지원자 상세 정보</h3>
+                <ol>
+                    <li>지원자 이름 클릭</li>
+                    <li>지원자 프로필 확인:
+                        <ul>
+                            <li>학력 정보</li>
+                            <li>경력 사항</li>
+                            <li>자격증</li>
+                            <li>포트폴리오</li>
+                        </ul>
+                    </li>
+                    <li>평가 및 메모 작성</li>
+                </ol>
+            </div>
+
+            <div class="help-section">
+                <h2>💬 4. 진로 상담 관리</h2>
+
+                <h3>상담 신청 확인</h3>
+                <ol>
+                    <li>대시보드의 "상담 신청 내역" 섹션 확인</li>
+                    <li>또는 좌측 메뉴에서 <strong>"진로 상담"</strong> 클릭</li>
+                    <li>대기 중인 상담 요청 목록 확인</li>
+                </ol>
+
+                <h3>상담 승인 및 답변</h3>
+                <ol>
+                    <li>상담 요청 항목 클릭</li>
+                    <li>학생의 상담 내용 확인</li>
+                    <li>두 가지 옵션 선택:
+                        <ul>
+                            <li><strong>"승인":</strong> 상담 승인 후 답변 작성</li>
+                            <li><strong>"거절":</strong> 거절 사유 작성</li>
+                        </ul>
+                    </li>
+                    <li>답변 또는 거절 사유 입력</li>
+                    <li><strong>"저장"</strong> 버튼 클릭</li>
+                </ol>
+
+                <h3>상담 내역 관리</h3>
+                <p>진로 상담 페이지에서 상태별로 필터링하여 관리할 수 있습니다:</p>
+                <ul>
+                    <li>🟡 <strong>대기중:</strong> 아직 처리하지 않은 상담</li>
+                    <li>🟢 <strong>승인됨:</strong> 승인하고 답변을 작성한 상담</li>
+                    <li>🔴 <strong>거절됨:</strong> 거절한 상담</li>
+                </ul>
+
+                <div class="info-box">
+                    <strong>💡 팁:</strong> 상담 승인 시 구체적이고 실질적인 조언을 제공하면 학생들에게 큰 도움이 됩니다.
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h2>📢 5. 최근 소식 및 교육프로그램</h2>
+                <p>교사 대시보드에서도 학교의 최근 소식과 평생교육프로그램을 확인할 수 있습니다.</p>
+                <ul>
+                    <li>항목 클릭 시 상세 정보 확인</li>
+                    <li>학생들에게 유용한 정보 공유 가능</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 관리자 가이드 -->
+        <div id="adminTab" class="tab-content">
+            <div class="help-section">
+                <h2>⚙️ 관리자 계정 개요</h2>
+                <p>관리자는 시스템의 모든 데이터를 관리하고 모니터링할 수 있는 최고 권한을 가진 계정입니다.</p>
+                
+                <div class="test-account-box">
+                    <h4>🔑 테스트 계정 정보</h4>
+                    <div class="test-account">
+                        <strong>이메일:</strong> admin@admin.com<br>
+                        <strong>비밀번호:</strong> admin123<br>
+                        <strong>이름:</strong> 관리자
+                    </div>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h2>📊 1. 관리자 대시보드</h2>
+
+                <h3>대시보드 통계</h3>
+                <div class="feature-card">
+                    <ul>
+                        <li><strong>🤝 네트워크 수:</strong> 전체 사용자 수</li>
+                        <li><strong>💼 지원한 공고:</strong> 전체 채용공고 수</li>
+                        <li><strong>📝 저장한 공고:</strong> 상담 신청 수</li>
+                    </ul>
+                </div>
+
+                <h3>관리자 메뉴</h3>
+                <p>좌측 사이드바에서 다음 메뉴에 접근할 수 있습니다:</p>
+                <ul>
+                    <li>👥 <strong>회원 관리</strong></li>
+                    <li>💼 <strong>채용공고 관리</strong></li>
+                    <li>📋 <strong>게시판 관리</strong></li>
+                    <li>⚙️ <strong>코드 관리</strong></li>
+                </ul>
+            </div>
+
+            <div class="help-section">
+                <h2>👥 2. 회원 관리</h2>
+
+                <h3>회원 목록 조회</h3>
+                <ol>
+                    <li>좌측 메뉴에서 <strong>"회원 관리"</strong> 클릭</li>
+                    <li>전체 회원 목록 확인</li>
+                    <li>필터 사용:
+                        <ul>
+                            <li><strong>유형별:</strong> 전체, 학생, 교사, 졸업생, 기업, 관리자</li>
+                            <li><strong>검색:</strong> 이름 또는 이메일로 검색</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h3>회원 정보 수정</h3>
+                <ol>
+                    <li>회원 목록에서 <strong>"수정"</strong> 버튼 클릭</li>
+                    <li>수정 가능 항목:
+                        <ul>
+                            <li>이름</li>
+                            <li>이메일</li>
+                            <li>전화번호</li>
+                            <li>사용자 유형</li>
+                            <li>학교</li>
+                            <li>졸업년도</li>
+                        </ul>
+                    </li>
+                    <li><strong>"저장"</strong> 버튼 클릭</li>
+                </ol>
+
+                <h3>회원 삭제</h3>
+                <ol>
+                    <li>회원 목록에서 <strong>"삭제"</strong> 버튼 클릭</li>
+                    <li>삭제 확인 팝업에서 <strong>"확인"</strong> 클릭</li>
+                    <li>회원 데이터가 완전히 삭제됨</li>
+                </ol>
+
+                <h3>회원 추가</h3>
+                <ol>
+                    <li>상단의 <strong>"회원 추가"</strong> 버튼 클릭</li>
+                    <li>신규 회원 정보 입력</li>
+                    <li><strong>"저장"</strong> 버튼 클릭</li>
+                </ol>
+
+                <div class="warning-box">
+                    <strong>⚠️ 주의:</strong> 회원을 삭제하면 해당 회원의 모든 데이터(상담 내역, 지원 정보 등)가 함께 삭제됩니다.
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h2>💼 3. 채용공고 관리</h2>
+
+                <h3>채용공고 목록 조회</h3>
+                <ol>
+                    <li>좌측 메뉴에서 <strong>"채용공고 관리"</strong> 클릭</li>
+                    <li>전체 채용공고 목록 확인</li>
+                    <li>상태별 필터:
+                        <ul>
+                            <li>전체</li>
+                            <li>활성 (모집중)</li>
+                            <li>마감</li>
+                            <li>만료</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h3>채용공고 등록</h3>
+                <ol>
+                    <li>상단의 <strong>"공고 등록"</strong> 버튼 클릭</li>
+                    <li>채용 정보 입력</li>
+                    <li><strong>"등록하기"</strong> 버튼 클릭</li>
+                </ol>
+
+                <h3>채용공고 수정/삭제</h3>
+                <ol>
+                    <li>채용공고 목록에서 해당 공고 선택</li>
+                    <li><strong>"수정"</strong> 또는 <strong>"삭제"</strong> 버튼 클릭</li>
+                    <li>수정 시 정보 변경 후 저장</li>
+                    <li>삭제 시 확인 후 완전 삭제</li>
+                </ol>
+
+                <h3>채용공고 만료 처리</h3>
+                <ol>
+                    <li>마감일이 지난 공고의 <strong>"만료"</strong> 버튼 클릭</li>
+                    <li>공고 상태가 "만료"로 변경됨</li>
+                    <li>더 이상 학생들에게 표시되지 않음</li>
+                </ol>
+            </div>
+
+            <div class="help-section">
+                <h2>📋 4. 게시판 관리</h2>
+                <p>게시판 관리에서는 학교 공지사항과 교육 프로그램을 관리합니다.</p>
+
+                <h3>최근 소식 관리</h3>
+                
+                <h4>소식 등록</h4>
+                <ol>
+                    <li>좌측 메뉴에서 <strong>"게시판 관리"</strong> 클릭</li>
+                    <li><strong>"최근 소식"</strong> 탭 선택 (기본값)</li>
+                    <li><strong>"소식 등록"</strong> 버튼 클릭</li>
+                    <li>소식 정보 입력:
+                        <ul>
+                            <li>제목</li>
+                            <li>내용</li>
+                        </ul>
+                    </li>
+                    <li><strong>"등록"</strong> 버튼 클릭</li>
+                </ol>
+
+                <h4>소식 수정</h4>
+                <ol>
+                    <li>소식 목록에서 <strong>"수정"</strong> 버튼 클릭</li>
+                    <li>제목 또는 내용 수정</li>
+                    <li><strong>"저장"</strong> 버튼 클릭</li>
+                </ol>
+
+                <h4>소식 삭제</h4>
+                <ol>
+                    <li>소식 목록에서 <strong>"삭제"</strong> 버튼 클릭</li>
+                    <li>삭제 확인 후 완료</li>
+                </ol>
+
+                <h3>평생교육프로그램 관리</h3>
+
+                <h4>프로그램 등록</h4>
+                <ol>
+                    <li><strong>"평생교육프로그램"</strong> 탭 클릭</li>
+                    <li><strong>"프로그램 등록"</strong> 버튼 클릭</li>
+                    <li>프로그램 정보 입력:
+                        <ul>
+                            <li>프로그램명</li>
+                            <li>프로그램 설명</li>
+                            <li>시작일</li>
+                            <li>종료일</li>
+                            <li>신청 마감일</li>
+                            <li>수강료 (무료인 경우 "무료" 입력)</li>
+                        </ul>
+                    </li>
+                    <li><strong>"등록"</strong> 버튼 클릭</li>
+                </ol>
+
+                <h4>프로그램 수정/삭제</h4>
+                <ol>
+                    <li>프로그램 목록에서 <strong>"수정"</strong> 또는 <strong>"삭제"</strong> 버튼 클릭</li>
+                    <li>수정 시 정보 변경 후 저장</li>
+                    <li>삭제 시 확인 후 완료</li>
+                </ol>
+
+                <div class="info-box">
+                    <strong>💡 팁:</strong> 등록된 최근 소식과 교육프로그램은 모든 사용자의 대시보드에 자동으로 표시됩니다.
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h2>⚙️ 5. 코드 관리</h2>
+                <p>코드 관리에서는 시스템에서 사용되는 기준 정보를 관리합니다.</p>
+
+                <h3>학교 관리</h3>
+
+                <h4>학교 등록</h4>
+                <ol>
+                    <li>좌측 메뉴에서 <strong>"코드 관리"</strong> 클릭</li>
+                    <li><strong>"학교 관리"</strong> 섹션에서 <strong>"학교 추가"</strong> 버튼 클릭</li>
+                    <li>학교명 입력</li>
+                    <li><strong>"저장"</strong> 버튼 클릭</li>
+                    <li>등록된 학교는 회원가입 시 학교 선택 항목에 자동으로 추가됨</li>
+                </ol>
+
+                <h4>학교 수정</h4>
+                <ol>
+                    <li>학교 목록에서 <strong>"수정"</strong> 버튼 클릭</li>
+                    <li>학교명 변경</li>
+                    <li><strong>"저장"</strong> 버튼 클릭</li>
+                </ol>
+
+                <h4>학교 삭제</h4>
+                <ol>
+                    <li>학교 목록에서 <strong>"삭제"</strong> 버튼 클릭</li>
+                    <li>삭제 확인 팝업에서 <strong>"확인"</strong> 클릭</li>
+                </ol>
+
+                <div class="warning-box">
+                    <strong>⚠️ 주의:</strong> 해당 학교로 등록된 회원이 있는 경우 먼저 회원의 학교 정보를 변경해야 합니다.
+                </div>
+
+                <h4>기본 학교 정보</h4>
+                <p>시스템 최초 실행 시 "전주공업고등학교"가 기본으로 등록됩니다.</p>
+            </div>
+
+            <div class="help-section">
+                <h2>📊 6. 데이터 모니터링</h2>
+                <p>관리자는 대시보드를 통해 다음 데이터를 실시간으로 모니터링할 수 있습니다:</p>
+                <ul>
+                    <li>전체 사용자 수</li>
+                    <li>활성 채용공고 수</li>
+                    <li>진행 중인 상담 건수</li>
+                    <li>최근 등록된 소식 및 교육 프로그램</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 공통 섹션 -->
+        <div class="help-section">
+            <h2>💡 팁 및 주의사항</h2>
+
+            <h3>보안 관련</h3>
+            <ul>
+                <li>비밀번호는 8자 이상 사용</li>
+                <li>정기적으로 비밀번호 변경 권장</li>
+                <li>공용 컴퓨터 사용 후 반드시 로그아웃</li>
+            </ul>
+
+            <h3>데이터 관리</h3>
+            <ul>
+                <li>정기적으로 프로필 정보 업데이트</li>
+                <li>만료된 채용공고는 정기적으로 정리</li>
+                <li>중요한 상담 내역은 별도로 백업</li>
+            </ul>
+
+            <h3>브라우저 호환성</h3>
+            <ul>
+                <li>Chrome, Edge, Firefox 최신 버전 권장</li>
+                <li>Internet Explorer는 지원하지 않음</li>
+            </ul>
+        </div>
+
+        <div class="help-section">
+            <h2>🔧 문제 해결</h2>
+
+            <h3>로그인 안 될 때</h3>
+            <ol>
+                <li>이메일과 비밀번호 확인</li>
+                <li>브라우저 쿠키 및 캐시 삭제</li>
+                <li>비밀번호 찾기 기능 사용 (구현 예정)</li>
+            </ol>
+
+            <h3>데이터가 보이지 않을 때</h3>
+            <ol>
+                <li>페이지 새로고침 (F5)</li>
+                <li>브라우저 캐시 삭제</li>
+                <li>다른 브라우저로 시도</li>
+            </ol>
+
+            <h3>파일 업로드 안 될 때</h3>
+            <ol>
+                <li>파일 크기 확인 (최대 5MB)</li>
+                <li>지원 형식 확인 (JPG, PNG, PDF 등)</li>
+                <li>인터넷 연결 상태 확인</li>
+            </ol>
+        </div>
+
+        <div class="help-section">
+            <h2>📞 지원 및 문의</h2>
+            <p>기술적 문제나 문의사항이 있을 경우:</p>
+            <ul>
+                <li>📧 <strong>이메일:</strong> support@jjobb.com</li>
+                <li>📞 <strong>전화:</strong> 063-XXX-XXXX</li>
+                <li>🕐 <strong>지원 시간:</strong> 평일 09:00-18:00</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; padding: 2rem; color: #6b7280;">
+            <p><strong>버전:</strong> v1.0 | <strong>최종 업데이트:</strong> 2026년 2월 2일</p>
+            <p>개발: 전주공업고등학교 IT팀</p>
+        </div>
+    </div>
+
+    <div class="back-to-top" id="backToTop">
+        ↑
+    </div>
+
+    <script>
+        // 탭 전환
+        function switchTab(tabName) {
+            // 모든 탭 버튼 비활성화
+            document.querySelectorAll('.account-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 모든 탭 컨텐츠 숨기기
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 선택된 탭 활성화
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            // 맨 위로 스크롤
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 검색 기능
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const sections = document.querySelectorAll('.help-section');
+            
+            sections.forEach(section => {
+                const text = section.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    section.style.display = 'block';
+                    // 검색어 하이라이트 (간단 버전)
+                    if (searchTerm) {
+                        section.style.backgroundColor = '#fef3c7';
+                    } else {
+                        section.style.backgroundColor = 'white';
+                    }
+                } else {
+                    section.style.display = searchTerm ? 'none' : 'block';
+                }
+            });
+        });
+
+        // Back to top 버튼
+        const backToTop = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+        
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
