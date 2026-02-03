@@ -30,16 +30,32 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // 회원 로드
-function loadUsers() {
-    const usersData = localStorage.getItem('graduateNetwork_users');
-    if (usersData) {
-        users = JSON.parse(usersData);
-    } else {
-        users = [];
+async function loadUsers() {
+    try {
+        // API에서 사용자 목록 가져오기
+        const response = await api.get('/users?limit=1000');
+        
+        if (response && response.users) {
+            users = response.users;
+        } else {
+            users = [];
+        }
+        
+        updateStats();
+        displayUsers(users);
+    } catch (error) {
+        console.error('회원 로드 실패:', error);
+        
+        // API 실패 시 localStorage fallback
+        const usersData = localStorage.getItem('graduateNetwork_users');
+        if (usersData) {
+            users = JSON.parse(usersData);
+            updateStats();
+            displayUsers(users);
+        } else {
+            alert('회원 목록을 불러올 수 없습니다.');
+        }
     }
-    
-    updateStats();
-    displayUsers(users);
 }
 
 // 통계 업데이트
