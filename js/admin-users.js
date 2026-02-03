@@ -32,12 +32,17 @@ document.addEventListener('DOMContentLoaded', function() {
 // 회원 로드
 async function loadUsers() {
     try {
+        console.log('회원 목록 로드 시작...');
+        
         // API에서 사용자 목록 가져오기
         const response = await api.get('/users?limit=1000');
+        console.log('API 응답:', response);
         
         if (response && response.users) {
             users = response.users;
+            console.log('로드된 회원 수:', users.length);
         } else {
+            console.warn('응답에 users 속성이 없음:', response);
             users = [];
         }
         
@@ -50,9 +55,11 @@ async function loadUsers() {
         const usersData = localStorage.getItem('graduateNetwork_users');
         if (usersData) {
             users = JSON.parse(usersData);
+            console.log('localStorage에서 로드:', users.length);
             updateStats();
             displayUsers(users);
         } else {
+            console.error('localStorage에도 데이터 없음');
             alert('회원 목록을 불러올 수 없습니다.');
         }
     }
