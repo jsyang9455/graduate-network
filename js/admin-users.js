@@ -84,7 +84,7 @@ function displayUsers(userList) {
     const tbody = document.getElementById('usersTableBody');
     
     if (userList.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #999; padding: 40px;">회원이 없습니다.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: #999; padding: 40px;">회원이 없습니다.</td></tr>';
         return;
     }
     
@@ -97,7 +97,8 @@ function displayUsers(userList) {
             'admin': '관리자'
         }[user.user_type] || user.user_type;
         
-        const joinDate = user.created_at ? new Date(user.created_at).toLocaleDateString() : '-';
+        const joinDate = user.created_at ? new Date(user.created_at).toLocaleDateString('ko-KR') : '-';
+        const phone = user.phone || '-';
         const schoolName = user.school_name || user.current_company || '-';
         const major = user.major || '-';
         
@@ -107,6 +108,7 @@ function displayUsers(userList) {
                 <td>${user.name || '-'}</td>
                 <td>${user.email || '-'}</td>
                 <td><span class="badge badge-${user.user_type}">${userTypeLabel}</span></td>
+                <td>${phone}</td>
                 <td>${schoolName}</td>
                 <td>${major}</td>
                 <td>${joinDate}</td>
