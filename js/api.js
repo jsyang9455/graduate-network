@@ -1,8 +1,8 @@
 // API Configuration
-// Use environment variable or default to localhost
+// Use relative path for production (Nginx will proxy to backend)
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:5000/api'
-  : 'http://localhost:5000/api';
+  : '/api';
 
 // API Helper Functions
 const api = {
