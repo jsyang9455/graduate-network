@@ -67,10 +67,16 @@ async function loadUsers() {
 
 // 통계 업데이트
 function updateStats() {
-    document.getElementById('totalUsers').textContent = `${users.length}명`;
-    document.getElementById('studentCount').textContent = `${users.filter(u => u.user_type === 'student' || u.user_type === 'graduate').length}명`;
-    document.getElementById('teacherCount').textContent = `${users.filter(u => u.user_type === 'teacher').length}명`;
-    document.getElementById('companyCount').textContent = `${users.filter(u => u.user_type === 'company').length}명`;
+    // HTML에 통계 엘리먼트가 있는 경우에만 업데이트
+    const totalUsersEl = document.getElementById('totalUsers');
+    const studentCountEl = document.getElementById('studentCount');
+    const teacherCountEl = document.getElementById('teacherCount');
+    const companyCountEl = document.getElementById('companyCount');
+    
+    if (totalUsersEl) totalUsersEl.textContent = `${users.length}명`;
+    if (studentCountEl) studentCountEl.textContent = `${users.filter(u => u.user_type === 'student' || u.user_type === 'graduate').length}명`;
+    if (teacherCountEl) teacherCountEl.textContent = `${users.filter(u => u.user_type === 'teacher').length}명`;
+    if (companyCountEl) companyCountEl.textContent = `${users.filter(u => u.user_type === 'company').length}명`;
 }
 
 // 회원 목록 표시
