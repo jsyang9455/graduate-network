@@ -84,15 +84,15 @@ function displayUsers(userList) {
             'admin': '관리자'
         }[user.user_type] || user.user_type;
         
-        const joinDate = user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-';
-        const schoolName = user.schoolName || user.companyName || '-';
-        const major = user.major || user.industry || '-';
+        const joinDate = user.created_at ? new Date(user.created_at).toLocaleDateString() : '-';
+        const schoolName = user.school_name || user.current_company || '-';
+        const major = user.major || '-';
         
         return `
             <tr>
                 <td>${user.id}</td>
-                <td>${user.name}</td>
-                <td>${user.email}</td>
+                <td>${user.name || '-'}</td>
+                <td>${user.email || '-'}</td>
                 <td><span class="badge badge-${user.user_type}">${userTypeLabel}</span></td>
                 <td>${schoolName}</td>
                 <td>${major}</td>
