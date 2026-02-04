@@ -161,7 +161,7 @@ router.get('/', async (req, res) => {
     } = req.query;
 
     let queryText = `
-      SELECT u.id, u.email, u.name, u.user_type, u.phone, u.profile_image, u.created_at,
+      SELECT u.id, u.email, u.name, u.user_type, u.phone, u.school_name, u.profile_image, u.created_at,
              gp.graduation_year, gp.major, gp.current_company, 
              gp.current_position, gp.is_mentor
       FROM users u
