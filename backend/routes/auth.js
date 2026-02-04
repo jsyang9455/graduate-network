@@ -18,7 +18,7 @@ router.post('/register', [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, password, name, user_type, phone } = req.body;
+    const { email, password, name, user_type, phone, school_name } = req.body;
 
     // Check if user exists
     const existingUser = await query(
@@ -35,10 +35,10 @@ router.post('/register', [
 
     // Create user
     const result = await query(
-      `INSERT INTO users (email, password_hash, name, user_type, phone) 
-       VALUES ($1, $2, $3, $4, $5) 
-       RETURNING id, email, name, user_type, created_at`,
-      [email, password_hash, name, user_type, phone]
+      `INSERT INTO users (email, password_hash, name, user_type, phone, school_name) 
+       VALUES ($1, $2, $3, $4, $5, $6) 
+       RETURNING id, email, name, user_type, school_name, created_at`,
+      [email, password_hash, name, user_type, phone, school_name]
     );
 
     const user = result.rows[0];
