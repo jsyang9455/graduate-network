@@ -169,9 +169,6 @@ async function saveUser(event) {
     }
 }
 document.getElementById('editUserForm')?.addEventListener('submit', saveUser);
-    alert('회원 정보가 수정되었습니다.');
-}
-window.saveUser = saveUser;
 
 // 회원 탈퇴
 function deleteUser(userId) {
