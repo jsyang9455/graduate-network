@@ -8,6 +8,7 @@ CREATE TABLE users (
     name VARCHAR(100) NOT NULL,
     user_type VARCHAR(20) NOT NULL CHECK (user_type IN ('student', 'graduate', 'teacher', 'company', 'admin')),
     phone VARCHAR(20),
+    school_name VARCHAR(200),
     profile_image TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -187,3 +188,22 @@ CREATE INDEX idx_posts_user_id ON posts(user_id);
 CREATE INDEX idx_comments_post_id ON comments(post_id);
 CREATE INDEX idx_notifications_user_id ON notifications(user_id);
 CREATE INDEX idx_notifications_is_read ON notifications(user_id, is_read);
+
+-- Majors table (학과 관리)
+CREATE TABLE IF NOT EXISTS majors (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT TRUE
+);
+
+-- Insert default majors
+INSERT INTO majors (name) VALUES 
+    ('전기과'),
+    ('전자과'),
+    ('기계과'),
+    ('컴퓨터과'),
+    ('건축과'),
+    ('토목과')
+ON CONFLICT (name) DO NOTHING;

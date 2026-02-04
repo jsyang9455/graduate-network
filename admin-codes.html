@@ -73,6 +73,30 @@
                         </table>
                     </div>
                 </div>
+
+                <!-- 학과 관리 -->
+                <div id="majorSection" style="margin-top: 3rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2>학과 관리</h2>
+                        <button onclick="showMajorModal()" class="btn btn-primary">학과 등록</button>
+                    </div>
+
+                    <div class="board-table" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead style="background: #f9fafb;">
+                                <tr>
+                                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">ID</th>
+                                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">학과명</th>
+                                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">등록일</th>
+                                    <th style="padding: 1rem; text-align: center; border-bottom: 2px solid #e5e7eb;">관리</th>
+                                </tr>
+                            </thead>
+                            <tbody id="majorTableBody">
+                                <!-- Majors will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -100,10 +124,34 @@
         </div>
     </div>
 
+    <!-- 학과 등록/수정 모달 -->
+    <div id="majorModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 id="majorModalTitle">학과 등록</h2>
+                <span class="close" onclick="closeMajorModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="majorForm">
+                    <input type="hidden" id="majorId">
+                    <div class="form-group">
+                        <label>학과명 *</label>
+                        <input type="text" id="majorName" required placeholder="예: 컴퓨터과">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">저장</button>
+                        <button type="button" onclick="closeMajorModal()" class="btn btn-secondary">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script>
         let allSchools = [];
+        let allMajors = [];
 
         document.addEventListener('DOMContentLoaded', function() {
             if (!auth.isLoggedIn()) {
@@ -120,13 +168,21 @@
 
             document.getElementById('userName').textContent = user.name;
             
-            // 기본 학교 데이터 초기화
+            // 기본 학교 데이터 초기화 및 로드
             initializeSchools();
             loadSchools();
+            
+            // 학과 데이터 로드
+            loadMajors();
 
             document.getElementById('schoolForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 saveSchool();
+            });
+            
+            document.getElementById('majorForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveMajor();
             });
         });
 
@@ -239,6 +295,105 @@
             
             alert('학교가 삭제되었습니다.');
             loadSchools();
+        }
+        
+        // ===== 학과 관리 함수 =====
+        async function loadMajors() {
+            try {
+                const response = await api.get('/majors');
+                allMajors = response.majors || [];
+                displayMajors();
+            } catch (error) {
+                console.error('학과 로드 실패:', error);
+                alert('학과 목록을 불러올 수 없습니다.');
+            }
+        }
+
+        function displayMajors() {
+            const tbody = document.getElementById('majorTableBody');
+            
+            if (allMajors.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem;">등록된 학과가 없습니다.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = allMajors.map(major => `
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                    <td style="padding: 1rem;">${major.id}</td>
+                    <td style="padding: 1rem;">${major.name}</td>
+                    <td style="padding: 1rem;">${new Date(major.created_at).toLocaleDateString('ko-KR')}</td>
+                    <td style="padding: 1rem; text-align: center;">
+                        <button onclick="editMajor(${major.id})" class="btn btn-sm btn-primary" style="margin-right: 0.5rem;">수정</button>
+                        <button onclick="deleteMajor(${major.id})" class="btn btn-sm btn-danger">삭제</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showMajorModal() {
+            document.getElementById('majorModalTitle').textContent = '학과 등록';
+            document.getElementById('majorForm').reset();
+            document.getElementById('majorId').value = '';
+            document.getElementById('majorModal').style.display = 'flex';
+        }
+
+        function editMajor(majorId) {
+            const major = allMajors.find(m => m.id === majorId);
+            if (!major) return;
+
+            document.getElementById('majorModalTitle').textContent = '학과 수정';
+            document.getElementById('majorId').value = major.id;
+            document.getElementById('majorName').value = major.name;
+
+            document.getElementById('majorModal').style.display = 'flex';
+        }
+
+        function closeMajorModal() {
+            document.getElementById('majorModal').style.display = 'none';
+            document.getElementById('majorForm').reset();
+        }
+
+        async function saveMajor() {
+            const majorId = document.getElementById('majorId').value;
+            const majorData = {
+                name: document.getElementById('majorName').value.trim()
+            };
+
+            if (!majorData.name) {
+                alert('학과명을 입력해주세요.');
+                return;
+            }
+
+            try {
+                if (majorId) {
+                    // 수정
+                    await api.put(`/majors/${majorId}`, majorData);
+                    alert('학과가 수정되었습니다.');
+                } else {
+                    // 신규 등록
+                    await api.post('/majors', majorData);
+                    alert('학과가 등록되었습니다.');
+                }
+                
+                closeMajorModal();
+                loadMajors();
+            } catch (error) {
+                console.error('학과 저장 실패:', error);
+                alert(error.response?.data?.error || '학과 저장에 실패했습니다.');
+            }
+        }
+
+        async function deleteMajor(majorId) {
+            if (!confirm('정말 이 학과를 삭제하시겠습니까?')) return;
+
+            try {
+                await api.delete(`/majors/${majorId}`);
+                alert('학과가 삭제되었습니다.');
+                loadMajors();
+            } catch (error) {
+                console.error('학과 삭제 실패:', error);
+                alert('학과 삭제에 실패했습니다.');
+            }
         }
     </script>
 </body>

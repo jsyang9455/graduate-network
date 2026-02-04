@@ -25,6 +25,7 @@ const networkingRoutes = require('./routes/networking');
 const counselingRoutes = require('./routes/counseling');
 const certificateRoutes = require('./routes/certificates');
 const postRoutes = require('./routes/posts');
+const majorRoutes = require('./routes/majors');
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -34,6 +35,7 @@ app.use('/api/networking', networkingRoutes);
 app.use('/api/counseling', counselingRoutes);
 app.use('/api/certificates', certificateRoutes);
 app.use('/api/posts', postRoutes);
+app.use('/api/majors', majorRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

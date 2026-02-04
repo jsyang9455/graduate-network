@@ -6,8 +6,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const studentFields = document.getElementById('studentFields');
     const userTypeRadios = document.querySelectorAll('input[name="userType"]');
 
-    // Load schools from localStorage
+    // Load schools and majors
     loadSchools();
+    loadMajors();
 
     // Populate graduation years
     populateGraduationYears();
@@ -253,4 +254,38 @@ document.addEventListener('DOMContentLoaded', function() {
             schoolSelect.appendChild(option);
         });
     }
+    
+    async function loadMajors() {
+        const majorSelect = document.getElementById('major');
+        if (!majorSelect) return;
+
+        try {
+            const response = await api.get('/majors');
+            const majors = response.majors || [];
+
+            // 기존 옵션 제거 (첫 번째 "전공 선택" 옵션 제외)
+            while (majorSelect.options.length > 1) {
+                majorSelect.remove(1);
+            }
+
+            // 학과 목록을 드롭다운에 추가
+            majors.forEach(major => {
+                const option = document.createElement('option');
+                option.value = major.name;
+                option.textContent = major.name;
+                majorSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('학과 목록 로드 실패:', error);
+            // API 실패 시 기본 학과 목록 사용
+            const defaultMajors = ['기계과', '전기과', '전자과', '컴퓨터과', '건축과', '토목과'];
+            defaultMajors.forEach(major => {
+                const option = document.createElement('option');
+                option.value = major;
+                option.textContent = major;
+                majorSelect.appendChild(option);
+            });
+        }
+    }
 });
+
