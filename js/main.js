@@ -11,29 +11,42 @@ document.addEventListener('DOMContentLoaded', function() {
     setupScrollAnimations();
 });
 
-function updateStats() {
-    // localStorage에서 실제 데이터 가져오기
-    const usersData = localStorage.getItem('graduateNetwork_users');
-    let totalStudents = 0;
-    let activeMembers = 0;
-    
-    if (usersData) {
-        const users = JSON.parse(usersData);
+async function updateStats() {
+    try {
+        // API에서 실제 데이터 가져오기
+        const response = await api.get('/users?limit=1000');
+        const users = response.users || [];
+        
         // 학생 수 카운트 (student + graduate)
-        totalStudents = users.filter(u => u.user_type === 'student' || u.user_type === 'graduate').length;
+        const totalStudents = users.filter(u => u.user_type === 'student' || u.user_type === 'graduate').length;
         // 활동 회원 수 (전체 회원 수)
-        activeMembers = users.length;
-    }
-    
-    const totalStudentsEl = document.getElementById('totalStudents');
-    const activeMembersEl = document.getElementById('activeMembers');
-    
-    if (totalStudentsEl) {
-        totalStudentsEl.textContent = totalStudents.toLocaleString();
-    }
-    
-    if (activeMembersEl) {
-        activeMembersEl.textContent = activeMembers.toLocaleString();
+        const activeMembers = users.length;
+        
+        const totalStudentsEl = document.getElementById('totalStudents');
+        const activeMembersEl = document.getElementById('activeMembers');
+        
+        if (totalStudentsEl) {
+            totalStudentsEl.textContent = totalStudents.toLocaleString();
+        }
+        
+        if (activeMembersEl) {
+            activeMembersEl.textContent = activeMembers.toLocaleString();
+        }
+    } catch (error) {
+        console.error('통계 업데이트 실패:', error);
+        // API 실패 시 localStorage fallback
+        const usersData = localStorage.getItem('graduateNetwork_users');
+        if (usersData) {
+            const users = JSON.parse(usersData);
+            const totalStudents = users.filter(u => u.user_type === 'student' || u.user_type === 'graduate').length;
+            const activeMembers = users.length;
+            
+            const totalStudentsEl = document.getElementById('totalStudents');
+            const activeMembersEl = document.getElementById('activeMembers');
+            
+            if (totalStudentsEl) totalStudentsEl.textContent = totalStudents.toLocaleString();
+            if (activeMembersEl) activeMembersEl.textContent = activeMembers.toLocaleString();
+        }
     }
 }
 
