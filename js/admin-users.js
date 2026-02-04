@@ -171,16 +171,20 @@ async function saveUser(event) {
 document.getElementById('editUserForm')?.addEventListener('submit', saveUser);
 
 // 회원 탈퇴
-function deleteUser(userId) {
+async function deleteUser(userId) {
     const user = users.find(u => String(u.id) === String(userId));
     if (!user) return;
     
     if (!confirm(`${user.name}(${user.email}) 회원을 탈퇴 처리하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다.`)) return;
     
-    users = users.filter(u => String(u.id) !== String(userId));
-    localStorage.setItem('graduateNetwork_users', JSON.stringify(users));
-    loadUsers();
-    alert('회원이 탈퇴 처리되었습니다.');
+    try {
+        await api.delete(`/users/${userId}`);
+        alert('회원이 탈퇴 처리되었습니다.');
+        loadUsers();
+    } catch (error) {
+        console.error('회원 탈퇴 실패:', error);
+        alert('회원 탈퇴 처리에 실패했습니다.');
+    }
 }
 window.deleteUser = deleteUser;
 

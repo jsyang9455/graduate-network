@@ -243,4 +243,74 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Update user (admin only)
+router.put('/:id', auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email, user_type, phone } = req.body;
+    
+    // Only admins can update other users
+    if (req.user.user_type !== 'admin') {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+    
+    const result = await query(
+      `UPDATE users 
+       SET name = COALESCE($1, name),
+           email = COALESCE($2, email),
+           user_type = COALESCE($3, user_type),
+           phone = COALESCE($4, phone),
+           updated_at = CURRENT_TIMESTAMP
+       WHERE id = $5
+       RETURNING id, email, name, user_type, phone`,
+      [name, email, user_type, phone, id]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    res.json({ 
+      message: 'User updated successfully',
+      user: result.rows[0]
+    });
+  } catch (error) {
+    console.error('Update user error:', error);
+    res.status(500).json({ error: 'Failed to update user' });
+  }
+});
+
+// Deactivate user (soft delete)
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Only admins can deactivate users
+    if (req.user.user_type !== 'admin') {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+    
+    const result = await query(
+      `UPDATE users 
+       SET is_active = false, 
+           updated_at = CURRENT_TIMESTAMP
+       WHERE id = $1
+       RETURNING id, email, name`,
+      [id]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    res.json({ 
+      message: 'User deactivated successfully',
+      user: result.rows[0]
+    });
+  } catch (error) {
+    console.error('Deactivate user error:', error);
+    res.status(500).json({ error: 'Failed to deactivate user' });
+  }
+});
+
 module.exports = router;
