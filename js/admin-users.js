@@ -130,42 +130,45 @@ function editUser(userId) {
     document.getElementById('editUserId').value = user.id;
     document.getElementById('editUserName').value = user.name;
     document.getElementById('editUserEmail').value = user.email;
+    
+    // editUserPhone 필드가 있으면 설정
+    const phoneField = document.getElementById('editUserPhone');
+    if (phoneField) phoneField.value = user.phone || '';
+    
     document.getElementById('editUserType').value = user.user_type;
-    document.getElementById('editSchoolName').value = user.schoolName || user.companyName || '';
-    document.getElementById('editMajor').value = user.major || user.industry || '';
-    document.getElementById('editGraduationYear').value = user.graduationYear || '';
     
     document.getElementById('editUserModal').style.display = 'block';
 }
 window.editUser = editUser;
 
 // 회원 저장
-function saveUser(event) {
+async function saveUser(event) {
     event.preventDefault();
     
     const userId = document.getElementById('editUserId').value;
-    const index = users.findIndex(u => String(u.id) === String(userId));
-    
-    if (index === -1) return;
-    
+    const name = document.getElementById('editUserName').value;
+    const email = document.getElementById('editUserEmail').value;
     const userType = document.getElementById('editUserType').value;
+    const phoneField = document.getElementById('editUserPhone');
+    const phone = phoneField ? phoneField.value : '';
     
-    users[index] = {
-        ...users[index],
-        name: document.getElementById('editUserName').value,
-        email: document.getElementById('editUserEmail').value,
-        user_type: userType,
-        schoolName: userType === 'company' ? '' : document.getElementById('editSchoolName').value,
-        companyName: userType === 'company' ? document.getElementById('editSchoolName').value : '',
-        major: userType !== 'company' ? document.getElementById('editMajor').value : '',
-        industry: userType === 'company' ? document.getElementById('editMajor').value : '',
-        graduationYear: document.getElementById('editGraduationYear').value,
-        updatedAt: new Date().toISOString()
-    };
-    
-    localStorage.setItem('graduateNetwork_users', JSON.stringify(users));
-    loadUsers();
-    closeEditUserModal();
+    try {
+        await api.put(`/users/${userId}`, {
+            name,
+            email,
+            user_type: userType,
+            phone
+        });
+        
+        alert('회원 정보가 수정되었습니다.');
+        closeEditUserModal();
+        loadUsers();
+    } catch (error) {
+        console.error('회원 수정 실패:', error);
+        alert('회원 정보 수정에 실패했습니다.');
+    }
+}
+document.getElementById('editUserForm')?.addEventListener('submit', saveUser);
     alert('회원 정보가 수정되었습니다.');
 }
 window.saveUser = saveUser;
