@@ -83,3 +83,19 @@ function setupScrollAnimations() {
         observer.observe(el);
     });
 }
+
+// Navigate to service with authentication check
+function navigateWithAuth(event, url) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Check if user is logged in
+    if (!auth.isLoggedIn()) {
+        alert('로그인이 필요한 서비스입니다.');
+        window.location.href = `login.html?returnUrl=${encodeURIComponent(url)}`;
+        return;
+    }
+    
+    // User is logged in, navigate to the page
+    window.location.href = url;
+}

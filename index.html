@@ -15,9 +15,9 @@
             </div>
             <ul class="nav-links" id="navLinks">
                 <li><a href="index.html">홈</a></li>
-                <li><a href="jobs.html">채용 정보</a></li>
-                <li><a href="networking.html">동문 네트워킹</a></li>
-                <li><a href="counseling.html">진로 상담</a></li>
+                <li><a href="#" onclick="navigateWithAuth(event, 'jobs.html')">채용 정보</a></li>
+                <li><a href="#" onclick="navigateWithAuth(event, 'networking.html')">동문 네트워킹</a></li>
+                <li><a href="#" onclick="navigateWithAuth(event, 'counseling.html')">진로 상담</a></li>
             </ul>
             <div class="auth-buttons" id="authButtons">
                 <a href="login.html" class="btn-login">로그인</a>
@@ -76,23 +76,23 @@
             <p class="section-subtitle">졸업생들의 성공적인 진로를 위한 다양한 지원 서비스를 제공합니다</p>
         </div>
         <div class="services-grid">
-            <div class="service-card" onclick="navigateToService('jobs.html')">
+            <div class="service-card" onclick="navigateWithAuth(event, 'jobs.html')">
                 <div class="service-icon"></div>
                 <h3>취업 정보 서비스</h3>
                 <p>최신 채용 정보와 맞춤형 일자리 추천을 받아보세요</p>
-                <a href="jobs.html" class="service-link">자세히 보기 </a>
+                <a href="#" onclick="navigateWithAuth(event, 'jobs.html')" class="service-link">자세히 보기 </a>
             </div>
-            <div class="service-card" onclick="navigateToService('networking.html')">
+            <div class="service-card" onclick="navigateWithAuth(event, 'networking.html')">
                 <div class="service-icon"></div>
                 <h3>동문 네트워킹</h3>
                 <p>선후배 졸업생들과 연결되어 멘토링 기회를 만들어보세요.</p>
-                <a href="networking.html" class="service-link">자세히 보기 </a>
+                <a href="#" onclick="navigateWithAuth(event, 'networking.html')" class="service-link">자세히 보기 </a>
             </div>
-            <div class="service-card" onclick="navigateToService('counseling.html')">
+            <div class="service-card" onclick="navigateWithAuth(event, 'counseling.html')">
                 <div class="service-icon"></div>
                 <h3>진로 상담 서비스</h3>
                 <p>전문 상담교사와 1:1 진로 상담을 지원합니다.</p>
-                <a href="counseling.html" class="service-link">자세히 보기 </a>
+                <a href="#" onclick="navigateWithAuth(event, 'counseling.html')" class="service-link">자세히 보기 </a>
             </div>
             <div class="service-card" onclick="navigateToService('education.html')">
                 <div class="service-icon"></div>
