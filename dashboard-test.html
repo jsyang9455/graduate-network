@@ -1,0 +1,410 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대시보드 - 전주공업고등학교 졸업생 네트워크</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <header id="mainHeader">
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html" class="active">??쒕낫??/a></li>
+                <li><a href="jobs.html">梨꾩슜 ?뺣낫</a></li>
+                <li><a href="networking.html">?숇Ц ?ㅽ듃?뚰궧</a></li>
+                <li><a href="profile.html">???꾨줈??/a></li>
+            </ul>
+            <div class="user-menu">
+                <span class="user-name" id="userName"></span>
+                <button onclick="auth.logout()" class="btn-logout">濡쒓렇?꾩썐</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item active">
+                    <span class="icon">?뱤</span>
+                    <span>??쒕낫??/span>
+                </a>
+                <a href="profile.html" class="menu-item">
+                    <span class="icon">?뫀</span>
+                    <span>???꾨줈??/span>
+                </a>
+                <a href="jobs.html" class="menu-item">
+                    <span class="icon">?뮳</span>
+                    <span>梨꾩슜 ?뺣낫</span>
+                </a>
+                <a href="networking.html" class="menu-item">
+                    <span class="icon">?쩃</span>
+                    <span>?숇Ц ?ㅽ듃?뚰궧</span>
+                </a>
+                <a href="counseling.html" class="menu-item" id="counselingMenu">
+                    <span class="icon">?뮠</span>
+                    <span>吏꾨줈 ?곷떞</span>
+                </a>
+                <a href="career.html" class="menu-item" id="careerMenu">
+                    <span class="icon">?뱢</span>
+                    <span>寃쎈젰 愿由?/span>
+                </a>
+                <a href="education-programs.html" class="menu-item">
+                    <span class="icon">?럳</span>
+                    <span>援먯쑁 ?꾨줈洹몃옩</span>
+                </a>
+                
+                <!-- 愿由ъ옄 硫붾돱 -->
+                <div id="adminMenuSection" style="display: none;">
+                    <div class="menu-divider"></div>
+                    <div class="menu-section-title">愿由ъ옄 硫붾돱</div>
+                    <a href="admin-users.html" class="menu-item">
+                        <span class="icon">?뫁</span>
+                        <span>?뚯썝 愿由?/span>
+                    </a>
+                    <a href="education-programs.html" class="menu-item">
+                        <span class="icon">?럳</span>
+                        <span>援먯쑁 ?꾨줈洹몃옩 愿由?/span>
+                    </a>
+                    <a href="admin-board.html" class="menu-item">
+                        <span class="icon">?뱥</span>
+                        <span>寃뚯떆??愿由?/span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content" id="defaultDashboard">
+            <!-- Default Dashboard -->
+            <div class="welcome-section">
+                <h1>?덈뀞?섏꽭?? <span id="dashboardUserName"></span>??</h1>
+                <p>?ㅻ뒛??醫뗭? ?섎（ 蹂대궡?몄슂 ?뙚</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">?뮳</div>
+                    <div class="stat-info">
+                        <h3>?덈줈??梨꾩슜怨듦퀬</h3>
+                        <p class="stat-number">12媛?/p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">?뫁</div>
+                    <div class="stat-info">
+                        <h3>?ㅽ듃?뚰겕 ?곌껐</h3>
+                        <p class="stat-number">45紐?/p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">?뱟</div>
+                    <div class="stat-info">
+                        <h3>?덉젙???곷떞</h3>
+                        <p class="stat-number">2嫄?/p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">?럳</div>
+                    <div class="stat-info">
+                        <h3>吏꾪뻾以묒씤 援먯쑁</h3>
+                        <p class="stat-number">3媛?/p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <section class="dashboard-section">
+                    <div class="section-header">
+                        <h2>留욎땄 梨꾩슜 ?뺣낫</h2>
+                        <a href="jobs.html" class="view-more">?붾낫湲???/a>
+                    </div>
+                    <div class="job-list">
+                        <div class="job-item">
+                            <div class="company-logo">H</div>
+                            <div class="job-info">
+                                <h3>?꾨??먮룞李?/h3>
+                                <p>?앹궛湲곗닠 ?붿??덉뼱</p>
+                                <span class="job-meta">寃쎈젰 3-5??| 留덇컧 D-7</span>
+                            </div>
+                            <button class="btn-apply">吏?먰븯湲?/button>
+                        </div>
+                        <div class="job-item">
+                            <div class="company-logo">L</div>
+                            <div class="job-info">
+                                <h3>LG?꾩옄</h3>
+                                <p>?덉쭏愿由??대떦??/p>
+                                <span class="job-meta">寃쎈젰 2-4??| 留덇컧 D-14</span>
+                            </div>
+                            <button class="btn-apply">吏?먰븯湲?/button>
+                        </div>
+                        <div class="job-item">
+                            <div class="company-logo">S</div>
+                            <div class="job-info">
+                                <h3>?쇱꽦?꾩옄</h3>
+                                <p>諛섎룄泥?怨듭젙 ?붿??덉뼱</p>
+                                <span class="job-meta">寃쎈젰 1-3??| 留덇컧 D-21</span>
+                            </div>
+                            <button class="btn-apply">吏?먰븯湲?/button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="dashboard-section">
+                    <div class="section-header">
+                        <h2>理쒓렐 ?쒕룞</h2>
+                    </div>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <span class="activity-icon">?뮳</span>
+                            <div class="activity-info">
+                                <p>?꾨??먮룞李?梨꾩슜怨듦퀬??愿???쒖떆</p>
+                                <span class="activity-time">2?쒓컙 ??/span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">?쩃</span>
+                            <div class="activity-info">
+                                <p>源誘쇱닔?섍낵 ?ㅽ듃?뚰겕 ?곌껐</p>
+                                <span class="activity-time">1????/span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-icon">?뱷</span>
+                            <div class="activity-info">
+                                <p>?꾨줈???낅뜲?댄듃 ?꾨즺</p>
+                                <span class="activity-time">3????/span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="dashboard-section">
+                    <div class="section-header">
+                        <h2>異붿쿇 援먯쑁 ?꾨줈洹몃옩</h2>
+                        <a href="education.html" class="view-more">?붾낫湲???/a>
+                    </div>
+                    <div class="education-list">
+                        <div class="education-item">
+                            <h3>AI 湲곗큹 怨쇱젙</h3>
+                            <p>?멸났吏?μ쓽 湲곗큹 媛쒕뀗怨??ㅻТ ?쒖슜</p>
+                            <span class="education-meta">4二?怨쇱젙 | ?⑤씪??/span>
+                        </div>
+                        <div class="education-item">
+                            <h3>?ㅻ쭏??怨듭옣 ?먮룞??/h3>
+                            <p>4李??곗뾽?곷챸 ?쒕???怨듭옣 ?먮룞??湲곗닠</p>
+                            <span class="education-meta">6二?怨쇱젙 | ?ㅽ봽?쇱씤</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="dashboard-section">
+                    <div class="section-header">
+                        <h2>?숇Ц ?뚯떇</h2>
+                        <a href="networking.html" class="view-more">?붾낫湲???/a>
+                    </div>
+                    <div class="news-list">
+                        <div class="news-item">
+                            <p><strong>源誘쇱닔</strong>?섏씠 ?꾨??먮룞李⑥뿉????μ쑝濡??뱀쭊?섏뀲?듬땲??/p>
+                            <span class="news-time">2????/span>
+                        </div>
+                        <div class="news-item">
+                            <p><strong>諛뺤???/strong>?섏씠 LG?꾩옄 ?곗닔?ъ썝?쇰줈 ?좎젙?섏뿀?듬땲??/p>
+                            <span class="news-time">5????/span>
+                        </div>
+                        <div class="news-item">
+                            <p><strong>?댁???/strong>?섏씠 李쎌뾽??硫붿뭅?띿씠 Series A ?ъ옄 ?좎튂???깃났?덉뒿?덈떎</p>
+                            <span class="news-time">1二???/span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Company Dashboard -->
+        <main class="main-content" id="companyDashboard" style="display: none;">
+            <div class="welcome-section">
+                <h1>湲곗뾽 ??쒕낫??/h1>
+                <p>梨꾩슜 愿由?諛??숇Ц ?곌껐</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">?뱥</div>
+                    <div class="stat-info">
+                        <h3>怨듭떇 梨꾩슜怨듦퀬</h3>
+                        <p class="stat-number"><span id="activeJobCount">5</span>媛?/p>
+                        <span class="stat-label">?쒖꽦 紐⑥쭛以?/span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">?뫁</div>
+                    <div class="stat-info">
+                        <h3>珥?吏?먯옄</h3>
+                        <p class="stat-number"><span id="totalApplicants">24</span>紐?/p>
+                        <span class="stat-label">?대쾲 二?湲곗?</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">??</div>
+                    <div class="stat-info">
+                        <h3>議고쉶??/h3>
+                        <p class="stat-number"><span id="totalViews">186</span>??/p>
+                        <span class="stat-label">珥?議고쉶</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">??/div>
+                    <div class="stat-info">
+                        <h3>?대쾲 ??梨꾩슜</h3>
+                        <p class="stat-number"><span id="monthlyHires">2</span>嫄?/p>
+                        <span class="stat-label">梨꾩슜 ?꾨즺</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- 梨꾩슜 怨듦퀬 愿由?-->
+                <section class="dashboard-section full-width">
+                    <div class="section-header">
+                        <h2>梨꾩슜 怨듦퀬 愿由?/h2>
+                        <button class="btn btn-primary" id="createJobBtn">
+                            ??怨듦퀬 ?묒꽦
+                        </button>
+                    </div>
+                    <div class="job-postings-list" id="jobPostingsList">
+                        <!-- Jobs will be loaded here -->
+                    </div>
+                </section>
+
+                <!-- 理쒓렐 吏?먯옄 -->
+                <section class="dashboard-section">
+                    <div class="section-header">
+                        <h2>理쒓렐 吏?먯옄</h2>
+                        <a href="#" class="view-more">?꾩껜蹂닿린 ??/a>
+                    </div>
+                    <div class="applicants-list" id="recentApplicantsList">
+                        <!-- Applicants will be loaded here -->
+                    </div>
+                </section>
+
+                <!-- 鍮좊Ⅸ ?ㅽ뻾 -->
+                <section class="dashboard-section">
+                    <div class="section-header">
+                        <h2>鍮좊Ⅸ ?ㅽ뻾</h2>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn" id="quickJobCreate">
+                            <span class="icon">??/span>
+                            <span>梨꾩슜怨듦퀬</span>
+                        </button>
+                        <button class="quick-action-btn" id="quickApplicantManage">
+                            <span class="icon">?뫀</span>
+                            <span>吏?먯옄愿由?/span>
+                        </button>
+                        <button class="quick-action-btn" id="quickTalentPool">
+                            <span class="icon">?뱤</span>
+                            <span>?몄옱?</span>
+                        </button>
+                        <button class="quick-action-btn" id="quickAnalytics">
+                            <span class="icon">?뱢</span>
+                            <span>遺꾩꽍</span>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- 梨꾩슜 ?꾪솴 -->
+                <section class="dashboard-section">
+                    <div class="section-header">
+                        <h2>梨꾩슜 ?꾪솴</h2>
+                    </div>
+                    <div class="hiring-status">
+                        <p class="status-label">吏?먮퀎 ?곹깭</p>
+                        <div class="status-item">
+                            <span>?쒕쪟寃??/span>
+                            <span class="status-count">4嫄?/span>
+                        </div>
+                        <div class="status-item">
+                            <span>硫댁젒?湲?/span>
+                            <span class="status-count">5嫄?/span>
+                        </div>
+                        <div class="status-item">
+                            <span>理쒖쥌寃??/span>
+                            <span class="status-count">2嫄?/span>
+                        </div>
+                        <div class="status-item highlight">
+                            <span>?⑷꺽</span>
+                            <span class="status-count">1嫄?/span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ?덉젙???쇱젙 -->
+                <section class="dashboard-section">
+                    <div class="section-header">
+                        <h2>?덉젙???쇱젙</h2>
+                    </div>
+                    <div class="schedule-list">
+                        <div class="schedule-item">
+                            <span class="schedule-icon">?븧</span>
+                            <div class="schedule-info">
+                                <h4>?ㅻ뒛 14:00</h4>
+                                <p>硫댁젒 ?쇱젙</p>
+                            </div>
+                        </div>
+                        <div class="schedule-item">
+                            <span class="schedule-icon">?븰</span>
+                            <div class="schedule-info">
+                                <h4>?댁씪 10:00</h4>
+                                <p>?뚯궗 ?뚭컻</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 怨듯넻 ?쒕퉬??-->
+                <section class="dashboard-section">
+                    <div class="section-header">
+                        <h2>怨듯넻 ?쒕퉬??/h2>
+                    </div>
+                    <div class="service-list">
+                        <a href="#" class="service-item">
+                            <span class="icon">?뱤</span>
+                            <span>梨꾩슜?뺣낫 遺꾩꽍</span>
+                        </a>
+                        <a href="networking.html" class="service-item">
+                            <span class="icon">?쩃</span>
+                            <span>?숇Ц ?ㅽ듃?뚰궧</span>
+                        </a>
+                        <a href="#" class="service-item">
+                            <span class="icon">?렕</span>
+                            <span>痍⑥뾽 諛뺣엺??/span>
+                        </a>
+                        <a href="#" class="service-item">
+                            <span class="icon">?뙋</span>
+                            <span>湲濡쒕쾶 ?몄옱</span>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- ?뚯궗 ?뺣낫 ?낅뜲?댄듃 -->
+                <section class="dashboard-section info-update">
+                    <div class="section-header">
+                        <h2>?뚯궗 ?뺣낫 ?낅뜲?댄듃</h2>
+                    </div>
+                    <p>?뚯궗 ?뺣낫瑜?理쒖떊 ?곹깭濡??좎??섏꽭??/p>
+                    <button class="btn btn-secondary">?뱷 ?뚯궗 ?뺣낫 ?섏젙</button>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

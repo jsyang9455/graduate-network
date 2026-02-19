@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?�스내 프로필?�정</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        .info {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>?�� ?�스??기업 새로운?�정</h1>
+        
+        <div class="info">
+            <h3>기업 ?�스??계정 ?�보</h3>
+            <p><strong>이메일</strong> company@JJOBB.com</p>
+            <p><strong>비밀번호:</strong> password123</p>
+            <p><strong>?�사�?</strong> JJOBB채용</p>
+        </div>
+
+        <button onclick="setupTestProfile()">?�스내 프로필?�성</button>
+        <button onclick="viewProfile()">?�재 새로운보기</button>
+        <button onclick="clearProfile()">새로운??��</button>
+        <button onclick="goToLogin()">로그인?�이지�??�동</button>
+
+        <div id="result" class="result"></div>
+
+        <h3>?�성내 프로필?�이??</h3>
+        <pre id="profileData"></pre>
+    </div>
+
+    <script>
+        // ?�스내 프로필?�이??
+        const testProfile = {
+            companyName: 'JJOBB채용',
+            businessNumber: '123-45-67890',
+            ceoName: '김예?,
+            foundedDate: '2015-03-15',
+            employees: '50',
+            industry: 'IT/?�프?�웨??,
+            companyType: '중소기업',
+            address: '?�라북도 ?�주???�산�?숫자??,
+            phone: '063-123-4567',
+            email: 'hr@JJOBB.com',
+            website: 'https://JJOBB.com',
+            description: 'JJOBB채용?� 전주공업고등학교 졸업생들의취업??지?�하??영문 채용 ?�랫?�입?�다. ?�수??기술 ?�재�?발굴?�고 ?�결?�여 지???�업 발전??기여?�고 ?�습?�다.',
+            benefits: '4?�보험, ?�직�? ?�차, 교육�?지?? 중식 전공, ?�격�?취득 지??,
+            culture: '?�평??조직문화, ?�율 출퇴근제, ?�택근무 가??
+        };
+
+        // 새로운?�이???�시
+        document.getElementById('profileData').textContent = JSON.stringify(testProfile, null, 2);
+
+        function setupTestProfile() {
+            // company@JJOBB.com??user_id�?5�?가??(?�제 DB??ID)
+            const userId = 5;
+            
+            // localStorage내 프로필예?
+            localStorage.setItem(`company_profile_${userId}`, JSON.stringify(testProfile));
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = 'result success';
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <h3>???�스???�로?�이 전공?�으�??�성?�었?�니??</h3>
+                <p>User ID: ${userId}</p>
+                <p>localStorage key: company_profile_${userId}</p>
+                <p><strong>?�음 ?�계:</strong></p>
+                <ol>
+                    <li>로그인?�이지�??�동</li>
+                    <li>company@JJOBB.com / password123�?로그인/li>
+                    <li>내 프로필?�릭?�여 ?�인</li>
+                </ol>
+            `;
+        }
+
+        function viewProfile() {
+            const userId = 5;
+            const profile = localStorage.getItem(`company_profile_${userId}`);
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = 'result success';
+            resultDiv.style.display = 'block';
+            
+            if (profile) {
+                resultDiv.innerHTML = `
+                    <h3>?�� ?�재 예�된 새로운/h3>
+                    <pre>${JSON.stringify(JSON.parse(profile), null, 2)}</pre>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <h3>?�️ 예�된 ?�로?�이 ?�습?�다</h3>
+                    <p>"?�스내 프로필?�성" 버튼???�릭?�여 ?�로?�을 ?�성?�세??</p>
+                `;
+            }
+        }
+
+        function clearProfile() {
+            const userId = 5;
+            localStorage.removeItem(`company_profile_${userId}`);
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = 'result success';
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <h3>?���??�로?�이 ??��?�었?�니??/h3>
+            `;
+        }
+
+        function goToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        // ?�이지 로드 ???�재 새로운?�태 ?�인
+        window.onload = function() {
+            const userId = 5;
+            const profile = localStorage.getItem(`company_profile_${userId}`);
+            
+            if (profile) {
+                const resultDiv = document.getElementById('result');
+                resultDiv.className = 'result success';
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `
+                    <h3>?�️ ?��? ?�로?�이 존재?�니??/h3>
+                    <p>"?�재 새로운보기" 버튼???�릭?�여 ?�인?�거??<br>
+                    "새로운??��" ???�시 ?�성?????�습?�다.</p>
+                `;
+            }
+        };
+    </script>
+</body>
+</html>

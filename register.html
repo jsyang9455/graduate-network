@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 - 전주공업고등학교 졸업생 네트워크</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-box register-box">
+            <div class="auth-header">
+                <h1>새 회원가입</h1>
+                <p>전북지역 졸업생 네트워크에 가입하세요</p>
+            </div>
+            
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label>회원 유형 *</label>
+                    <div style="display: flex; gap: 20px; margin-top: 0.5rem;">
+                        <label class="radio-label">
+                            <input type="radio" name="userType" value="student" checked>
+                            <span>학생/졸업생</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="userType" value="teacher">
+                            <span>선생님</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">이름 *</label>
+                    <input type="text" id="name" name="name" required placeholder="실명을 입력하세요">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">이메일 *</label>
+                    <input type="email" id="email" name="email" required placeholder="example@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">비밀번호 *</label>
+                    <input type="password" id="password" name="password" required placeholder="8자 이상 입력">
+                    <small>영문, 숫자, 특수문자 조합 8자 이상</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">비밀번호 확인 *</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="비밀번호 재입력">
+                </div>
+                
+                <div class="form-group">
+                    <label for="schoolName">학교명 *</label>
+                    <select id="schoolName" name="schoolName" required>
+                        <option value="">학교 선택</option>
+                        <option value="전주공업고등학교">전주공업고등학교</option>
+                    </select>
+                </div>
+
+                <div id="studentFields" style="display: block;">
+                    <div class="form-group">
+                        <label for="phone">전화번호 *</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="010-1234-5678">
+                    </div>
+                    <div class="form-group">
+                        <label for="studentId">학번</label>
+                        <input type="text" id="studentId" name="studentId" placeholder="예: 20230101">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="major">전공 *</label>
+                        <select id="major" name="major" required>
+                            <option value="">전공 선택</option>
+                            <!-- Options will be loaded dynamically from API -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="graduationYear">졸업년도 *</label>
+                        <input type="number" id="graduationYear" name="graduationYear" min="1980" max="2030" placeholder="예: 2023" required>
+                    </div>
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <span>이용약관 및 개인정보처리방침에 동의합니다 *</span>
+                    </label>
+                </div>
+                
+                <div id="registerError" class="error-message" style="display: none;"></div>
+                <div id="registerSuccess" class="success-message" style="display: none;"></div>
+                
+                <button type="submit" class="btn btn-primary btn-block">회원가입</button>
+                
+                <div class="auth-footer">
+                    <p>이미 계정이 있으신가요? <a href="login.html">로그인</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/register.js"></script>
+</body>
+</html>

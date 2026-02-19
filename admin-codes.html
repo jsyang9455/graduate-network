@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>코드 관리 - 관리자</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <span class="icon">🏠</span>
+                    <span>대시보드</span>
+                </a>
+                <div style="border-top: 1px solid #e5e7eb; margin: 1rem 0; padding-top: 1rem;">
+                    <p style="padding: 0 1rem; color: #6b7280; font-size: 0.875rem; font-weight: 600;">관리자 메뉴</p>
+                </div>
+                <a href="admin-users.html" class="menu-item">
+                    <span class="icon">👥</span>
+                    <span>회원 관리</span>
+                </a>
+                <a href="admin-jobs.html" class="menu-item">
+                    <span class="icon">💼</span>
+                    <span>채용공고 관리</span>
+                </a>
+                <a href="admin-board.html" class="menu-item">
+                    <span class="icon">📋</span>
+                    <span>게시판 관리</span>
+                </a>
+                <a href="admin-codes.html" class="menu-item active">
+                    <span class="icon">⚙️</span>
+                    <span>코드 관리</span>
+                </a>
+            </div>
+            <div class="sidebar-footer">
+                <button onclick="auth.logout()" class="btn-logout">로그아웃</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="content-header">
+                <h1>코드 관리</h1>
+                <div class="user-info">
+                    <span id="userName"></span>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <!-- 학교 관리 -->
+                <div id="schoolSection">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2>학교 관리</h2>
+                        <button onclick="showSchoolModal()" class="btn btn-primary">학교 등록</button>
+                    </div>
+
+                    <div class="board-table" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead style="background: #f9fafb;">
+                                <tr>
+                                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">ID</th>
+                                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">학교명</th>
+                                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">등록일</th>
+                                    <th style="padding: 1rem; text-align: center; border-bottom: 2px solid #e5e7eb;">관리</th>
+                                </tr>
+                            </thead>
+                            <tbody id="schoolTableBody">
+                                <!-- Schools will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 학과 관리 -->
+                <div id="majorSection" style="margin-top: 3rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h2>학과 관리</h2>
+                        <button onclick="showMajorModal()" class="btn btn-primary">학과 등록</button>
+                    </div>
+
+                    <div class="board-table" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead style="background: #f9fafb;">
+                                <tr>
+                                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">ID</th>
+                                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">학과명</th>
+                                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">등록일</th>
+                                    <th style="padding: 1rem; text-align: center; border-bottom: 2px solid #e5e7eb;">관리</th>
+                                </tr>
+                            </thead>
+                            <tbody id="majorTableBody">
+                                <!-- Majors will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 학교 등록/수정 모달 -->
+    <div id="schoolModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 id="schoolModalTitle">학교 등록</h2>
+                <span class="close" onclick="closeSchoolModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="schoolForm">
+                    <input type="hidden" id="schoolId">
+                    <div class="form-group">
+                        <label>학교명 *</label>
+                        <input type="text" id="schoolName" required placeholder="예: 전주공업고등학교">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">저장</button>
+                        <button type="button" onclick="closeSchoolModal()" class="btn btn-secondary">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 학과 등록/수정 모달 -->
+    <div id="majorModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 id="majorModalTitle">학과 등록</h2>
+                <span class="close" onclick="closeMajorModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="majorForm">
+                    <input type="hidden" id="majorId">
+                    <div class="form-group">
+                        <label>학과명 *</label>
+                        <input type="text" id="majorName" required placeholder="예: 컴퓨터과">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">저장</button>
+                        <button type="button" onclick="closeMajorModal()" class="btn btn-secondary">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let allSchools = [];
+        let allMajors = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!auth.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const user = auth.getCurrentUser();
+            if (user.user_type !== 'admin') {
+                alert('관리자만 접근할 수 있습니다.');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            document.getElementById('userName').textContent = user.name;
+            
+            // 기본 학교 데이터 초기화 및 로드
+            initializeSchools();
+            loadSchools();
+            
+            // 학과 데이터 로드
+            loadMajors();
+
+            document.getElementById('schoolForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveSchool();
+            });
+            
+            document.getElementById('majorForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveMajor();
+            });
+        });
+
+        function initializeSchools() {
+            const schools = JSON.parse(localStorage.getItem('schools') || '[]');
+            if (schools.length === 0) {
+                // 기본 학교 데이터 생성
+                const defaultSchool = {
+                    id: 1,
+                    name: '전주공업고등학교',
+                    createdAt: new Date().toISOString()
+                };
+                localStorage.setItem('schools', JSON.stringify([defaultSchool]));
+            }
+        }
+
+        function loadSchools() {
+            allSchools = JSON.parse(localStorage.getItem('schools') || '[]');
+            displaySchools();
+        }
+
+        function displaySchools() {
+            const tbody = document.getElementById('schoolTableBody');
+            
+            if (allSchools.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem;">등록된 학교가 없습니다.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = allSchools.map(school => `
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                    <td style="padding: 1rem;">${school.id}</td>
+                    <td style="padding: 1rem;">${school.name}</td>
+                    <td style="padding: 1rem;">${new Date(school.createdAt).toLocaleDateString('ko-KR')}</td>
+                    <td style="padding: 1rem; text-align: center;">
+                        <button onclick="editSchool(${school.id})" class="btn btn-sm btn-primary" style="margin-right: 0.5rem;">수정</button>
+                        <button onclick="deleteSchool(${school.id})" class="btn btn-sm btn-danger">삭제</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showSchoolModal() {
+            document.getElementById('schoolModalTitle').textContent = '학교 등록';
+            document.getElementById('schoolForm').reset();
+            document.getElementById('schoolId').value = '';
+            document.getElementById('schoolModal').style.display = 'flex';
+        }
+
+        function editSchool(schoolId) {
+            const school = allSchools.find(s => s.id === schoolId);
+            if (!school) return;
+
+            document.getElementById('schoolModalTitle').textContent = '학교 수정';
+            document.getElementById('schoolId').value = school.id;
+            document.getElementById('schoolName').value = school.name;
+
+            document.getElementById('schoolModal').style.display = 'flex';
+        }
+
+        function closeSchoolModal() {
+            document.getElementById('schoolModal').style.display = 'none';
+            document.getElementById('schoolForm').reset();
+        }
+
+        function saveSchool() {
+            const schoolId = document.getElementById('schoolId').value;
+            const schools = JSON.parse(localStorage.getItem('schools') || '[]');
+
+            const schoolData = {
+                name: document.getElementById('schoolName').value.trim()
+            };
+
+            if (!schoolData.name) {
+                alert('학교명을 입력해주세요.');
+                return;
+            }
+
+            if (schoolId) {
+                // 수정
+                const schoolIndex = schools.findIndex(s => s.id == schoolId);
+                if (schoolIndex !== -1) {
+                    schools[schoolIndex] = { ...schools[schoolIndex], ...schoolData };
+                }
+            } else {
+                // 신규 등록
+                const maxId = schools.length > 0 ? Math.max(...schools.map(s => s.id)) : 0;
+                const newSchool = {
+                    id: maxId + 1,
+                    ...schoolData,
+                    createdAt: new Date().toISOString()
+                };
+                schools.push(newSchool);
+            }
+
+            localStorage.setItem('schools', JSON.stringify(schools));
+            
+            alert(schoolId ? '학교가 수정되었습니다.' : '학교가 등록되었습니다.');
+            closeSchoolModal();
+            loadSchools();
+        }
+
+        function deleteSchool(schoolId) {
+            if (!confirm('정말 이 학교를 삭제하시겠습니까?')) return;
+
+            const schools = JSON.parse(localStorage.getItem('schools') || '[]');
+            const filtered = schools.filter(s => s.id !== schoolId);
+            
+            localStorage.setItem('schools', JSON.stringify(filtered));
+            
+            alert('학교가 삭제되었습니다.');
+            loadSchools();
+        }
+        
+        // ===== 학과 관리 함수 =====
+        async function loadMajors() {
+            try {
+                const response = await api.get('/majors');
+                allMajors = response.majors || [];
+                displayMajors();
+            } catch (error) {
+                console.error('학과 로드 실패:', error);
+                alert('학과 목록을 불러올 수 없습니다.');
+            }
+        }
+
+        function displayMajors() {
+            const tbody = document.getElementById('majorTableBody');
+            
+            if (allMajors.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem;">등록된 학과가 없습니다.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = allMajors.map((major, index) => `
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                    <td style="padding: 1rem;">${index + 1}</td>
+                    <td style="padding: 1rem;">${major.name}</td>
+                    <td style="padding: 1rem;">${new Date(major.created_at).toLocaleDateString('ko-KR')}</td>
+                    <td style="padding: 1rem; text-align: center;">
+                        <button onclick="editMajor(${major.id})" class="btn btn-sm btn-primary" style="margin-right: 0.5rem;">수정</button>
+                        <button onclick="deleteMajor(${major.id})" class="btn btn-sm btn-danger">삭제</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showMajorModal() {
+            document.getElementById('majorModalTitle').textContent = '학과 등록';
+            document.getElementById('majorForm').reset();
+            document.getElementById('majorId').value = '';
+            document.getElementById('majorModal').style.display = 'flex';
+        }
+
+        function editMajor(majorId) {
+            const major = allMajors.find(m => m.id === majorId);
+            if (!major) return;
+
+            document.getElementById('majorModalTitle').textContent = '학과 수정';
+            document.getElementById('majorId').value = major.id;
+            document.getElementById('majorName').value = major.name;
+
+            document.getElementById('majorModal').style.display = 'flex';
+        }
+
+        function closeMajorModal() {
+            document.getElementById('majorModal').style.display = 'none';
+            document.getElementById('majorForm').reset();
+        }
+
+        async function saveMajor() {
+            const majorId = document.getElementById('majorId').value;
+            const majorData = {
+                name: document.getElementById('majorName').value.trim()
+            };
+
+            if (!majorData.name) {
+                alert('학과명을 입력해주세요.');
+                return;
+            }
+
+            try {
+                if (majorId) {
+                    // 수정
+                    await api.put(`/majors/${majorId}`, majorData);
+                    alert('학과가 수정되었습니다.');
+                } else {
+                    // 신규 등록
+                    await api.post('/majors', majorData);
+                    alert('학과가 등록되었습니다.');
+                }
+                
+                closeMajorModal();
+                loadMajors();
+            } catch (error) {
+                console.error('학과 저장 실패:', error);
+                alert(error.response?.data?.error || '학과 저장에 실패했습니다.');
+            }
+        }
+
+        async function deleteMajor(majorId) {
+            if (!confirm('정말 이 학과를 삭제하시겠습니까?')) return;
+
+            try {
+                await api.delete(`/majors/${majorId}`);
+                alert('학과가 삭제되었습니다.');
+                loadMajors();
+            } catch (error) {
+                console.error('학과 삭제 실패:', error);
+                alert('학과 삭제에 실패했습니다.');
+            }
+        }
+    </script>
+</body>
+</html>

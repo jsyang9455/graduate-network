@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전주공업고등학교 졸업생 네트워크</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header id="mainHeader">
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">홈</a></li>
+                <li><a href="#" onclick="navigateWithAuth(event, 'jobs.html')">채용 정보</a></li>
+                <li><a href="#" onclick="navigateWithAuth(event, 'networking.html')">동문 네트워킹</a></li>
+                <li><a href="#" onclick="navigateWithAuth(event, 'counseling.html')">진로 상담</a></li>
+            </ul>
+            <div class="auth-buttons" id="authButtons">
+                <a href="login.html" class="btn-login">로그인</a>
+                <a href="register.html" class="btn-register">회원가입</a>
+            </div>
+            <div class="user-menu" id="userMenu" style="display: none;">
+                <span class="user-name" id="userName"></span>
+                <button onclick="logout()" class="btn-logout">로그아웃</button>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>미래를 함께 만들어가는<br>졸업생 네트워크</h1>
+                <p>전북지역 졸업생의 성공적인 진로와 지속적인 성장을 지원합니다. 동문 네트워크를 통해 새로운 기회를 발견하세요.</p>
+                <div class="hero-buttons">
+                    <a href="register.html" class="btn btn-primary">졸업생 등록하기</a>
+                    <a href="login.html?type=company&returnUrl=company-profile.html" class="btn btn-secondary">회사 정보 등록</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" alt="Modern industrial facility">
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section fade-in-up">
+        <div class="stats-header">
+            <h2>현재 주요 현황</h2>
+            <p class="stats-subtitle">
+                <span>실시간 업데이트 (5초마다 자동 갱신)</span>
+                <span></span>
+            </p>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalStudents">0</div>
+                <div class="stat-label">등록 학생</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="employmentRate">94.2%</div>
+                <div class="stat-label">취업률</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activeMembers">0</div>
+                <div class="stat-label">활동 회원</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services-section">
+        <div class="section-title">
+            <h2>주요 서비스</h2>
+            <p class="section-subtitle">졸업생들의 성공적인 진로를 위한 다양한 지원 서비스를 제공합니다</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card" onclick="navigateWithAuth(event, 'jobs.html')">
+                <div class="service-icon"></div>
+                <h3>취업 정보 서비스</h3>
+                <p>최신 채용 정보와 맞춤형 일자리 추천을 받아보세요</p>
+                <a href="#" onclick="navigateWithAuth(event, 'jobs.html')" class="service-link">자세히 보기 </a>
+            </div>
+            <div class="service-card" onclick="navigateWithAuth(event, 'networking.html')">
+                <div class="service-icon"></div>
+                <h3>동문 네트워킹</h3>
+                <p>선후배 졸업생들과 연결되어 멘토링 기회를 만들어보세요.</p>
+                <a href="#" onclick="navigateWithAuth(event, 'networking.html')" class="service-link">자세히 보기 </a>
+            </div>
+            <div class="service-card" onclick="navigateWithAuth(event, 'counseling.html')">
+                <div class="service-icon"></div>
+                <h3>진로 상담 서비스</h3>
+                <p>전문 상담교사와 1:1 진로 상담을 지원합니다.</p>
+                <a href="#" onclick="navigateWithAuth(event, 'counseling.html')" class="service-link">자세히 보기 </a>
+            </div>
+            <div class="service-card" onclick="navigateToService('education.html')">
+                <div class="service-icon"></div>
+                <h3>평생 교육 프로그램</h3>
+                <p>기술 트렌드와 실무 역량 향상 교육을 제공합니다</p>
+                <a href="education.html" class="service-link">자세히 보기 </a>
+            </div>
+            <div class="service-card" onclick="navigateToService('career.html')">
+                <div class="service-icon"></div>
+                <h3>경력 관리</h3>
+                <p>개인 이력과 경력 현황을 체계적으로 관리합니다.</p>
+                <a href="career.html" class="service-link">자세히 보기 </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="stories-section">
+        <div class="stories-content">
+            <div class="stories-header">
+                <div class="section-title">
+                    <h2>성공 스토리</h2>
+                    <p class="section-subtitle">졸업생들의 다양한 성공 사례를 만나보세요</p>
+                </div>
+            </div>
+            <div class="stories-grid">
+                <div class="story-card">
+                    <div class="story-profile">
+                        <div class="profile-img">김</div>
+                        <div class="profile-info">
+                            <h3>김민수 ('18년 졸업)</h3>
+                            <p class="role">현대자동차 생산기술자 근무</p>
+                        </div>
+                    </div>
+                    <p class="story-text">"학교에서 배운 기계설계 기초가 현재 업무에 큰 도움이 되고 있습니다."</p>
+                    <p class="story-date">2025.08.10</p>
+                </div>
+                <div class="story-card">
+                    <div class="story-profile">
+                        <div class="profile-img">박</div>
+                        <div class="profile-info">
+                            <h3>박지훈 ('19년 졸업)</h3>
+                            <p class="role">LG전자 품질관리 선임연구원</p>
+                        </div>
+                    </div>
+                    <p class="story-text">"지속적인 학습과 기술 개발로 성장하고 있습니다."</p>
+                    <p class="story-date">2025.08.08</p>
+                </div>
+                <div class="story-card">
+                    <div class="story-profile">
+                        <div class="profile-img">이</div>
+                        <div class="profile-info">
+                            <h3>이수진 ('16년 졸업)</h3>
+                            <p class="role">테크놀로지 창업 (스마트팜 운영)</p>
+                        </div>
+                    </div>
+                    <p class="story-text">"실무 중심 교육으로 창업의 꿈을 이룰 수 있었습니다"</p>
+                    <p class="story-date">2025.08.05</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about">
+                <h3>전주공업고등학교</h3>
+                <p>직업교육을 선도하는 세계 최고의 명품 인재육성고</p>
+                <p>주소: 전북특별자치도 전주시 덕진구 산정동 101</p>
+                <p>전화: 063-210-9390</p>
+            </div>
+            <div class="footer-links">
+                <h4>빠른 링크</h4>
+                <ul>
+                    <li><a href="#">학교 홈페이지</a></li>
+                    <li><a href="#">취업 현황</a></li>
+                    <li><a href="#">동문회</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>지원 서비스</h4>
+                <ul>
+                    <li><a href="#">이용 가이드</a></li>
+                    <li><a href="#">자주 묻는 질문</a></li>
+                    <li><a href="#">개인정보처리방침</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p> 2025 전주공업고등학교. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

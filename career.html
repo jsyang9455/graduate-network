@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>경력 관리 - 전주공업고등학교 졸업생 네트워크</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <header id="mainHeader">
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">대시보드</a></li>
+                <li><a href="jobs.html">채용 정보</a></li>
+                <li><a href="networking.html">동문 네트워킹</a></li>
+                <li><a href="counseling.html">진로 상담</a></li>
+            </ul>
+            <div class="user-menu">
+                <span class="user-name" id="userName"></span>
+                <button onclick="auth.logout()" class="btn-logout">로그아웃</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <span class="icon">📊</span>
+                    <span>대시보드</span>
+                </a>
+                <a href="profile.html" class="menu-item">
+                    <span class="icon">👤</span>
+                    <span>내 프로필</span>
+                </a>
+                <a href="jobs.html" class="menu-item">
+                    <span class="icon">💼</span>
+                    <span>채용 정보</span>
+                </a>
+                <a href="networking.html" class="menu-item">
+                    <span class="icon">🤝</span>
+                    <span>동문 네트워킹</span>
+                </a>
+                <a href="counseling.html" class="menu-item" id="counselingMenu">
+                    <span class="icon">💬</span>
+                    <span>진로 상담</span>
+                </a>
+                <a href="career.html" class="menu-item active" id="careerMenu">
+                    <span class="icon">📈</span>
+                    <span>경력 관리</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1>📈 경력 관리</h1>
+                <p>나의 경력과 성장 과정을 관리하세요</p>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2>이력서 관리</h2>
+                </div>
+                <div class="resume-upload-section">
+                    <div class="upload-area">
+                        <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" style="display: none;" onchange="uploadResume()">
+                        <button class="btn btn-secondary" onclick="document.getElementById('resumeFile').click()">이력서 업로드</button>
+                        <p class="upload-info">PDF, DOC, DOCX 형식 지원 (최대 5MB)</p>
+                        <div id="currentResume" class="current-resume" style="display: none;">
+                            <p>📄 <span id="resumeFileName"></span></p>
+                            <button class="btn btn-sm btn-danger" onclick="deleteResume()">삭제</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2>경력 타임라인</h2>
+                    <button class="btn btn-primary" onclick="openAddCareerModal()">+ 경력 추가</button>
+                </div>
+
+                <div class="timeline" id="careerTimeline">
+                    <!-- 경력 목록이 여기에 동적으로 표시됩니다 -->
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>보유 기술 및 자격증</h2>
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <h3>기술 스택</h3>
+                        <div class="skill-input-group">
+                            <input type="text" id="skillInput" placeholder="기술 스택을 입력하세요" onkeypress="if(event.key==='Enter') addSkill()">
+                            <button class="btn btn-primary btn-sm" onclick="addSkill()">+ 추가</button>
+                        </div>
+                        <div class="tag-list" id="skillList">
+                            <!-- 기술 스택이 여기에 동적으로 표시됩니다 -->
+                        </div>
+                    </div>
+                    <div class="skill-card">
+                        <h3>자격증</h3>
+                        <div class="certificate-list" id="certificateList">
+                            <!-- 자격증 목록이 여기에 동적으로 표시됩니다 -->
+                        </div>
+                        <button class="btn btn-secondary btn-sm" onclick="openAddCertificateModal()">+ 자격증 추가</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>교육 및 훈련</h2>
+                <div class="education-list" id="educationList">
+                    <!-- 교육 목록이 여기에 동적으로 표시됩니다 -->
+                </div>
+                <button class="btn btn-secondary" onclick="openAddEducationModal()">+ 교육 추가</button>
+            </div>
+
+            <div class="content-section">
+                <h2>포트폴리오</h2>
+                <div class="portfolio-grid" id="portfolioGrid">
+                    <!-- 포트폴리오가 여기에 동적으로 표시됩니다 -->
+                </div>
+                <button class="btn btn-secondary" onclick="openAddPortfolioModal()">+ 포트폴리오 추가</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- 경력 추가 모달 -->
+    <div id="addCareerModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>경력 추가</h2>
+                <span class="close" onclick="closeAddCareerModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="addCareerForm">
+                    <div class="form-group">
+                        <label>회사명</label>
+                        <input type="text" id="careerCompany" required>
+                    </div>
+                    <div class="form-group">
+                        <label>직책/직위</label>
+                        <input type="text" id="careerPosition" required>
+                    </div>
+                    <div class="form-row-grid">
+                        <div class="form-group">
+                            <label>시작일</label>
+                            <input type="date" id="careerStartDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>종료일</label>
+                            <input type="date" id="careerEndDate">
+                            <label style="font-size: 0.9rem;">
+                                <input type="checkbox" id="careerCurrent" onchange="toggleEndDate()"> 현재 재직중
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>업무 설명</label>
+                        <textarea id="careerDescription" rows="4"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">추가</button>
+                        <button type="button" onclick="closeAddCareerModal()" class="btn btn-secondary">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 자격증 추가 모달 -->
+    <div id="addCertificateModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>자격증 추가</h2>
+                <span class="close" onclick="closeAddCertificateModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="addCertificateForm">
+                    <div class="form-group">
+                        <label>자격증명</label>
+                        <input type="text" id="certificateName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>발급기관</label>
+                        <input type="text" id="certificateIssuer" required>
+                    </div>
+                    <div class="form-group">
+                        <label>취득일</label>
+                        <input type="date" id="certificateDate" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">추가</button>
+                        <button type="button" onclick="closeAddCertificateModal()" class="btn btn-secondary">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 교육 추가 모달 -->
+    <div id="addEducationModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>교육 추가</h2>
+                <span class="close" onclick="closeAddEducationModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="addEducationForm">
+                    <div class="form-group">
+                        <label>교육명</label>
+                        <input type="text" id="educationName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>교육기관</label>
+                        <input type="text" id="educationInstitution" required>
+                    </div>
+                    <div class="form-row-grid">
+                        <div class="form-group">
+                            <label>시작일</label>
+                            <input type="date" id="educationStartDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>종료일</label>
+                            <input type="date" id="educationEndDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>교육 내용</label>
+                        <textarea id="educationDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">추가</button>
+                        <button type="button" onclick="closeAddEducationModal()" class="btn btn-secondary">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 포트폴리오 추가 모달 -->
+    <div id="addPortfolioModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>포트폴리오 추가</h2>
+                <span class="close" onclick="closeAddPortfolioModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="addPortfolioForm">
+                    <div class="form-group">
+                        <label>프로젝트명</label>
+                        <input type="text" id="portfolioTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label>프로젝트 설명</label>
+                        <textarea id="portfolioDescription" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>사용 기술</label>
+                        <input type="text" id="portfolioTech" placeholder="예: React, Node.js, MongoDB">
+                    </div>
+                    <div class="form-group">
+                        <label>프로젝트 링크</label>
+                        <input type="url" id="portfolioLink" placeholder="https://...">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">추가</button>
+                        <button type="button" onclick="closeAddPortfolioModal()" class="btn btn-secondary">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!auth.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            const user = auth.getCurrentUser();
+            document.getElementById('userName').textContent = user.name;
+            
+            // Load all career data
+            loadCareerData();
+            loadCertificates();
+            loadEducation();
+            loadPortfolio();
+            loadSkills();
+            
+            // Setup form submissions
+            setupFormSubmissions();
+        });
+
+        function setupFormSubmissions() {
+            // Career form
+            document.getElementById('addCareerForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveCareer();
+            });
+            
+            // Certificate form
+            document.getElementById('addCertificateForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveCertificate();
+            });
+            
+            // Education form
+            document.getElementById('addEducationForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveEducation();
+            });
+            
+            // Portfolio form
+            document.getElementById('addPortfolioForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                savePortfolio();
+            });
+        }
+
+        // Career Functions
+        function saveCareer() {
+            const user = auth.getCurrentUser();
+            const career = {
+                id: Date.now().toString(),
+                userId: user.id,
+                company: document.getElementById('careerCompany').value,
+                position: document.getElementById('careerPosition').value,
+                startDate: document.getElementById('careerStartDate').value,
+                endDate: document.getElementById('careerCurrent').checked ? '현재' : document.getElementById('careerEndDate').value,
+                description: document.getElementById('careerDescription').value,
+                current: document.getElementById('careerCurrent').checked
+            };
+            
+            const careers = JSON.parse(localStorage.getItem('career_experiences') || '[]');
+            careers.push(career);
+            localStorage.setItem('career_experiences', JSON.stringify(careers));
+            
+            closeAddCareerModal();
+            document.getElementById('addCareerForm').reset();
+            loadCareerData();
+            alert('경력이 추가되었습니다.');
+        }
+
+        function loadCareerData() {
+            const user = auth.getCurrentUser();
+            const careers = JSON.parse(localStorage.getItem('career_experiences') || '[]');
+            const userCareers = careers.filter(c => String(c.userId) === String(user.id));
+            
+            const container = document.getElementById('careerTimeline');
+            if (!container) return;
+            
+            if (userCareers.length === 0) {
+                container.innerHTML = '<p style="color: #6b7280;">등록된 경력이 없습니다.</p>';
+                return;
+            }
+            
+            container.innerHTML = userCareers.map(career => `
+                <div class="career-card">
+                    <div class="career-header">
+                        <h3>${career.company}</h3>
+                        <button class="btn-icon" onclick="deleteCareer('${career.id}')">🗑️</button>
+                    </div>
+                    <p class="career-position">${career.position}</p>
+                    <p class="career-period">${career.startDate} - ${career.endDate}</p>
+                    ${career.description ? `<p class="career-description">${career.description}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function deleteCareer(id) {
+            if (!confirm('이 경력을 삭제하시겠습니까?')) return;
+            
+            const careers = JSON.parse(localStorage.getItem('career_experiences') || '[]');
+            const filtered = careers.filter(c => c.id !== id);
+            localStorage.setItem('career_experiences', JSON.stringify(filtered));
+            loadCareerData();
+        }
+
+        // Certificate Functions
+        function saveCertificate() {
+            const user = auth.getCurrentUser();
+            const certificate = {
+                id: Date.now().toString(),
+                userId: user.id,
+                name: document.getElementById('certificateName').value,
+                issuer: document.getElementById('certificateIssuer').value,
+                date: document.getElementById('certificateDate').value
+            };
+            
+            const certificates = JSON.parse(localStorage.getItem('career_certificates') || '[]');
+            certificates.push(certificate);
+            localStorage.setItem('career_certificates', JSON.stringify(certificates));
+            
+            closeAddCertificateModal();
+            document.getElementById('addCertificateForm').reset();
+            loadCertificates();
+            alert('자격증이 추가되었습니다.');
+        }
+
+        function loadCertificates() {
+            const user = auth.getCurrentUser();
+            const certificates = JSON.parse(localStorage.getItem('career_certificates') || '[]');
+            const userCertificates = certificates.filter(c => String(c.userId) === String(user.id));
+            
+            const container = document.getElementById('certificateList');
+            if (userCertificates.length === 0) {
+                container.innerHTML = '<p style="color: #6b7280;">등록된 자격증이 없습니다.</p>';
+                return;
+            }
+            
+            container.innerHTML = userCertificates.map(cert => `
+                <div class="certificate-item">
+                    <div>
+                        <strong>${cert.name}</strong>
+                        <p>${cert.issuer} · ${cert.date}</p>
+                    </div>
+                    <button class="btn-icon" onclick="deleteCertificate('${cert.id}')">🗑️</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteCertificate(id) {
+            if (!confirm('이 자격증을 삭제하시겠습니까?')) return;
+            
+            const certificates = JSON.parse(localStorage.getItem('career_certificates') || '[]');
+            const filtered = certificates.filter(c => c.id !== id);
+            localStorage.setItem('career_certificates', JSON.stringify(filtered));
+            loadCertificates();
+        }
+
+        // Education Functions
+        function saveEducation() {
+            const user = auth.getCurrentUser();
+            const education = {
+                id: Date.now().toString(),
+                userId: user.id,
+                name: document.getElementById('educationName').value,
+                institution: document.getElementById('educationInstitution').value,
+                startDate: document.getElementById('educationStartDate').value,
+                endDate: document.getElementById('educationEndDate').value,
+                description: document.getElementById('educationDescription').value
+            };
+            
+            const educations = JSON.parse(localStorage.getItem('career_educations') || '[]');
+            educations.push(education);
+            localStorage.setItem('career_educations', JSON.stringify(educations));
+            
+            closeAddEducationModal();
+            document.getElementById('addEducationForm').reset();
+            loadEducation();
+            alert('교육이 추가되었습니다.');
+        }
+
+        function loadEducation() {
+            const user = auth.getCurrentUser();
+            const educations = JSON.parse(localStorage.getItem('career_educations') || '[]');
+            const userEducations = educations.filter(e => String(e.userId) === String(user.id));
+            
+            const container = document.getElementById('educationList');
+            if (userEducations.length === 0) {
+                container.innerHTML = '<p style="color: #6b7280;">등록된 교육이 없습니다.</p>';
+                return;
+            }
+            
+            container.innerHTML = userEducations.map(edu => `
+                <div class="education-card">
+                    <div class="education-header">
+                        <h3>${edu.name}</h3>
+                        <button class="btn-icon" onclick="deleteEducation('${edu.id}')">🗑️</button>
+                    </div>
+                    <p class="education-institution">${edu.institution}</p>
+                    <p class="education-period">${edu.startDate} - ${edu.endDate}</p>
+                    ${edu.description ? `<p class="education-description">${edu.description}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function deleteEducation(id) {
+            if (!confirm('이 교육을 삭제하시겠습니까?')) return;
+            
+            const educations = JSON.parse(localStorage.getItem('career_educations') || '[]');
+            const filtered = educations.filter(e => e.id !== id);
+            localStorage.setItem('career_educations', JSON.stringify(filtered));
+            loadEducation();
+        }
+
+        // Portfolio Functions
+        function savePortfolio() {
+            const user = auth.getCurrentUser();
+            const portfolio = {
+                id: Date.now().toString(),
+                userId: user.id,
+                title: document.getElementById('portfolioTitle').value,
+                description: document.getElementById('portfolioDescription').value,
+                tech: document.getElementById('portfolioTech').value,
+                link: document.getElementById('portfolioLink').value
+            };
+            
+            const portfolios = JSON.parse(localStorage.getItem('career_portfolios') || '[]');
+            portfolios.push(portfolio);
+            localStorage.setItem('career_portfolios', JSON.stringify(portfolios));
+            
+            closeAddPortfolioModal();
+            document.getElementById('addPortfolioForm').reset();
+            loadPortfolio();
+            alert('포트폴리오가 추가되었습니다.');
+        }
+
+        function loadPortfolio() {
+            const user = auth.getCurrentUser();
+            const portfolios = JSON.parse(localStorage.getItem('career_portfolios') || '[]');
+            const userPortfolios = portfolios.filter(p => String(p.userId) === String(user.id));
+            
+            const container = document.getElementById('portfolioGrid');
+            if (userPortfolios.length === 0) {
+                container.innerHTML = '<p style="color: #6b7280;">등록된 포트폴리오가 없습니다.</p>';
+                return;
+            }
+            
+            container.innerHTML = userPortfolios.map(port => `
+                <div class="portfolio-card">
+                    <div class="portfolio-header">
+                        <h3>${port.title}</h3>
+                        <button class="btn-icon" onclick="deletePortfolio('${port.id}')">🗑️</button>
+                    </div>
+                    <p class="portfolio-description">${port.description}</p>
+                    ${port.tech ? `<p class="portfolio-tech">🛠️ ${port.tech}</p>` : ''}
+                    ${port.link ? `<a href="${port.link}" target="_blank" class="portfolio-link">프로젝트 보기 →</a>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function deletePortfolio(id) {
+            if (!confirm('이 포트폴리오를 삭제하시겠습니까?')) return;
+            
+            const portfolios = JSON.parse(localStorage.getItem('career_portfolios') || '[]');
+            const filtered = portfolios.filter(p => p.id !== id);
+            localStorage.setItem('career_portfolios', JSON.stringify(filtered));
+            loadPortfolio();
+        }
+
+        // Skills Functions
+        function addSkill() {
+            const input = document.getElementById('skillInput');
+            const skill = input.value.trim();
+            if (!skill) return;
+            
+            const user = auth.getCurrentUser();
+            const skills = JSON.parse(localStorage.getItem('career_skills') || '[]');
+            const userSkills = skills.filter(s => String(s.userId) === String(user.id));
+            
+            // Add new skill
+            skills.push({
+                id: Date.now().toString(),
+                userId: user.id,
+                name: skill
+            });
+            localStorage.setItem('career_skills', JSON.stringify(skills));
+            
+            input.value = '';
+            loadSkills();
+        }
+
+        function loadSkills() {
+            const user = auth.getCurrentUser();
+            const skills = JSON.parse(localStorage.getItem('career_skills') || '[]');
+            const userSkills = skills.filter(s => String(s.userId) === String(user.id));
+            
+            const container = document.getElementById('skillList');
+            if (userSkills.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            container.innerHTML = userSkills.map(skill => `
+                <span class="tag">${skill.name} <button onclick="deleteSkill('${skill.id}')">×</button></span>
+            `).join('');
+        }
+
+        function deleteSkill(id) {
+            const skills = JSON.parse(localStorage.getItem('career_skills') || '[]');
+            const filtered = skills.filter(s => s.id !== id);
+            localStorage.setItem('career_skills', JSON.stringify(filtered));
+            loadSkills();
+        }
+
+        // Modal Functions
+        function openAddCareerModal() {
+            document.getElementById('addCareerModal').style.display = 'block';
+        }
+        function closeAddCareerModal() {
+            document.getElementById('addCareerModal').style.display = 'none';
+        }
+        function openAddCertificateModal() {
+            document.getElementById('addCertificateModal').style.display = 'block';
+        }
+        function closeAddCertificateModal() {
+            document.getElementById('addCertificateModal').style.display = 'none';
+        }
+        function openAddEducationModal() {
+            document.getElementById('addEducationModal').style.display = 'block';
+        }
+        function closeAddEducationModal() {
+            document.getElementById('addEducationModal').style.display = 'none';
+        }
+        function openAddPortfolioModal() {
+            document.getElementById('addPortfolioModal').style.display = 'block';
+        }
+        function closeAddPortfolioModal() {
+            document.getElementById('addPortfolioModal').style.display = 'none';
+        }
+        function toggleEndDate() {
+            const checkbox = document.getElementById('careerCurrent');
+            const endDateInput = document.getElementById('careerEndDate');
+            endDateInput.disabled = checkbox.checked;
+            if (checkbox.checked) {
+                endDateInput.value = '';
+            }
+        }
+        function uploadResume() {
+            const file = document.getElementById('resumeFile').files[0];
+            if (file) {
+                document.getElementById('resumeFileName').textContent = file.name;
+                document.getElementById('currentResume').style.display = 'block';
+            }
+        }
+        function deleteResume() {
+            document.getElementById('resumeFile').value = '';
+            document.getElementById('currentResume').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

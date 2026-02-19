@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동문 네트워킹 - 전주공업고등학교 졸업생 네트워크</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/networking.css">
+</head>
+<body>
+    <header id="mainHeader">
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">대시보드</a></li>
+                <li><a href="jobs.html">채용 정보</a></li>
+                <li><a href="networking.html" class="active">동문 네트워킹</a></li>
+                <li><a href="counseling.html">진로 상담</a></li>
+                <li><a href="help.html">📚 도움말</a></li>
+            </ul>
+            <div class="user-menu">
+                <span class="user-name" id="userName"></span>
+                <button onclick="auth.logout()" class="btn-logout">로그아웃</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <span class="icon">📊</span>
+                    <span>대시보드</span>
+                </a>
+                <a href="profile.html" class="menu-item">
+                    <span class="icon">👤</span>
+                    <span>내 프로필</span>
+                </a>
+                <a href="jobs.html" class="menu-item">
+                    <span class="icon">💼</span>
+                    <span>채용 정보</span>
+                </a>
+                <a href="networking.html" class="menu-item active">
+                    <span class="icon">🤝</span>
+                    <span>동문 네트워킹</span>
+                </a>
+                <a href="counseling.html" class="menu-item" id="counselingMenu">
+                    <span class="icon">💬</span>
+                    <span>진로 상담</span>
+                </a>
+                <a href="career.html" class="menu-item" id="careerMenu">
+                    <span class="icon">📈</span>
+                    <span>경력 관리</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+        <div class="page-container">
+        <div class="page-header">
+            <h1>🤝 동문 네트워킹</h1>
+            <p>선후배 졸업생들과 연결되어 멘토링과 네트워킹 기회를 만들어보세요</p>
+        </div>
+
+        <div class="search-section">
+            <div class="search-bar">
+                <input type="text" id="searchAlumni" placeholder="이름, 회사, 직종으로 검색...">
+                <button class="btn-search">🔍 검색</button>
+            </div>
+            <div class="filter-bar">
+                <select id="filterGradYear">
+                    <option value="">졸업연도</option>
+                    <option value="2020-2025">2020-2025</option>
+                    <option value="2015-2019">2015-2019</option>
+                    <option value="2010-2014">2010-2014</option>
+                    <option value="2005-2009">2005-2009</option>
+                </select>
+                <select id="filterMajor">
+                    <option value="">전공</option>
+                    <option value="기계">기계과</option>
+                    <option value="전자">전자과</option>
+                    <option value="전기">전기과</option>
+                    <option value="건축">건축과</option>
+                </select>
+                <select id="filterIndustry">
+                    <option value="">업종</option>
+                    <option value="제조">제조업</option>
+                    <option value="IT">IT/소프트웨어</option>
+                    <option value="건설">건설</option>
+                    <option value="금융">금융</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="networking-stats">
+            <div class="stat-box" onclick="showMessages('received')" style="cursor: pointer;">
+                <h3>받은 메시지</h3>
+                <p class="stat-number" id="receivedMessages">0건</p>
+            </div>
+            <div class="stat-box" onclick="showMessages('sent')" style="cursor: pointer;">
+                <h3>보낸 메시지</h3>
+                <p class="stat-number" id="sentMessages">0건</p>
+            </div>
+        </div>
+
+        <div class="alumni-grid" id="alumniGrid">
+            <!-- 동문 목록이 여기에 동적으로 표시됩니다 -->
+        </div>
+
+        <div class="mentoring-section">
+            <h2>멘토링 프로그램</h2>
+            <div class="mentoring-grid">
+                <div class="mentoring-card">
+                    <h3>🎯 취업 멘토링</h3>
+                    <p>선배의 조성부터 면접 준비까지 1:1 멘토링</p>
+                    <button class="btn btn-primary">신청하기</button>
+                </div>
+                <div class="mentoring-card">
+                    <h3>💼 커리어 컨설팅</h3>
+                    <p>경력 개발 및 이직 준비 상담</p>
+                    <button class="btn btn-primary">신청하기</button>
+                </div>
+                <div class="mentoring-card">
+                    <h3>🚀 창업 멘토링</h3>
+                    <p>창업 아이디어부터 사업화까지 지원</p>
+                    <button class="btn btn-primary">신청하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+    </div>
+
+    <!-- 메시지 모달 -->
+    <div id="messageModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2 id="messageModalTitle">메시지함</h2>
+                <span class="close" onclick="closeMessageModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="messageListContainer">
+                    <!-- 메시지 리스트가 여기에 표시됩니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메시지 상세보기 모달 -->
+    <div id="messageDetailModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>메시지 상세</h2>
+                <span class="close" onclick="closeMessageDetailModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="messageDetailContainer">
+                    <!-- 메시지 상세 내용이 여기에 표시됩니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메시지 보내기 모달 -->
+    <div id="sendMessageModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>메시지 보내기</h2>
+                <span class="close" onclick="closeSendMessageModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="sendMessageForm">
+                    <input type="hidden" id="recipientId">
+                    <div class="form-group">
+                        <label>받는 사람</label>
+                        <input type="text" id="recipientName" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="messageSubject">제목</label>
+                        <input type="text" id="messageSubject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="messageContent">내용</label>
+                        <textarea id="messageContent" rows="5" required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">보내기</button>
+                        <button type="button" onclick="closeSendMessageModal()" class="btn btn-secondary">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/networking.js"></script>
+</body>
+</html>

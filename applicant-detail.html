@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>지원자 상세 정보 - 전주공업고등학교 졸업생 네트워크</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header id="mainHeader">
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">대시보드</a></li>
+                <li><a href="jobs.html" class="active">채용 정보</a></li>
+                <li><a href="networking.html">동문 네트워킹</a></li>
+            </ul>
+            <div class="user-menu">
+                <span class="user-name" id="userName"></span>
+                <button onclick="auth.logout()" class="btn-logout">로그아웃</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="applicant-container">
+        <h1>지원자 상세 정보</h1>
+        <div id="applicantDetail">
+            <!-- Applicant details will be loaded dynamically -->
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

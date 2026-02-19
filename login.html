@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - 전주공업고등학교 졸업생 네트워크</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <a href="index.html"><img src="images/logo.png" alt="JJOBB" style="height: 40px;"></a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">홈</a>
+                <a href="#" onclick="navigateWithAuth(event, 'jobs.html')">채용 정보</a>
+                <a href="#" onclick="navigateWithAuth(event, 'networking.html')">동문 네트워킹</a>
+                <a href="#" onclick="navigateWithAuth(event, 'counseling.html')">진로 상담</a>
+            </div>
+            <div class="auth-buttons" id="authButtons">
+                <a href="login.html" class="btn btn-secondary">로그인</a>
+                <a href="register.html" class="btn btn-primary">회원가입</a>
+            </div>
+            <div class="user-menu" id="userMenu" style="display: none;">
+                <span id="userName"></span>
+                <button onclick="logout()" class="btn btn-secondary">로그아웃</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="auth-container">
+        <div class="auth-box login-box">
+            <div class="auth-header">
+                <h1>JJOBB 로그인</h1>
+                <p>전주공업고등학교 졸업생 네트워크 플랫폼</p>
+            </div>
+            
+            <div id="loginError" class="error-message" style="display: none;"></div>
+            <div id="loginSuccess" class="success-message" style="display: none;"></div>
+
+            <div id="userTypeSelection" class="user-type-selection">
+                <h3>사용자 유형을 선택하세요</h3>
+                <div class="user-type-grid">
+                    <button type="button" class="user-type-btn" data-type="student">
+                        <div class="user-type-icon">🎓</div>
+                        <div class="user-type-name">재학생</div>
+                        <div class="user-type-desc">학생 계정</div>
+                    </button>
+                    <button type="button" class="user-type-btn" data-type="graduate">
+                        <div class="user-type-icon">👨‍🎓</div>
+                        <div class="user-type-name">졸업생</div>
+                        <div class="user-type-desc">동문 계정</div>
+                    </button>
+                    <button type="button" class="user-type-btn" data-type="teacher">
+                        <div class="user-type-icon">👨‍🏫</div>
+                        <div class="user-type-name">교사</div>
+                        <div class="user-type-desc">상담 교사</div>
+                    </button>
+                    <button type="button" class="user-type-btn" data-type="company">
+                        <div class="user-type-icon">🏢</div>
+                        <div class="user-type-name">기업</div>
+                        <div class="user-type-desc">채용 담당자</div>
+                    </button>
+                    <button type="button" class="user-type-btn" data-type="admin">
+                        <div class="user-type-icon">⚙️</div>
+                        <div class="user-type-name">관리자</div>
+                        <div class="user-type-desc">시스템 관리</div>
+                    </button>
+                </div>
+            </div>
+
+            <div id="loginFormContainer" style="display: none;">
+                <div class="selected-type">
+                    <span>로그인 유형: <strong id="selectedUserTypeName"></strong></span>
+                    <button type="button" id="changeTypeBtn" class="btn btn-secondary btn-sm">변경</button>
+                </div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">이메일</label>
+                        <input type="email" id="email" name="email" required 
+                               placeholder="example@email.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">비밀번호</label>
+                        <input type="password" id="password" name="password" required 
+                               placeholder="비밀번호를 입력하세요">
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe">
+                        <span>로그인 상태 유지</span>
+                    </label>
+                    <a href="#" class="link">비밀번호 찾기</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">로그인</button>
+
+                <div class="auth-footer">
+                    <p>계정이 없으신가요? <a href="register.html" class="link">회원가입</a></p>
+                </div>
+            </form>
+            </div>
+        </div>
+
+        <div class="auth-info">
+            <div class="info-card">
+                <div class="info-icon">🎓</div>
+                <h3>학생 및 졸업생</h3>
+                <p>취업 정보 탐색, 동문 네트워킹, 진로 상담 서비스를 이용하실 수 있습니다.</p>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">🏢</div>
+                <h3>기업</h3>
+                <p>채용 공고 등록, 우수 인재 발굴, 기업 정보 관리 서비스를 제공합니다.</p>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">👨‍🏫</div>
+                <h3>교사</h3>
+                <p>학생 진로 상담, 취업 지원, 교육 프로그램 관리를 지원합니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="auth-footer-bottom">
+        <div class="container">
+            <p>&copy; 2025 전주공업고등학교. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">개인정보처리방침</a>
+                <a href="#">이용약관</a>
+                <a href="#">고객센터</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

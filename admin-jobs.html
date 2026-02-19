@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>채용공고 관리 - 관리자</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/jobs.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <span class="icon">🏠</span>
+                    <span>대시보드</span>
+                </a>
+                <div style="border-top: 1px solid #e5e7eb; margin: 1rem 0; padding-top: 1rem;">
+                    <p style="padding: 0 1rem; color: #6b7280; font-size: 0.875rem; font-weight: 600;">관리자 메뉴</p>
+                </div>
+                <a href="admin-users.html" class="menu-item">
+                    <span class="icon">👥</span>
+                    <span>회원 관리</span>
+                </a>
+                <a href="admin-jobs.html" class="menu-item active">
+                    <span class="icon">💼</span>
+                    <span>채용공고 관리</span>
+                </a>
+                <a href="admin-board.html" class="menu-item">
+                    <span class="icon">📋</span>
+                    <span>게시판 관리</span>
+                </a>
+                <a href="admin-codes.html" class="menu-item">
+                    <span class="icon">⚙️</span>
+                    <span>코드 관리</span>
+                </a>
+            </div>
+            <div class="sidebar-footer">
+                <button onclick="auth.logout()" class="btn-logout">로그아웃</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="content-header">
+                <h1>채용공고 관리</h1>
+                <div class="user-info">
+                    <span id="userName"></span>
+                    <button onclick="showCreateJobModal()" class="btn btn-primary" style="margin-left: 1rem;">공고 등록</button>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <div class="filter-section" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                    <input type="text" id="searchJob" placeholder="채용 공고 검색..." style="flex: 1; padding: 0.8rem; border: 2px solid #e5e7eb; border-radius: 8px;">
+                    <select id="statusFilter" style="padding: 0.8rem; border: 2px solid #e5e7eb; border-radius: 8px; min-width: 150px;">
+                        <option value="">전체 상태</option>
+                        <option value="active">진행중</option>
+                        <option value="closed">마감</option>
+                        <option value="expired">만료</option>
+                    </select>
+                    <button onclick="filterJobs()" class="btn btn-primary">검색</button>
+                </div>
+
+                <div class="jobs-table" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead style="background: #f9fafb;">
+                            <tr>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">ID</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">기업명</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">채용제목</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">마감일</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">지원자</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">상태</th>
+                                <th style="padding: 1rem; text-align: center; border-bottom: 2px solid #e5e7eb;">관리</th>
+                            </tr>
+                        </thead>
+                        <tbody id="jobsTableBody">
+                            <!-- Jobs will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 공고 등록/수정 모달 -->
+    <div id="jobModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 id="jobModalTitle">채용공고 등록</h2>
+                <span class="close" onclick="closeJobModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="jobForm">
+                    <input type="hidden" id="jobId">
+                    <div class="form-group">
+                        <label>채용 제목 *</label>
+                        <input type="text" id="jobTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label>채용 내용 *</label>
+                        <textarea id="jobDescription" rows="6" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>채용 유형 *</label>
+                        <select id="jobType" required>
+                            <option value="">선택하세요</option>
+                            <option value="정규직">정규직</option>
+                            <option value="계약직">계약직</option>
+                            <option value="인턴">인턴</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>근무 지역</label>
+                        <input type="text" id="jobLocation">
+                    </div>
+                    <div class="form-group">
+                        <label>급여 정보</label>
+                        <input type="text" id="jobSalary">
+                    </div>
+                    <div class="form-group">
+                        <label>마감일</label>
+                        <input type="date" id="jobDeadline">
+                    </div>
+                    <div class="form-group">
+                        <label>상태</label>
+                        <select id="jobStatus">
+                            <option value="active">진행중</option>
+                            <option value="closed">마감</option>
+                            <option value="expired">만료</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">저장</button>
+                        <button type="button" onclick="closeJobModal()" class="btn btn-secondary">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let allJobs = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!auth.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const user = auth.getCurrentUser();
+            if (user.user_type !== 'admin') {
+                alert('관리자만 접근할 수 있습니다.');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            document.getElementById('userName').textContent = user.name;
+            loadJobs();
+
+            document.getElementById('searchJob').addEventListener('input', filterJobs);
+            document.getElementById('statusFilter').addEventListener('change', filterJobs);
+
+            document.getElementById('jobForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveJob();
+            });
+        });
+
+        function loadJobs() {
+            allJobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
+            displayJobs(allJobs);
+        }
+
+        function displayJobs(jobs) {
+            const tbody = document.getElementById('jobsTableBody');
+            
+            if (jobs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">등록된 채용공고가 없습니다.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = jobs.map((job, index) => {
+                const statusText = {
+                    'active': '진행중',
+                    'closed': '마감',
+                    'expired': '만료'
+                };
+                const statusClass = {
+                    'active': 'success',
+                    'closed': 'warning',
+                    'expired': 'danger'
+                };
+
+                return `
+                    <tr style="border-bottom: 1px solid #e5e7eb;">
+                        <td style="padding: 1rem;">${index + 1}</td>
+                        <td style="padding: 1rem;">${job.companyName || '-'}</td>
+                        <td style="padding: 1rem;">${job.jobTitle || job.title}</td>
+                        <td style="padding: 1rem;">${job.deadline || '상시채용'}</td>
+                        <td style="padding: 1rem;">${job.applicants || 0}명</td>
+                        <td style="padding: 1rem;"><span class="badge badge-${statusClass[job.status]}">${statusText[job.status] || job.status}</span></td>
+                        <td style="padding: 1rem; text-align: center;">
+                            <button onclick="viewJob(${job.id})" class="btn btn-sm btn-secondary" style="margin-right: 0.5rem;">보기</button>
+                            <button onclick="editJob(${job.id})" class="btn btn-sm btn-primary" style="margin-right: 0.5rem;">수정</button>
+                            <button onclick="expireJob(${job.id})" class="btn btn-sm btn-warning" style="margin-right: 0.5rem;">만료</button>
+                            <button onclick="deleteJob(${job.id})" class="btn btn-sm btn-danger">삭제</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterJobs() {
+            const searchTerm = document.getElementById('searchJob').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            let filtered = allJobs;
+
+            if (searchTerm) {
+                filtered = filtered.filter(job => 
+                    (job.jobTitle || job.title || '').toLowerCase().includes(searchTerm) ||
+                    (job.companyName || '').toLowerCase().includes(searchTerm)
+                );
+            }
+
+            if (statusFilter) {
+                filtered = filtered.filter(job => job.status === statusFilter);
+            }
+
+            displayJobs(filtered);
+        }
+
+        function showCreateJobModal() {
+            document.getElementById('jobModalTitle').textContent = '채용공고 등록';
+            document.getElementById('jobForm').reset();
+            document.getElementById('jobId').value = '';
+            document.getElementById('jobModal').style.display = 'flex';
+        }
+
+        function viewJob(jobId) {
+            const job = allJobs.find(j => j.id === jobId);
+            if (!job) return;
+            
+            alert(`채용 제목: ${job.jobTitle || job.title}\n\n${job.description}\n\n상태: ${job.status}\n지원자: ${job.applicants || 0}명`);
+        }
+
+        function editJob(jobId) {
+            const job = allJobs.find(j => j.id === jobId);
+            if (!job) return;
+
+            document.getElementById('jobModalTitle').textContent = '채용공고 수정';
+            document.getElementById('jobId').value = job.id;
+            document.getElementById('jobTitle').value = job.jobTitle || job.title;
+            document.getElementById('jobDescription').value = job.description;
+            document.getElementById('jobType').value = job.type;
+            document.getElementById('jobLocation').value = job.location;
+            document.getElementById('jobSalary').value = job.salary;
+            document.getElementById('jobDeadline').value = job.deadline;
+            document.getElementById('jobStatus').value = job.status;
+
+            document.getElementById('jobModal').style.display = 'flex';
+        }
+
+        function closeJobModal() {
+            document.getElementById('jobModal').style.display = 'none';
+            document.getElementById('jobForm').reset();
+        }
+
+        function saveJob() {
+            const jobId = document.getElementById('jobId').value;
+            const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
+
+            const jobData = {
+                jobTitle: document.getElementById('jobTitle').value,
+                description: document.getElementById('jobDescription').value,
+                type: document.getElementById('jobType').value,
+                location: document.getElementById('jobLocation').value || '미정',
+                salary: document.getElementById('jobSalary').value || '협의',
+                deadline: document.getElementById('jobDeadline').value || '상시채용',
+                status: document.getElementById('jobStatus').value
+            };
+
+            if (jobId) {
+                // 수정
+                const jobIndex = jobs.findIndex(j => j.id == jobId);
+                if (jobIndex !== -1) {
+                    jobs[jobIndex] = { ...jobs[jobIndex], ...jobData };
+                }
+            } else {
+                // 신규 등록
+                const newJob = {
+                    id: Date.now(),
+                    companyId: 0,
+                    companyName: '관리자',
+                    ...jobData,
+                    createdAt: new Date().toISOString(),
+                    views: 0,
+                    applicants: 0
+                };
+                jobs.push(newJob);
+            }
+
+            localStorage.setItem('jobPostings', JSON.stringify(jobs));
+            
+            alert(jobId ? '채용공고가 수정되었습니다.' : '채용공고가 등록되었습니다.');
+            closeJobModal();
+            loadJobs();
+        }
+
+        function expireJob(jobId) {
+            if (!confirm('이 공고를 만료 처리하시겠습니까?')) return;
+
+            const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
+            const jobIndex = jobs.findIndex(j => j.id === jobId);
+
+            if (jobIndex !== -1) {
+                jobs[jobIndex].status = 'expired';
+                localStorage.setItem('jobPostings', JSON.stringify(jobs));
+                alert('공고가 만료되었습니다.');
+                loadJobs();
+            }
+        }
+
+        function deleteJob(jobId) {
+            if (!confirm('정말 이 채용공고를 삭제하시겠습니까?')) return;
+
+            const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
+            const filtered = jobs.filter(j => j.id !== jobId);
+            
+            localStorage.setItem('jobPostings', JSON.stringify(filtered));
+            
+            alert('채용공고가 삭제되었습니다.');
+            loadJobs();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 관리 - 관리자</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <span class="icon">🏠</span>
+                    <span>대시보드</span>
+                </a>
+                <div style="border-top: 1px solid #e5e7eb; margin: 1rem 0; padding-top: 1rem;">
+                    <p style="padding: 0 1rem; color: #6b7280; font-size: 0.875rem; font-weight: 600;">관리자 메뉴</p>
+                </div>
+                <a href="admin-users.html" class="menu-item active">
+                    <span class="icon">👥</span>
+                    <span>회원 관리</span>
+                </a>
+                <a href="admin-jobs.html" class="menu-item">
+                    <span class="icon">💼</span>
+                    <span>채용공고 관리</span>
+                </a>
+                <a href="admin-board.html" class="menu-item">
+                    <span class="icon">📋</span>
+                    <span>게시판 관리</span>
+                </a>
+                <a href="admin-codes.html" class="menu-item">
+                    <span class="icon">⚙️</span>
+                    <span>코드 관리</span>
+                </a>
+            </div>
+            <div class="sidebar-footer">
+                <button onclick="auth.logout()" class="btn-logout">로그아웃</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="content-header">
+                <h1>회원 관리</h1>
+                <div class="user-info">
+                    <span id="userName"></span>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <div class="filter-section" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                    <input type="text" id="searchUser" placeholder="이름, 이메일로 검색..." style="flex: 1; padding: 0.8rem; border: 2px solid #e5e7eb; border-radius: 8px;">
+                    <select id="userTypeFilter" style="padding: 0.8rem; border: 2px solid #e5e7eb; border-radius: 8px; min-width: 150px;">
+                        <option value="">전체 유형</option>
+                        <option value="student">학생</option>
+                        <option value="graduate">졸업생</option>
+                        <option value="teacher">선생님</option>
+                        <option value="company">기업</option>
+                        <option value="admin">관리자</option>
+                    </select>
+                    <button onclick="filterUsers()" class="btn btn-primary">검색</button>
+                </div>
+
+                <div class="users-table" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead style="background: #f9fafb;">
+                            <tr>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">ID</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">이름</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">이메일</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">유형</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">전화번호</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">학교/회사</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">학과</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">등록일</th>
+                                <th style="padding: 1rem; text-align: center; border-bottom: 2px solid #e5e7eb;">관리</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Users will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 회원 수정 모달 -->
+    <div id="editUserModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>회원 정보 수정</h2>
+                <span class="close" onclick="closeEditUserModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm">
+                    <input type="hidden" id="editUserId">
+                    <div class="form-group">
+                        <label>이름</label>
+                        <input type="text" id="editUserName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>이메일</label>
+                        <input type="email" id="editUserEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>전화번호</label>
+                        <input type="tel" id="editUserPhone">
+                    </div>
+                    <div class="form-group">
+                        <label>유형</label>
+                        <select id="editUserType" required>
+                            <option value="student">학생</option>
+                            <option value="graduate">졸업생</option>
+                            <option value="teacher">선생님</option>
+                            <option value="company">기업</option>
+                            <option value="admin">관리자</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">저장</button>
+                        <button type="button" onclick="closeEditUserModal()" class="btn btn-secondary">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin-users.js"></script>
+</body>
+</html>
+</html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 프로필 - 전주공업고등학교 졸업생 네트워크</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <header id="mainHeader">
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
+            </div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">대시보드</a></li>
+                <li><a href="jobs.html">채용 정보</a></li>
+                <li><a href="networking.html">동문 네트워킹</a></li>
+                <li><a href="counseling.html">진로 상담</a></li>
+            </ul>
+            <div class="user-menu">
+                <span class="user-name" id="userName"></span>
+                <button onclick="auth.logout()" class="btn-logout">로그아웃</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <span class="icon">📊</span>
+                    <span>대시보드</span>
+                </a>
+                <a href="profile.html" class="menu-item active">
+                    <span class="icon">👤</span>
+                    <span>내 프로필</span>
+                </a>
+                <a href="jobs.html" class="menu-item">
+                    <span class="icon">💼</span>
+                    <span>채용 정보</span>
+                </a>
+                <a href="networking.html" class="menu-item">
+                    <span class="icon">🤝</span>
+                    <span>동문 네트워킹</span>
+                </a>
+                <a href="counseling.html" class="menu-item" id="counselingMenu">
+                    <span class="icon">💬</span>
+                    <span>진로 상담</span>
+                </a>
+                <a href="career.html" class="menu-item" id="careerMenu">
+                    <span class="icon">📈</span>
+                    <span>경력 관리</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="profile-container">
+                <h1>프로필 관리</h1>
+                <div id="profileContent">
+                    <!-- Student/Graduate Profile -->
+                    <div id="studentProfile" style="display: none;">
+                        <div class="profile-section">
+                            <div class="profile-header">
+                                <div class="profile-avatar">
+                                    <span id="profileInitial">?</span>
+                                </div>
+                                <div class="profile-info">
+                                    <h2 id="profileName">이름</h2>
+                                    <p id="profileEmail">이메일</p>
+                                    <p id="profileType">사용자 유형</p>
+                                </div>
+                                <button class="btn btn-primary" onclick="editProfile()">프로필 수정</button>
+                            </div>
+                        </div>
+
+                        <div class="profile-section">
+                            <h3>📚 학적 정보</h3>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>학교</label>
+                                    <p id="profileSchool">-</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>학번</label>
+                                    <p id="profileStudentId">-</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>전공</label>
+                                    <p id="profileMajor">-</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>졸업년도</label>
+                                    <p id="profileGradYear">-</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-section">
+                            <h3>📞 연락처 정보</h3>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>전화번호</label>
+                                    <p id="profilePhone">-</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>이메일</label>
+                                    <p id="profileEmailDetail">-</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-section">
+                            <h3>💼 활동 통계</h3>
+                            <div class="stats-grid">
+                                <div class="stat-card-small">
+                                    <div class="stat-number" id="statApplications">0</div>
+                                    <div class="stat-label">지원 현황</div>
+                                </div>
+                                <div class="stat-card-small">
+                                    <div class="stat-number" id="statConnections">0</div>
+                                    <div class="stat-label">네트워크</div>
+                                </div>
+                                <div class="stat-card-small">
+                                    <div class="stat-number" id="statMessages">0</div>
+                                    <div class="stat-label">메시지</div>
+                                </div>
+                                <div class="stat-card-small">
+                                    <div class="stat-number" id="statCounseling">0</div>
+                                    <div class="stat-label">상담 기록</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Teacher Profile -->
+                    <div id="teacherProfile" style="display: none;">
+                        <div class="profile-section">
+                            <div class="profile-header">
+                                <div class="profile-avatar">
+                                    <span id="teacherInitial">?</span>
+                                </div>
+                                <div class="profile-info">
+                                    <h2 id="teacherName">선생님 이름</h2>
+                                    <p id="teacherEmail">이메일</p>
+                                    <p>🏫 교사</p>
+                                </div>
+                                <button class="btn btn-primary" onclick="editProfile()">프로필 수정</button>
+                            </div>
+                        </div>
+
+                        <div class="profile-section">
+                            <h3>🏫 근무 정보</h3>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>소속 학교</label>
+                                    <p id="teacherSchool">-</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>담당 과목</label>
+                                    <p id="teacherSubject">전체</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-section">
+                            <h3>📞 연락처 정보</h3>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>이메일</label>
+                                    <p id="teacherEmailDetail">-</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>전화번호</label>
+                                    <p id="teacherPhone">-</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-section">
+                            <h3>📊 활동 통계</h3>
+                            <div class="stats-grid">
+                                <div class="stat-card-small">
+                                    <div class="stat-number" id="statCounselingRequests">0</div>
+                                    <div class="stat-label">상담 요청</div>
+                                </div>
+                                <div class="stat-card-small">
+                                    <div class="stat-number" id="statStudents">0</div>
+                                    <div class="stat-label">상담 학생</div>
+                                </div>
+                                <div class="stat-card-small">
+                                    <div class="stat-number" id="statTeacherMessages">0</div>
+                                    <div class="stat-label">메시지</div>
+                                </div>
+                                <div class="stat-card-small">
+                                    <div class="stat-number" id="statTeacherNetwork">0</div>
+                                    <div class="stat-label">네트워크</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 프로필 수정 모달 -->
+    <div id="editProfileModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>프로필 수정</h2>
+                <span class="close" onclick="closeEditModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editProfileForm">
+                    <div class="form-group">
+                        <label>이름</label>
+                        <input type="text" id="editName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>이메일</label>
+                        <input type="email" id="editEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>전화번호</label>
+                        <input type="tel" id="editPhone">
+                    </div>
+                    
+                    <!-- Student/Graduate Fields -->
+                    <div id="editStudentFields" style="display: none;">
+                        <div class="form-group">
+                            <label>학교</label>
+                            <input type="text" id="editSchool">
+                        </div>
+                        <div class="form-group">
+                            <label>학번</label>
+                            <input type="text" id="editStudentId">
+                        </div>
+                        <div class="form-group">
+                            <label>전공</label>
+                            <input type="text" id="editMajor">
+                        </div>
+                        <div class="form-group">
+                            <label>졸업년도</label>
+                            <input type="text" id="editGradYear">
+                        </div>
+                        <div class="form-group">
+                            <label>주소</label>
+                            <input type="text" id="editStudentAddress">
+                        </div>
+                    </div>
+
+                    <!-- Teacher Fields -->
+                    <div id="editTeacherFields" style="display: none;">
+                        <div class="form-group">
+                            <label>소속 학교</label>
+                            <input type="text" id="editTeacherSchool">
+                        </div>
+                        <div class="form-group">
+                            <label>담당 과목</label>
+                            <input type="text" id="editSubject">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">저장</button>
+                        <button type="button" onclick="closeEditModal()" class="btn btn-secondary">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Profile page functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!auth.requireAuth()) {
+                return;
+            }
+
+            const user = auth.getCurrentUser();
+            console.log('Profile page - Current user:', user);
+
+            if (user.user_type === 'teacher') {
+                // Hide career menu for teacher
+                const careerMenu = document.getElementById('careerMenu');
+                if (careerMenu) careerMenu.style.display = 'none';
+                
+                showTeacherProfile(user);
+            } else {
+                showStudentProfile(user);
+            }
+        });
+
+        function showStudentProfile(user) {
+            const studentProfile = document.getElementById('studentProfile');
+            const teacherProfile = document.getElementById('teacherProfile');
+            
+            if (studentProfile) studentProfile.style.display = 'block';
+            if (teacherProfile) teacherProfile.style.display = 'none';
+
+            // Basic info
+            const initial = user.name ? user.name.charAt(0) : '?';
+            document.getElementById('profileInitial').textContent = initial;
+            document.getElementById('profileName').textContent = user.name || '이름 없음';
+            document.getElementById('profileEmail').textContent = user.email || '';
+            
+            const userTypeText = user.user_type === 'student' ? '재학생' : 
+                                 user.user_type === 'graduate' ? '졸업생' : '사용자';
+            document.getElementById('profileType').textContent = `📚 ${userTypeText}`;
+
+            // Academic info
+            document.getElementById('profileSchool').textContent = user.schoolName || '전주공업고등학교';
+            document.getElementById('profileStudentId').textContent = user.studentId || '-';
+            document.getElementById('profileMajor').textContent = user.major || '-';
+            document.getElementById('profileGradYear').textContent = user.graduationYear || '-';
+
+            // Contact info
+            document.getElementById('profilePhone').textContent = user.phone || '-';
+            document.getElementById('profileEmailDetail').textContent = user.email || '-';
+
+            // Stats
+            const messages = JSON.parse(localStorage.getItem('graduateNetwork_messages') || '[]');
+            const myMessages = messages.filter(m => String(m.toUserId) === String(user.id));
+            document.getElementById('statMessages').textContent = myMessages.length;
+
+            const connections = JSON.parse(localStorage.getItem('graduateNetwork_connections') || '[]');
+            const myConnections = connections.filter(c => 
+                c.userId === user.id || c.connectedUserId === user.id
+            );
+            document.getElementById('statConnections').textContent = myConnections.length;
+
+            document.getElementById('statApplications').textContent = Math.floor(Math.random() * 5);
+            document.getElementById('statCounseling').textContent = Math.floor(Math.random() * 3);
+        }
+
+        function showTeacherProfile(user) {
+            const studentProfile = document.getElementById('studentProfile');
+            const teacherProfile = document.getElementById('teacherProfile');
+            
+            if (studentProfile) studentProfile.style.display = 'none';
+            if (teacherProfile) teacherProfile.style.display = 'block';
+
+            // Basic info
+            const initial = user.name ? user.name.charAt(0) : '?';
+            document.getElementById('teacherInitial').textContent = initial;
+            document.getElementById('teacherName').textContent = user.name || '이름 없음';
+            document.getElementById('teacherEmail').textContent = user.email || '';
+
+            // School info
+            document.getElementById('teacherSchool').textContent = user.schoolName || '전주공업고등학교';
+            document.getElementById('teacherSubject').textContent = user.subject || '전체';
+
+            // Contact info
+            document.getElementById('teacherEmailDetail').textContent = user.email || '-';
+            document.getElementById('teacherPhone').textContent = user.phone || '-';
+
+            // Stats
+            const messages = JSON.parse(localStorage.getItem('graduateNetwork_messages') || '[]');
+            const myMessages = messages.filter(m => String(m.toUserId) === String(user.id));
+            document.getElementById('statTeacherMessages').textContent = myMessages.length;
+
+            const connections = JSON.parse(localStorage.getItem('graduateNetwork_connections') || '[]');
+            const myConnections = connections.filter(c => 
+                c.userId === user.id || c.connectedUserId === user.id
+            );
+            document.getElementById('statTeacherNetwork').textContent = myConnections.length;
+
+            document.getElementById('statCounselingRequests').textContent = Math.floor(Math.random() * 10 + 5);
+            document.getElementById('statStudents').textContent = Math.floor(Math.random() * 20 + 10);
+        }
+
+        function editProfile() {
+            const user = auth.getCurrentUser();
+            if (!user) return;
+
+            // Open modal
+            document.getElementById('editProfileModal').style.display = 'block';
+
+            // Fill form with current data
+            document.getElementById('editName').value = user.name || '';
+            document.getElementById('editEmail').value = user.email || '';
+            document.getElementById('editPhone').value = user.phone || '';
+
+            // Show/hide fields based on user type
+            if (user.user_type === 'student' || user.user_type === 'graduate') {
+                document.getElementById('editStudentFields').style.display = 'block';
+                document.getElementById('editTeacherFields').style.display = 'none';
+                
+                document.getElementById('editSchool').value = user.school || '';
+                document.getElementById('editStudentId').value = user.studentId || '';
+                document.getElementById('editMajor').value = user.major || '';
+                document.getElementById('editGradYear').value = user.graduationYear || '';
+                document.getElementById('editStudentAddress').value = user.address || '';
+            } else if (user.user_type === 'teacher') {
+                document.getElementById('editStudentFields').style.display = 'none';
+                document.getElementById('editTeacherFields').style.display = 'block';
+                
+                document.getElementById('editTeacherSchool').value = user.school || '';
+                document.getElementById('editSubject').value = user.subject || '';
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('editProfileModal').style.display = 'none';
+        }
+
+        // Setup form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('editProfileForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    saveProfile();
+                });
+            }
+        });
+
+        function saveProfile() {
+            const user = auth.getCurrentUser();
+            if (!user) return;
+
+            // Get all users
+            const users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
+            const userIndex = users.findIndex(u => String(u.id) === String(user.id));
+            
+            if (userIndex === -1) {
+                alert('사용자를 찾을 수 없습니다.');
+                return;
+            }
+
+            // Update basic info
+            users[userIndex].name = document.getElementById('editName').value;
+            users[userIndex].email = document.getElementById('editEmail').value;
+            users[userIndex].phone = document.getElementById('editPhone').value;
+
+            // Update type-specific fields
+            if (user.user_type === 'student' || user.user_type === 'graduate') {
+                users[userIndex].school = document.getElementById('editSchool').value;
+                users[userIndex].studentId = document.getElementById('editStudentId').value;
+                users[userIndex].major = document.getElementById('editMajor').value;
+                users[userIndex].graduationYear = document.getElementById('editGradYear').value;
+                users[userIndex].address = document.getElementById('editStudentAddress').value;
+            } else if (user.user_type === 'teacher') {
+                users[userIndex].school = document.getElementById('editTeacherSchool').value;
+                users[userIndex].subject = document.getElementById('editSubject').value;
+            }
+
+            // Save to localStorage
+            localStorage.setItem('graduateNetwork_users', JSON.stringify(users));
+            
+            // Update current user in session
+            localStorage.setItem('graduateNetwork_user', JSON.stringify(users[userIndex]));
+
+            // Close modal and reload profile
+            closeEditModal();
+            alert('프로필이 업데이트되었습니다.');
+            location.reload();
+        }
+    </script>
+</body>
+</html>
