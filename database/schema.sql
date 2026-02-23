@@ -211,3 +211,35 @@ INSERT INTO majors (name) VALUES
     ('건축과'),
     ('토목과')
 ON CONFLICT (name) DO NOTHING;
+
+-- Announcements table (공지사항 - 취업박람회, 산업체견학, 기술자격증)
+CREATE TABLE IF NOT EXISTS announcements (
+    id SERIAL PRIMARY KEY,
+    type VARCHAR(50) NOT NULL, -- 'job-fair', 'industry-visit', 'certification'
+    title VARCHAR(200) NOT NULL,
+    organizer VARCHAR(100), -- 주최기관
+    description TEXT,
+    event_date DATE,
+    event_time VARCHAR(50),
+    location VARCHAR(200),
+    deadline DATE,
+    capacity INTEGER,
+    current_applicants INTEGER DEFAULT 0,
+    fee VARCHAR(50),
+    benefits TEXT[], -- 혜택 목록
+    requirements TEXT[], -- 준비사항/요구사항
+    contact_phone VARCHAR(20),
+    contact_email VARCHAR(100),
+    tags TEXT[], -- 태그 목록
+    rating DECIMAL(2,1) DEFAULT 0,
+    review_count INTEGER DEFAULT 0,
+    image_url VARCHAR(500),
+    detail_url VARCHAR(500),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_announcements_type ON announcements(type);
+CREATE INDEX idx_announcements_event_date ON announcements(event_date);
+CREATE INDEX idx_announcements_active ON announcements(is_active);

@@ -2,10 +2,168 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>추천 교육 ?�로그램 - JJOBB</title>
+    <title>추천 교육 프로그램 - JJOBB</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/jobs.css">
+    <style>
+        /* ===== 교육 프로그램 페이지 전용 스타일 ===== */
+        .page-container { padding: 1.5rem; }
+        .page-header { margin-bottom: 1.5rem; }
+        .page-header h1 { font-size: 1.6rem; color: #1e3a8a; margin: 0 0 0.4rem; }
+        .page-header p { color: #64748b; margin: 0; }
+        .page-actions { margin-bottom: 1rem; }
+
+        /* 프로그램 그리드 */
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        /* 프로그램 카드 */
+        .program-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: box-shadow 0.2s, transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .program-card:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .program-header {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .program-category, .program-type {
+            display: inline-block;
+            padding: 0.2rem 0.65rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .program-category {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .program-type {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .program-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+            line-height: 1.4;
+        }
+        .program-description {
+            font-size: 0.9rem;
+            color: #475569;
+            line-height: 1.6;
+            margin: 0;
+        }
+        .program-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+        .program-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: auto;
+            padding-top: 0.5rem;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        /* badge */
+        .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; }
+        .badge-category { background: #dbeafe; color: #1e40af; }
+        .badge-type { background: #dcfce7; color: #166534; }
+
+        /* 상세보기 모달 내 */
+        .program-detail { padding: 0.5rem 0; }
+        .program-detail-header { margin-bottom: 1rem; }
+        .program-detail-body { display: flex; flex-direction: column; gap: 1rem; }
+        .program-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+        .detail-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        .detail-section { margin-bottom: 0.5rem; }
+        .detail-section h4 { font-size: 0.9rem; font-weight: 700; color: #1e40af; margin: 0 0 0.4rem; }
+        .detail-footer {
+            display: flex;
+            gap: 0.75rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 0.5rem;
+        }
+        .info-item {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 0.75rem;
+        }
+        .info-label { display: block; font-size: 0.75rem; color: #6b7280; margin-bottom: 0.2rem; }
+        .info-value { font-weight: 600; color: #1e293b; font-size: 0.9rem; }
+        .btn-block { width: 100%; }
+
+        /* modal 공통 */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.55); z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: white; border-radius: 16px; padding: 2rem;
+            width: 92%; max-height: 90vh; overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #e2e8f0;
+        }
+        .modal-header h2 { margin: 0; color: #1e3a8a; font-size: 1.2rem; }
+        .modal-close {
+            background: none; border: none; font-size: 1.8rem; cursor: pointer;
+            color: #94a3b8; line-height: 1;
+        }
+        .modal-body { display: flex; flex-direction: column; gap: 1rem; }
+        .modal-footer {
+            display: flex; gap: 0.75rem; margin-top: 1.5rem;
+            padding-top: 1rem; border-top: 1px solid #e2e8f0;
+        }
+        .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+        .form-group label { font-weight: 600; color: #374151; font-size: 0.9rem; }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;
+            font-size: 0.95rem; box-sizing: border-box;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        @media (max-width: 768px) {
+            .programs-grid { grid-template-columns: 1fr; }
+            .detail-info-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
     <header id="mainHeader">
@@ -14,14 +172,16 @@
                 <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
             </div>
             <ul class="nav-links">
-                <li><a href="dashboard.html">?�?�보??/a></li>
-                <li><a href="jobs.html">채용 ?�보</a></li>
-                <li><a href="networking.html">?�문 ?�트?�킹</a></li>
-                <li><a href="counseling.html">진로 ?�담</a></li>
+                <li><a href="index.html">홈</a></li>
+                <li><a href="dashboard.html">대시보드</a></li>
+                <li><a href="jobs.html">채용 정보</a></li>
+                <li><a href="networking.html">동문 네트워킹</a></li>
+                <li><a href="counseling.html">진로 상담</a></li>
+                <li><a href="help.html">📚 도움말</a></li>
             </ul>
             <div class="user-menu">
                 <span class="user-name" id="userName"></span>
-                <button onclick="auth.logout()" class="btn-logout">로그?�웃</button>
+                <button onclick="auth.logout()" class="btn-logout">로그아웃</button>
             </div>
         </nav>
     </header>
@@ -29,50 +189,78 @@
     <div class="dashboard-container">
         <aside class="sidebar">
             <div class="sidebar-menu">
+                <a href="index.html" class="menu-item">
+                    <span class="icon">🏠</span>
+                    <span>홈</span>
+                </a>
                 <a href="dashboard.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�?�보??/span>
+                    <span class="icon">📊</span>
+                    <span>대시보드</span>
                 </a>
                 <a href="profile.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>???�로??/span>
+                    <span class="icon">👤</span>
+                    <span>내 프로필</span>
                 </a>
                 <a href="jobs.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>채용 ?�보</span>
+                    <span class="icon">💼</span>
+                    <span>채용 정보</span>
                 </a>
                 <a href="networking.html" class="menu-item">
-                    <span class="icon">?��</span>
-                    <span>?�문 ?�트?�킹</span>
+                    <span class="icon">🤝</span>
+                    <span>동문 네트워킹</span>
                 </a>
                 <a href="counseling.html" class="menu-item" id="counselingMenu">
-                    <span class="icon">?��</span>
-                    <span>진로 ?�담</span>
+                    <span class="icon">💬</span>
+                    <span>진로 상담</span>
                 </a>
                 <a href="career.html" class="menu-item" id="careerMenu">
-                    <span class="icon">?��</span>
-                    <span>경력 관�?/span>
+                    <span class="icon">📈</span>
+                    <span>경력 관리</span>
                 </a>
                 <a href="education-programs.html" class="menu-item active">
-                    <span class="icon">?��</span>
-                    <span>교육 ?�로그램</span>
+                    <span class="icon">🎓</span>
+                    <span>교육 프로그램</span>
                 </a>
-                
+                <div style="border-top: 1px solid #e5e7eb; margin: 1rem 0; padding-top: 1rem;">
+                    <p style="padding: 0 1rem; color: #6b7280; font-size: 0.875rem; font-weight: 600;">공지사항</p>
+                </div>
+                <a href="job-fair.html" class="menu-item">
+                    <span class="icon">🏢</span>
+                    <span>취업 박람회</span>
+                </a>
+                <a href="industry-visit.html" class="menu-item">
+                    <span class="icon">🏭</span>
+                    <span>산업체 견학</span>
+                </a>
+                <a href="certification-support.html" class="menu-item">
+                    <span class="icon">📜</span>
+                    <span>자격증 지원</span>
+                </a>
+
                 <!-- 관리자 메뉴 -->
                 <div id="adminMenuSection" style="display: none;">
-                    <div class="menu-divider"></div>
-                    <div class="menu-section-title">관리자 메뉴</div>
+                    <div style="border-top: 1px solid #e5e7eb; margin: 1rem 0; padding-top: 1rem;">
+                        <p style="padding: 0 1rem; color: #6b7280; font-size: 0.875rem; font-weight: 600;">관리자 메뉴</p>
+                    </div>
                     <a href="admin-users.html" class="menu-item">
-                        <span class="icon">?��</span>
-                        <span>?�원 관�?/span>
+                        <span class="icon">👥</span>
+                        <span>회원 관리</span>
                     </a>
-                    <a href="education-programs.html" class="menu-item active">
-                        <span class="icon">?��</span>
-                        <span>교육 ?�로그램 관�?/span>
+                    <a href="admin-jobs.html" class="menu-item">
+                        <span class="icon">💼</span>
+                        <span>채용공고 관리</span>
                     </a>
                     <a href="admin-board.html" class="menu-item">
-                        <span class="icon">?��</span>
-                        <span>게시??관�?/span>
+                        <span class="icon">📋</span>
+                        <span>게시판 관리</span>
+                    </a>
+                    <a href="admin-codes.html" class="menu-item">
+                        <span class="icon">⚙️</span>
+                        <span>코드 관리</span>
+                    </a>
+                    <a href="admin-announcements.html" class="menu-item">
+                        <span class="icon">📢</span>
+                        <span>공지사항 관리</span>
                     </a>
                 </div>
             </div>
@@ -81,130 +269,130 @@
         <main class="main-content">
             <div class="page-container">
                 <div class="page-header">
-                    <h1>?�� 추천 교육 ?�로그램</h1>
-                    <p>?�양??교육 ?�로그램???�해 지?�적???�장???�어가?�요</p>
+                    <h1>📚 추천 교육 프로그램</h1>
+                    <p>다양한 교육 프로그램을 통해 지속적으로 성장해 가세요</p>
                 </div>
 
                 <div class="page-actions" id="adminActions" style="display: none;">
                     <button class="btn btn-primary" onclick="openAddProgramModal()">
-                        ???�로그램 ?�록
+                        + 프로그램 등록
                     </button>
                 </div>
 
                 <div class="search-section">
                     <div class="search-bar">
-                        <input type="text" id="searchProgram" placeholder="?�로그램�? ?�용?�로 검??..">
-                        <button class="btn-search" onclick="searchPrograms()">?�� 검??/button>
+                        <input type="text" id="searchProgram" placeholder="프로그램명 및 내용으로 검색..">
+                        <button class="btn-search" onclick="searchPrograms()">🔍 검색</button>
                     </div>
                     <div class="filter-bar">
                         <select id="filterCategory" onchange="applyFilters()">
-                            <option value="">?�체 카테고리</option>
-                            <option value="IT">IT/?�프?�웨??/option>
-                            <option value="?�조">?�조/?�산</option>
-                            <option value="?�기?�자">?�기/?�자</option>
+                            <option value="">전체 카테고리</option>
+                            <option value="IT">IT/소프트웨어</option>
+                            <option value="제조">제조/생산</option>
+                            <option value="전기전자">전기/전자</option>
                             <option value="건축">건축/건설</option>
-                            <option value="?�격�?>?�격�?/option>
-                            <option value="기�?">기�?</option>
+                            <option value="자격증">자격증</option>
+                            <option value="기타">기타</option>
                         </select>
                         <select id="filterType" onchange="applyFilters()">
-                            <option value="">?�체 ?�형</option>
-                            <option value="?�라??>?�라??/option>
-                            <option value="?�프?�인">?�프?�인</option>
-                            <option value="?�합">?�합</option>
+                            <option value="">전체 유형</option>
+                            <option value="온라인">온라인</option>
+                            <option value="오프라인">오프라인</option>
+                            <option value="혼합">혼합</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="programs-grid" id="programsGrid">
-                    <!-- ?�로그램 목록???�기???�적?�로 ?�시?�니??-->
+                    <!-- 프로그램 목록이 여기에 자동으로 표시됩니다 -->
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- ?�로그램 ?�록/?�정 모달 -->
+    <!-- 프로그램 등록/수정 모달 -->
     <div id="programModal" class="modal" style="display: none;">
         <div class="modal-content" style="max-width: 700px;">
             <div class="modal-header">
-                <h2 id="programModalTitle">?�로그램 ?�록</h2>
+                <h2 id="programModalTitle">프로그램 등록</h2>
                 <span class="close" onclick="closeProgramModal()">&times;</span>
             </div>
             <div class="modal-body">
                 <form id="programForm" onsubmit="saveProgram(event)">
                     <input type="hidden" id="programId">
-                    
+
                     <div class="form-section">
-                        <label for="programTitle">?�로그램�?*</label>
+                        <label for="programTitle">프로그램명 *</label>
                         <input type="text" id="programTitle" required>
                     </div>
 
                     <div class="form-section">
                         <label for="programCategory">카테고리 *</label>
                         <select id="programCategory" required>
-                            <option value="">?�택?�세??/option>
-                            <option value="IT">IT/?�프?�웨??/option>
-                            <option value="?�조">?�조/?�산</option>
-                            <option value="?�기?�자">?�기/?�자</option>
+                            <option value="">선택하세요</option>
+                            <option value="IT">IT/소프트웨어</option>
+                            <option value="제조">제조/생산</option>
+                            <option value="전기전자">전기/전자</option>
                             <option value="건축">건축/건설</option>
-                            <option value="?�격�?>?�격�?/option>
-                            <option value="기�?">기�?</option>
+                            <option value="자격증">자격증</option>
+                            <option value="기타">기타</option>
                         </select>
                     </div>
 
                     <div class="form-section">
-                        <label for="programType">교육 ?�형 *</label>
+                        <label for="programType">교육 유형 *</label>
                         <select id="programType" required>
-                            <option value="">?�택?�세??/option>
-                            <option value="?�라??>?�라??/option>
-                            <option value="?�프?�인">?�프?�인</option>
-                            <option value="?�합">?�합</option>
+                            <option value="">선택하세요</option>
+                            <option value="온라인">온라인</option>
+                            <option value="오프라인">오프라인</option>
+                            <option value="혼합">혼합</option>
                         </select>
                     </div>
 
                     <div class="form-section">
                         <label for="programDuration">교육 기간 *</label>
-                        <input type="text" id="programDuration" placeholder="?? 4�? 8�? 3개월" required>
+                        <input type="text" id="programDuration" placeholder="예: 4주, 8주, 3개월" required>
                     </div>
 
                     <div class="form-section">
-                        <label for="programDescription">?�로그램 ?�명 *</label>
+                        <label for="programDescription">프로그램 설명 *</label>
                         <textarea id="programDescription" rows="4" required></textarea>
                     </div>
 
                     <div class="form-section">
-                        <label for="programInstructor">강사/기�?</label>
-                        <input type="text" id="programInstructor" placeholder="?? OO ?�?�교, OO 교육??>
+                        <label for="programInstructor">강사/기관</label>
+                        <input type="text" id="programInstructor" placeholder="예: OO 대학교, OO 교육원">
                     </div>
 
                     <div class="form-section">
                         <label for="programCost">교육 비용</label>
-                        <input type="text" id="programCost" placeholder="?? 무료, 50만원">
+                        <input type="text" id="programCost" placeholder="예: 무료, 50만원">
                     </div>
 
                     <div class="form-section">
-                        <label for="programLink">?�청 링크</label>
+                        <label for="programLink">신청 링크</label>
                         <input type="url" id="programLink" placeholder="https://">
                     </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" onclick="closeProgramModal()">취소</button>
-                        <button type="submit" class="btn btn-primary">?�??/button>
+                        <button type="submit" class="btn btn-primary">저장</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- ?�로그램 ?�세보기 모달 -->
+    <!-- 프로그램 상세보기 모달 -->
     <div id="programDetailModal" class="modal" style="display: none;">
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
-                <h2 id="programDetailTitle">?�로그램 ?�세</h2>
+                <h2 id="programDetailTitle">프로그램 상세</h2>
                 <span class="close" onclick="closeProgramDetailModal()">&times;</span>
             </div>
             <div class="modal-body">
                 <div id="programDetailContainer">
-                    <!-- ?�로그램 ?�세 ?�용???�기???�시?�니??-->
+                    <!-- 프로그램 상세 내용이 여기에 표시됩니다 -->
                 </div>
             </div>
         </div>
@@ -213,8 +401,8 @@
     <footer>
         <div class="footer-content">
             <div class="footer-about">
-                <h3>?�주공업고등?�교</h3>
-                <p>?�� ?�북?�별?�치???�주???�진�??�산�?101</p>
+                <h3>전주공업고등학교</h3>
+                <p>전북특별자치도 전주시 덕진구 산정동 101</p>
             </div>
         </div>
     </footer>

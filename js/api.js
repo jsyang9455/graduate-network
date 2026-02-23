@@ -25,11 +25,12 @@ const api = {
   async request(endpoint, options = {}) {
     const token = this.getToken();
     
-    // Skip API call for test and registered user tokens
+    // Skip /auth/me call for local tokens to prevent logout
     if (token && (token.startsWith('test_token_') || token.startsWith('user_token_'))) {
-      console.log('Skipping API call for local token:', endpoint);
-      // Return empty success response for local tokens
-      return { success: true, message: 'Using local storage' };
+      if (endpoint === '/auth/me') {
+        console.log('Skipping /auth/me for local token');
+        return { success: true, message: 'Using local storage' };
+      }
     }
     
     const headers = {

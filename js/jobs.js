@@ -266,9 +266,51 @@ function applyFilters(companyType, experience, location, searchQuery = '') {
 
 function viewJobDetail(jobId) {
     const job = allJobs.find(j => j.id === jobId);
-    if (job) {
-        alert(`${job.company} - ${job.position}\n\n${job.description}\n\n상세 페이지는 준비중입니다.`);
-    }
+    if (!job) return;
+
+    const daysLeft = Math.ceil((new Date(job.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+    const deadlineText = daysLeft > 0 ? `${job.deadline} (D-${daysLeft})` : `${job.deadline} (마감)`;
+    const deadlineColor = daysLeft > 7 ? '#166534' : daysLeft > 0 ? '#854d0e' : '#ef4444';
+
+    document.getElementById('jdCompanyType').textContent = job.companyType || '';
+    document.getElementById('jdCompany').textContent = job.company || '';
+    document.getElementById('jdPosition').textContent = job.position || '';
+
+    document.getElementById('jdContent').innerHTML = `
+        ${job.description ? `<p style="color:#374151; font-size:0.95rem; line-height:1.7; margin:0 0 1.5rem; padding:1rem; background:#f8fafc; border-radius:8px; border-left:3px solid #3b82f6;">${job.description}</p>` : ''}
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem;">
+            <div style="background:#f0f4ff; padding:0.9rem; border-radius:8px;">
+                <div style="font-size:0.75rem; color:#6b7280; margin-bottom:0.25rem;">💼 경력</div>
+                <div style="font-weight:600; color:#1e3a8a;">${job.experience || '-'}</div>
+            </div>
+            <div style="background:#f0f4ff; padding:0.9rem; border-radius:8px;">
+                <div style="font-size:0.75rem; color:#6b7280; margin-bottom:0.25rem;">📍 근무지</div>
+                <div style="font-weight:600; color:#1e3a8a;">${job.location || '-'}</div>
+            </div>
+            <div style="background:#fefce8; padding:0.9rem; border-radius:8px;">
+                <div style="font-size:0.75rem; color:#6b7280; margin-bottom:0.25rem;">💰 연봉</div>
+                <div style="font-weight:600; color:#854d0e;">${job.salary || '-'}</div>
+            </div>
+            <div style="background:#f0fdf4; padding:0.9rem; border-radius:8px;">
+                <div style="font-size:0.75rem; color:#6b7280; margin-bottom:0.25rem;">👥 채용인원</div>
+                <div style="font-weight:600; color:#166534;">${job.recruitCount || '-'}</div>
+            </div>
+            <div style="background:#fff1f2; padding:0.9rem; border-radius:8px; grid-column:1/-1;">
+                <div style="font-size:0.75rem; color:#6b7280; margin-bottom:0.25rem;">📅 지원 마감</div>
+                <div style="font-weight:600; color:${deadlineColor};">${deadlineText}</div>
+            </div>
+        </div>
+        ${job.requirements ? `<div style="margin-bottom:1.25rem;">
+            <strong style="color:#1e40af; display:block; margin-bottom:0.6rem; font-size:0.95rem;">📋 지원 자격</strong>
+            <div style="font-size:0.9rem; color:#374151; line-height:1.7; padding:0.75rem; background:#f8fafc; border-radius:8px;">${job.requirements}</div>
+        </div>` : ''}
+        <div style="display:flex; gap:0.75rem; margin-top:1.5rem;">
+            <button onclick="closeJobDetailModal()" style="flex:1; padding:0.875rem; background:#f3f4f6; border:none; border-radius:8px; font-size:1rem; cursor:pointer; color:#374151; font-weight:600;">닫기</button>
+            <button onclick="closeJobDetailModal(); applyJob(${job.id})" style="flex:2; padding:0.875rem; background:#1e40af; color:white; border:none; border-radius:8px; font-size:1rem; cursor:pointer; font-weight:600;">지원하기</button>
+        </div>
+    `;
+
+    document.getElementById('jobDetailModal').style.display = 'flex';
 }
 
 function applyJob(jobId) {

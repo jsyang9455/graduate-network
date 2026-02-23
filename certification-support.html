@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기술 자격증 지원 - 졸업생 네트워크</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/announcements.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <header id="mainHeader">
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="JJOBB" style="height: 40px;">
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">홈</a></li>
+                <li><a href="jobs.html">채용정보</a></li>
+                <li><a href="networking.html">네트워킹</a></li>
+                <li><a href="counseling.html">진로상담</a></li>
+                <li><a href="job-fair.html">취업박람회</a></li>
+                <li><a href="industry-visit.html">산업체 견학</a></li>
+                <li><a href="certification-support.html" class="active">자격증 지원</a></li>
+            </ul>
+            <div class="auth-buttons" id="authButtons">
+                <a href="login.html" class="btn-login">로그인</a>
+                <a href="register.html" class="btn-register">회원가입</a>
+            </div>
+            <div class="user-menu" id="userMenu" style="display: none;">
+                <span class="user-name" id="userName"></span>
+                <button onclick="auth.logout()" class="btn-logout">로그아웃</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="index.html" class="menu-item">
+                    <span class="icon">🏠</span>
+                    <span>홈</span>
+                </a>
+                <a href="dashboard.html" class="menu-item">
+                    <span class="icon">📊</span>
+                    <span>대시보드</span>
+                </a>
+                <a href="profile.html" class="menu-item">
+                    <span class="icon">👤</span>
+                    <span>내 프로필</span>
+                </a>
+                <a href="jobs.html" class="menu-item">
+                    <span class="icon">💼</span>
+                    <span>채용 정보</span>
+                </a>
+                <a href="networking.html" class="menu-item">
+                    <span class="icon">🤝</span>
+                    <span>동문 네트워킹</span>
+                </a>
+                <a href="counseling.html" class="menu-item" id="counselingMenu">
+                    <span class="icon">💬</span>
+                    <span>진로 상담</span>
+                </a>
+                <a href="career.html" class="menu-item" id="careerMenu">
+                    <span class="icon">📈</span>
+                    <span>경력 관리</span>
+                </a>
+                <a href="education-programs.html" class="menu-item">
+                    <span class="icon">🎓</span>
+                    <span>교육 프로그램</span>
+                </a>
+                <div style="border-top: 1px solid #e5e7eb; margin: 1rem 0; padding-top: 1rem;">
+                    <p style="padding: 0 1rem; color: #6b7280; font-size: 0.875rem; font-weight: 600;">공지사항</p>
+                </div>
+                <a href="job-fair.html" class="menu-item">
+                    <span class="icon">🏢</span>
+                    <span>취업 박람회</span>
+                </a>
+                <a href="industry-visit.html" class="menu-item">
+                    <span class="icon">🏭</span>
+                    <span>산업체 견학</span>
+                </a>
+                <a href="certification-support.html" class="menu-item active">
+                    <span class="icon">📜</span>
+                    <span>자격증 지원</span>
+                </a>
+                <!-- 관리자 메뉴 -->
+                <div id="adminMenuSection" style="display: none;">
+                    <div style="border-top: 1px solid #e5e7eb; margin: 1rem 0; padding-top: 1rem;">
+                        <p style="padding: 0 1rem; color: #6b7280; font-size: 0.875rem; font-weight: 600;">관리자 메뉴</p>
+                    </div>
+                    <a href="admin-users.html" class="menu-item">
+                        <span class="icon">👥</span>
+                        <span>회원 관리</span>
+                    </a>
+                    <a href="admin-jobs.html" class="menu-item">
+                        <span class="icon">💼</span>
+                        <span>채용공고 관리</span>
+                    </a>
+                    <a href="admin-board.html" class="menu-item">
+                        <span class="icon">📋</span>
+                        <span>게시판 관리</span>
+                    </a>
+                    <a href="admin-codes.html" class="menu-item">
+                        <span class="icon">⚙️</span>
+                        <span>코드 관리</span>
+                    </a>
+                    <a href="admin-announcements.html" class="menu-item">
+                        <span class="icon">📢</span>
+                        <span>공지사항 관리</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <main class="announcements-container" style="flex: 1; min-width: 0;">
+        <div class="page-header">
+            <h1>📜 기술 자격증 지원</h1>
+            <p>산업 기술 자격증 취득을 위한 정보 제공, 교육 과정 안내 및 지원 서비스</p>
+        </div>
+
+        <div class="filter-section">
+            <select id="categoryFilter">
+                <option value="">전체 분야</option>
+                <option value="전기">전기/전자</option>
+                <option value="기계">기계</option>
+                <option value="건축">건축/토목</option>
+                <option value="IT">IT/정보처리</option>
+                <option value="안전">안전/환경</option>
+                <option value="용접">용접/배관</option>
+            </select>
+            
+            <select id="levelFilter">
+                <option value="">전체 등급</option>
+                <option value="기능사">기능사</option>
+                <option value="산업기사">산업기사</option>
+                <option value="기사">기사</option>
+                <option value="기능장">기능장</option>
+            </select>
+
+            <select id="statusFilter">
+                <option value="">전체</option>
+                <option value="ongoing">진행중</option>
+                <option value="upcoming">예정</option>
+                <option value="past">종료</option>
+            </select>
+
+            <input type="text" id="searchInput" placeholder="자격증명 또는 교육과정 검색...">
+        </div>
+
+        <div id="announcementCount" class="announcement-count"></div>
+
+        <div class="announcements-grid" id="announcementsGrid">
+            <!-- 동적으로 로드됨 -->
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-state-icon">📜</div>
+            <h3>등록된 자격증 지원 프로그램이 없습니다</h3>
+            <p>새로운 자격증 지원 정보가 곧 업데이트될 예정입니다.</p>
+        </div>
+    </main>
+    </div>
+
+    <!-- 상세보기 모달 -->
+    <div id="detailModal" onclick="if(event.target===this)closeDetailModal()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1001; align-items:center; justify-content:center;">
+        <div style="background:white; border-radius:16px; padding:2rem; width:92%; max-width:660px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.35);">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5rem; border-bottom:2px solid #e2e8f0; padding-bottom:1rem;">
+                <div style="flex:1; padding-right:1rem;">
+                    <p id="detailOrganizer" style="color:#64748b; font-size:0.85rem; margin:0 0 0.4rem;"></p>
+                    <h2 id="detailTitle" style="color:#1e3a8a; margin:0; font-size:1.2rem; line-height:1.4;"></h2>
+                </div>
+                <button onclick="closeDetailModal()" style="background:none; border:none; font-size:1.8rem; cursor:pointer; color:#94a3b8; line-height:1; flex-shrink:0;">&times;</button>
+            </div>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+
+    <!-- 신청 모달 -->
+    <div id="applyModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+        <div style="background:white; border-radius:12px; padding:2rem; width:90%; max-width:500px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
+                <h2 style="color:#1e3a8a; margin:0; font-size:1.3rem;">📋 신청하기</h2>
+                <button onclick="closeApplyModal()" style="background:none; border:none; font-size:1.8rem; cursor:pointer; color:#64748b; line-height:1;">&times;</button>
+            </div>
+            <div id="applyModalInfo" style="background:#f0f4ff; padding:1rem; border-radius:8px; margin-bottom:1.5rem; font-size:0.9rem; color:#1e40af; font-weight:600;"></div>
+            <form id="applyForm" onsubmit="submitApplication(event)">
+                <input type="hidden" id="applyAnnouncementId">
+                <div style="margin-bottom:1rem;">
+                    <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">이름 <span style="color:#ef4444;">*</span></label>
+                    <input type="text" id="applyName" required placeholder="이름을 입력하세요" style="width:100%; padding:0.75rem; border:1px solid #d1d5db; border-radius:8px; font-size:1rem; box-sizing:border-box;">
+                </div>
+                <div style="margin-bottom:1rem;">
+                    <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">연락처 <span style="color:#ef4444;">*</span></label>
+                    <input type="tel" id="applyPhone" required placeholder="010-0000-0000" style="width:100%; padding:0.75rem; border:1px solid #d1d5db; border-radius:8px; font-size:1rem; box-sizing:border-box;">
+                </div>
+                <div style="margin-bottom:1rem;">
+                    <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">이메일 <span style="color:#6b7280; font-weight:400;">(선택)</span></label>
+                    <input type="email" id="applyEmail" placeholder="이메일 주소" style="width:100%; padding:0.75rem; border:1px solid #d1d5db; border-radius:8px; font-size:1rem; box-sizing:border-box;">
+                </div>
+                <div style="margin-bottom:1.5rem;">
+                    <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">문의 메시지 <span style="color:#6b7280; font-weight:400;">(선택)</span></label>
+                    <textarea id="applyMessage" placeholder="추가 문의 사항을 입력하세요" rows="3" style="width:100%; padding:0.75rem; border:1px solid #d1d5db; border-radius:8px; font-size:1rem; box-sizing:border-box; resize:vertical;"></textarea>
+                </div>
+                <div style="display:flex; gap:1rem;">
+                    <button type="button" onclick="closeApplyModal()" style="flex:1; padding:0.875rem; background:#f3f4f6; border:none; border-radius:8px; font-size:1rem; cursor:pointer; color:#374151; font-weight:600;">취소</button>
+                    <button type="submit" id="applySubmitBtn" style="flex:2; padding:0.875rem; background:#1e40af; color:white; border:none; border-radius:8px; font-size:1rem; cursor:pointer; font-weight:600;">신청 확인</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 전북지역 졸업생 네트워크. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let announcements = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadAnnouncements();
+            setupFilters();
+        });
+
+        // API 기본 URL
+        const API_BASE = 'http://localhost:5001/api';
+
+        async function loadAnnouncements() {
+            try {
+                const res = await fetch(API_BASE + '/announcements/certification');
+                if (!res.ok) throw new Error('서버 오류: ' + res.status);
+                const response = await res.json();
+                announcements = response.announcements || [];
+                displayAnnouncements(announcements);
+            } catch (error) {
+                console.error('자격증 지원 정보 로드 실패:', error);
+                document.getElementById('emptyState').style.display = 'block';
+                document.getElementById('emptyState').querySelector('p').textContent = '데이터를 불러오지 못했습니다. 서버가 실행 중인지 확인해주세요.';
+            }
+        }
+
+        function displayAnnouncements(items) {
+            const grid = document.getElementById('announcementsGrid');
+            const emptyState = document.getElementById('emptyState');
+            const countEl = document.getElementById('announcementCount');
+
+            if (items.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+                countEl.textContent = '';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            emptyState.style.display = 'none';
+            countEl.textContent = `총 ${items.length}개의 지원 프로그램`;
+
+            grid.innerHTML = items.map(item => {
+                try { return createAnnouncementCard(item); }
+                catch(e) { console.error('카드 오류:', e, item); return ''; }
+            }).join('');
+        }
+
+        function createAnnouncementCard(item) {
+            const eventDate = item.event_date ? new Date(item.event_date).toLocaleDateString('ko-KR') : '-';
+            const deadline = item.deadline ? new Date(item.deadline).toLocaleDateString('ko-KR') : '-';
+            const progress = item.capacity ? Math.round((item.current_applicants / item.capacity) * 100) : 0;
+            const tags = Array.isArray(item.tags) ? item.tags : [];
+            const benefits = Array.isArray(item.benefits) ? item.benefits : [];
+            const requirements = Array.isArray(item.requirements) ? item.requirements : [];
+
+            return `
+                <div class="announcement-card">
+                    ${item.image_url ? `<img src="${item.image_url}" alt="${item.title}" class="announcement-image">` : '<div class="announcement-image"></div>'}
+                    <div class="announcement-content">
+                        <div class="announcement-header">
+                            <h3 class="announcement-title">${item.title}</h3>
+                            ${item.organizer ? `<p class="announcement-organizer">${item.organizer}</p>` : ''}
+                        </div>
+
+                        ${item.rating ? `
+                        <div class="announcement-rating">
+                            <span class="stars">${'★'.repeat(Math.round(item.rating))}${'☆'.repeat(5 - Math.round(item.rating))}</span>
+                            <span class="review-count">${item.rating} (${item.review_count || 0}개)</span>
+                        </div>
+                        ` : ''}
+
+                        ${item.description ? `
+                        <p style="color: #64748b; font-size: 0.95rem; line-height: 1.5; margin: 1rem 0;">${item.description.substring(0, 120)}${item.description.length > 120 ? '...' : ''}</p>
+                        ` : ''}
+
+                        <div class="announcement-meta">
+                            ${eventDate !== '-' ? `
+                            <div class="meta-item">
+                                <span class="meta-icon">📅</span>
+                                <span>시험일: ${eventDate}</span>
+                            </div>
+                            ` : ''}
+                            ${item.event_time ? `
+                            <div class="meta-item">
+                                <span class="meta-icon">🕐</span>
+                                <span>${item.event_time}</span>
+                            </div>
+                            ` : ''}
+                            ${item.location ? `
+                            <div class="meta-item">
+                                <span class="meta-icon">📍</span>
+                                <span>교육장소: ${item.location}</span>
+                            </div>
+                            ` : ''}
+                            ${item.fee ? `
+                            <div class="meta-item">
+                                <span class="meta-icon">💰</span>
+                                <span>응시료/교육비: ${item.fee}</span>
+                            </div>
+                            ` : ''}
+                        </div>
+
+                        ${tags.length > 0 ? `
+                        <div class="announcement-tags">
+                            ${tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                        </div>
+                        ` : ''}
+
+                        ${benefits.length > 0 ? `
+                        <div style="background: #fef3c7; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                            <strong style="color: #92400e; display: block; margin-bottom: 0.5rem;">지원 혜택</strong>
+                            ${benefits.slice(0, 3).map(benefit => `<div style="font-size: 0.9rem; color: #78350f; margin-bottom: 0.25rem;">💎 ${benefit}</div>`).join('')}
+                        </div>
+                        ` : ''}
+
+                        ${requirements.length > 0 ? `
+                        <div style="background: #eff6ff; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                            <strong style="color: #1e40af; display: block; margin-bottom: 0.5rem;">응시 자격</strong>
+                            ${requirements.slice(0, 3).map(req => `<div style="font-size: 0.9rem; color: #1e3a8a; margin-bottom: 0.25rem;">• ${req}</div>`).join('')}
+                        </div>
+                        ` : ''}
+
+                        <div class="announcement-actions" style="margin-top: 1rem;">
+                            <button onclick="openDetailModal(${item.id})" class="btn btn-secondary">상세보기</button>
+                        </div>
+
+                        ${deadline !== '-' ? `<p style="text-align: center; margin-top: 1rem; color: #ef4444; font-size: 0.9rem;">신청마감: ${deadline}</p>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function setupFilters() {
+            const categoryFilter = document.getElementById('categoryFilter');
+            const levelFilter = document.getElementById('levelFilter');
+            const statusFilter = document.getElementById('statusFilter');
+            const searchInput = document.getElementById('searchInput');
+
+            [categoryFilter, levelFilter, statusFilter, searchInput].forEach(el => {
+                el.addEventListener('change', applyFilters);
+                el.addEventListener('input', applyFilters);
+            });
+        }
+
+        function applyFilters() {
+            const category = document.getElementById('categoryFilter').value.toLowerCase();
+            const level = document.getElementById('levelFilter').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+
+            let filtered = announcements;
+
+            if (category) {
+                filtered = filtered.filter(item => 
+                    (item.tags && item.tags.some(tag => tag.toLowerCase().includes(category))) ||
+                    (item.title && item.title.toLowerCase().includes(category))
+                );
+            }
+
+            if (level) {
+                filtered = filtered.filter(item => 
+                    (item.tags && item.tags.some(tag => tag.toLowerCase().includes(level))) ||
+                    (item.title && item.title.toLowerCase().includes(level))
+                );
+            }
+
+            if (status) {
+                const now = new Date();
+                filtered = filtered.filter(item => {
+                    const eventDate = new Date(item.event_date);
+                    const deadlineDate = new Date(item.deadline);
+                    
+                    if (status === 'ongoing') return deadlineDate > now && eventDate > now;
+                    if (status === 'upcoming') return eventDate > now;
+                    if (status === 'past') return eventDate < now;
+                    return true;
+                });
+            }
+
+            if (search) {
+                filtered = filtered.filter(item =>
+                    item.title.toLowerCase().includes(search) ||
+                    (item.description && item.description.toLowerCase().includes(search)) ||
+                    (item.organizer && item.organizer.toLowerCase().includes(search))
+                );
+            }
+
+            displayAnnouncements(filtered);
+        }
+
+        function openApplyModal(id, title) {
+            const user = auth.getCurrentUser();
+            if (!user) {
+                window.location.href = 'login.html?returnUrl=' + encodeURIComponent(window.location.pathname);
+                return;
+            }
+            document.getElementById('applyAnnouncementId').value = id;
+            document.getElementById('applyModalInfo').textContent = title;
+            document.getElementById('applyName').value = user.name || '';
+            document.getElementById('applyPhone').value = user.phone || '';
+            document.getElementById('applyEmail').value = user.email || '';
+            document.getElementById('applyMessage').value = '';
+            document.getElementById('applyModal').style.display = 'flex';
+        }
+
+        function closeApplyModal() {
+            document.getElementById('applyModal').style.display = 'none';
+        }
+
+        async function submitApplication(e) {
+            e.preventDefault();
+            const btn = document.getElementById('applySubmitBtn');
+            btn.textContent = '처리 중...';
+            btn.disabled = true;
+            try {
+                await api.post('/announcements/apply', {
+                    announcement_id: parseInt(document.getElementById('applyAnnouncementId').value),
+                    applicant_name: document.getElementById('applyName').value.trim(),
+                    applicant_phone: document.getElementById('applyPhone').value.trim(),
+                    applicant_email: document.getElementById('applyEmail').value.trim(),
+                    message: document.getElementById('applyMessage').value.trim()
+                });
+                closeApplyModal();
+                alert('✅ 신청이 완료되었습니다!');
+                loadAnnouncements();
+            } catch (error) {
+                alert('❌ ' + (error.message || '신청 처리 중 오류가 발생했습니다.'));
+            } finally {
+                btn.textContent = '신청 확인';
+                btn.disabled = false;
+            }
+        }
+
+        document.getElementById('applyModal').addEventListener('click', function(e) {
+            if (e.target === this) closeApplyModal();
+        });
+
+        // 상세보기 모달
+        function openDetailModal(id) {
+            const item = announcements.find(a => a.id === id);
+            if (!item) return;
+            const eventDate = item.event_date ? new Date(item.event_date).toLocaleDateString('ko-KR') : '-';
+            const deadline = item.deadline ? new Date(item.deadline).toLocaleDateString('ko-KR') : '-';
+            const benefits = Array.isArray(item.benefits) ? item.benefits : [];
+            const requirements = Array.isArray(item.requirements) ? item.requirements : [];
+            const tags = Array.isArray(item.tags) ? item.tags : [];
+            document.getElementById('detailTitle').textContent = item.title;
+            document.getElementById('detailOrganizer').textContent = item.organizer || '';
+            document.getElementById('detailContent').innerHTML = `
+                ${item.description ? `<p style="color:#374151; font-size:0.95rem; line-height:1.7; margin:0 0 1.5rem; padding:1rem; background:#f8fafc; border-radius:8px; border-left:3px solid #3b82f6;">${item.description}</p>` : ''}
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem;">
+                    <div style="background:#f0f4ff; padding:0.9rem; border-radius:8px;">
+                        <div style="font-size:0.75rem; color:#6b7280; margin-bottom:0.25rem;">📅 시작일</div>
+                        <div style="font-weight:600; color:#1e3a8a;">${eventDate}${item.event_time ? ' ' + item.event_time : ''}</div>
+                    </div>
+                    <div style="background:#f0f4ff; padding:0.9rem; border-radius:8px;">
+                        <div style="font-size:0.75rem; color:#6b7280; margin-bottom:0.25rem;">⏰ 신청 마감</div>
+                        <div style="font-weight:600; color:#ef4444;">${deadline}</div>
+                    </div>
+                    ${item.location ? `<div style="background:#f0fdf4; padding:0.9rem; border-radius:8px;">
+                        <div style="font-size:0.75rem; color:#6b7280; margin-bottom:0.25rem;">📍 장소</div>
+                        <div style="font-weight:600; color:#166534;">${item.location}</div>
+                    </div>` : ''}
+                    ${item.fee ? `<div style="background:#fefce8; padding:0.9rem; border-radius:8px;">
+                        <div style="font-size:0.75rem; color:#6b7280; margin-bottom:0.25rem;">💰 지원 내용</div>
+                        <div style="font-weight:600; color:#854d0e;">${item.fee}</div>
+                    </div>` : ''}
+                </div>
+                ${item.rating ? `<div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem;">
+                    <span style="color:#f59e0b; font-size:1.1rem;">${'★'.repeat(Math.round(Number(item.rating)))}${'☆'.repeat(5-Math.round(Number(item.rating)))}</span>
+                    <span style="color:#64748b; font-size:0.9rem;">${item.rating} (${item.review_count || 0}개 리뷰)</span>
+                </div>` : ''}
+                ${benefits.length > 0 ? `<div style="margin-bottom:1.25rem;">
+                    <strong style="color:#1e40af; display:block; margin-bottom:0.6rem; font-size:0.95rem;">✅ 지원 혜택</strong>
+                    ${benefits.map(b => `<div style="font-size:0.9rem; color:#374151; padding:0.3rem 0; border-bottom:1px solid #f1f5f9;">• ${b}</div>`).join('')}
+                </div>` : ''}
+                ${requirements.length > 0 ? `<div style="margin-bottom:1.25rem;">
+                    <strong style="color:#1e40af; display:block; margin-bottom:0.6rem; font-size:0.95rem;">📋 신청 자격</strong>
+                    ${requirements.map(r => `<div style="font-size:0.9rem; color:#374151; padding:0.3rem 0; border-bottom:1px solid #f1f5f9;">• ${r}</div>`).join('')}
+                </div>` : ''}
+                ${(item.contact_phone || item.contact_email) ? `<div style="background:#f8fafc; padding:1rem; border-radius:8px; margin-bottom:1rem;">
+                    <strong style="color:#374151; display:block; margin-bottom:0.5rem; font-size:0.9rem;">📞 문의</strong>
+                    ${item.contact_phone ? `<div style="font-size:0.9rem; color:#475569; margin-bottom:0.25rem;">☏ ${item.contact_phone}</div>` : ''}
+                    ${item.contact_email ? `<div style="font-size:0.9rem; color:#475569;">✉ ${item.contact_email}</div>` : ''}
+                </div>` : ''}
+                ${tags.length > 0 ? `<div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.5rem;">
+                    ${tags.map(t => `<span style="background:#dbeafe; color:#1e40af; padding:0.25rem 0.6rem; border-radius:999px; font-size:0.8rem;">#${t}</span>`).join('')}
+                </div>` : ''}
+            `;
+            document.getElementById('detailModal').style.display = 'flex';
+        }
+        function closeDetailModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

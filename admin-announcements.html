@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지사항 관리 - 관리자</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .admin-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-header h1 {
+            color: #1e3a8a;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #64748b;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #1e3a8a;
+            border-bottom-color: #3b82f6;
+        }
+
+        .content-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .close {
+            font-size: 2rem;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .array-input {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .array-input input {
+            flex: 1;
+        }
+
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .tag-item {
+            background: #eff6ff;
+            color: #1e40af;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            color: #ef4444;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <span class="icon">🏠</span>
+                    <span>대시보드</span>
+                </a>
+                <div style="border-top: 1px solid #e5e7eb; margin: 1rem 0; padding-top: 1rem;">
+                    <p style="padding: 0 1rem; color: #6b7280; font-size: 0.875rem; font-weight: 600;">관리자 메뉴</p>
+                </div>
+                <a href="admin-users.html" class="menu-item">
+                    <span class="icon">👥</span>
+                    <span>회원 관리</span>
+                </a>
+                <a href="admin-jobs.html" class="menu-item">
+                    <span class="icon">💼</span>
+                    <span>채용공고 관리</span>
+                </a>
+                <a href="admin-board.html" class="menu-item">
+                    <span class="icon">📋</span>
+                    <span>게시판 관리</span>
+                </a>
+                <a href="admin-codes.html" class="menu-item">
+                    <span class="icon">⚙️</span>
+                    <span>코드 관리</span>
+                </a>
+                <a href="admin-announcements.html" class="menu-item active">
+                    <span class="icon">📢</span>
+                    <span>공지사항 관리</span>
+                </a>
+            </div>
+            <div class="sidebar-footer">
+                <button onclick="auth.logout()" class="btn-logout">로그아웃</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="content-header">
+                <h1>📢 공지사항 관리</h1>
+                <div class="user-info">
+                    <span id="userName"></span>
+                </div>
+            </header>
+
+            <div class="admin-content">
+
+        <div class="tabs">
+            <button class="tab active" data-type="job-fair" onclick="switchTab('job-fair')">취업 박람회</button>
+            <button class="tab" data-type="industry-visit" onclick="switchTab('industry-visit')">산업체 견학</button>
+            <button class="tab" data-type="certification" onclick="switchTab('certification')">기술 자격증</button>
+            <button class="tab" data-type="applications" onclick="switchTab('applications')">📝 신청 내역</button>
+        </div>
+
+        <!-- 공지사항 목록 섹션 -->
+        <div id="announcementSection" class="content-section">
+            <div class="section-header">
+                <h2 id="sectionTitle">취업 박람회</h2>
+                <button class="btn btn-primary" onclick="openAddModal()">+ 새 공지사항 등록</button>
+            </div>
+            <div id="tableContainer"></div>
+        </div>
+
+        <!-- 신청 내역 섹션 -->
+        <div id="applicationsSection" class="content-section" style="display:none;">
+            <div class="section-header">
+                <h2>신청 내역 조회</h2>
+                <div style="display:flex; gap:1rem; align-items:center;">
+                    <select id="appTypeFilter" onchange="loadApplications()" style="padding:0.5rem 1rem; border:1px solid #d1d5db; border-radius:8px;">
+                        <option value="">전체 유형</option>
+                        <option value="job-fair">취업박람회</option>
+                        <option value="industry-visit">산업체견학</option>
+                        <option value="certification">기술자격증</option>
+                    </select>
+                    <button class="btn btn-secondary" onclick="loadApplications()">새로고침</button>
+                </div>
+            </div>
+            <div id="applicationsTable"></div>
+        </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- 등록/수정 모달 -->
+    <div id="announcementModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">공지사항 등록</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="announcementForm">
+                <input type="hidden" id="announcementId">
+
+                <div class="form-group">
+                    <label>카테고리 *</label>
+                    <select id="announcementType" required>
+                        <option value="job-fair">🏢 취업박람회</option>
+                        <option value="industry-visit">🏭 산업체 견학</option>
+                        <option value="certification">📜 기술 자격증</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>제목 *</label>
+                    <input type="text" id="title" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>주최기관</label>
+                        <input type="text" id="organizer">
+                    </div>
+                    <div class="form-group">
+                        <label>평점</label>
+                        <input type="number" id="rating" min="0" max="5" step="0.1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>설명</label>
+                    <textarea id="description"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>행사일자</label>
+                        <input type="date" id="event_date">
+                    </div>
+                    <div class="form-group">
+                        <label>시간</label>
+                        <input type="text" id="event_time" placeholder="예: 10:00 - 17:00">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>장소</label>
+                        <input type="text" id="location">
+                    </div>
+                    <div class="form-group">
+                        <label>신청마감일</label>
+                        <input type="date" id="deadline">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>정원</label>
+                        <input type="number" id="capacity">
+                    </div>
+                    <div class="form-group">
+                        <label>현재 신청인원</label>
+                        <input type="number" id="current_applicants" value="0">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>참가비</label>
+                        <input type="text" id="fee" placeholder="예: 무료, 3만원">
+                    </div>
+                    <div class="form-group">
+                        <label>리뷰 수</label>
+                        <input type="number" id="review_count" value="0">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>연락처</label>
+                        <input type="tel" id="contact_phone">
+                    </div>
+                    <div class="form-group">
+                        <label>이메일</label>
+                        <input type="email" id="contact_email">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>이미지 URL</label>
+                        <input type="url" id="image_url">
+                    </div>
+                    <div class="form-group">
+                        <label>상세페이지 URL</label>
+                        <input type="url" id="detail_url">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>혜택 (엔터로 추가)</label>
+                    <div id="benefitsContainer">
+                        <div class="array-input">
+                            <input type="text" id="benefitInput" placeholder="혜택 입력 후 엔터">
+                        </div>
+                        <div class="tag-container" id="benefitsList"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>준비사항/요구사항 (엔터로 추가)</label>
+                    <div id="requirementsContainer">
+                        <div class="array-input">
+                            <input type="text" id="requirementInput" placeholder="준비사항 입력 후 엔터">
+                        </div>
+                        <div class="tag-container" id="requirementsList"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>태그 (엔터로 추가)</label>
+                    <div id="tagsContainer">
+                        <div class="array-input">
+                            <input type="text" id="tagInput" placeholder="태그 입력 후 엔터">
+                        </div>
+                        <div class="tag-container" id="tagsList"></div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">저장</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let currentType = 'job-fair';
+        let announcements = [];
+        let editingId = null;
+
+        // 배열 데이터
+        let benefits = [];
+        let requirements = [];
+        let tags = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdminAuth();
+            loadAnnouncements();
+            setupArrayInputs();
+        });
+
+        function checkAdminAuth() {
+            const user = auth.getCurrentUser();
+            if (!user || user.user_type !== 'admin') {
+                alert('관리자만 접근할 수 있습니다.');
+                window.location.href = 'login.html';
+            }
+            const userNameEl = document.getElementById('userName');
+            if (userNameEl && user) userNameEl.textContent = user.name;
+        }
+
+        async function loadAnnouncements() {
+            try {
+                const response = await api.get(`/announcements/${currentType}`);
+                announcements = response.announcements || [];
+                displayAnnouncements();
+            } catch (error) {
+                console.error('공지사항 로드 실패:', error);
+                displayAnnouncements();
+            }
+        }
+
+        function displayAnnouncements() {
+            const container = document.getElementById('tableContainer');
+            
+            if (announcements.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 3rem; color: #64748b;">등록된 공지사항이 없습니다.</p>';
+                return;
+            }
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>주최기관</th>
+                            <th>행사일</th>
+                            <th>신청현황</th>
+                            <th>등록일</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${announcements.map((item, index) => `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${item.title}</td>
+                                <td>${item.organizer || '-'}</td>
+                                <td>${item.event_date ? new Date(item.event_date).toLocaleDateString('ko-KR') : '-'}</td>
+                                <td>${item.current_applicants || 0}/${item.capacity || '-'}</td>
+                                <td>${new Date(item.created_at).toLocaleDateString('ko-KR')}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary" onclick="editAnnouncement(${item.id})">수정</button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteAnnouncement(${item.id})">삭제</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function switchTab(type) {
+            currentType = type;
+
+            // 탭 활성화
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            const activeTab = document.querySelector(`.tab[data-type="${type}"]`);
+            if (activeTab) activeTab.classList.add('active');
+
+            if (type === 'applications') {
+                document.getElementById('announcementSection').style.display = 'none';
+                document.getElementById('applicationsSection').style.display = 'block';
+                loadApplications();
+            } else {
+                document.getElementById('announcementSection').style.display = 'block';
+                document.getElementById('applicationsSection').style.display = 'none';
+
+                const titles = { 'job-fair': '취업 박람회', 'industry-visit': '산업체 견학', 'certification': '기술 자격증' };
+                document.getElementById('sectionTitle').textContent = titles[type];
+                loadAnnouncements();
+            }
+        }
+
+        function openAddModal() {
+            editingId = null;
+            document.getElementById('modalTitle').textContent = '공지사항 등록';
+            document.getElementById('announcementForm').reset();
+            document.getElementById('announcementType').value = currentType;
+            benefits = [];
+            requirements = [];
+            tags = [];
+            updateArrayDisplay();
+            document.getElementById('announcementModal').style.display = 'flex';
+        }
+
+        async function editAnnouncement(id) {
+            const item = announcements.find(a => a.id === id);
+            if (!item) return;
+
+            editingId = id;
+            document.getElementById('modalTitle').textContent = '공지사항 수정';
+            document.getElementById('announcementId').value = id;
+            document.getElementById('announcementType').value = item.type;
+            document.getElementById('title').value = item.title || '';
+            document.getElementById('organizer').value = item.organizer || '';
+            document.getElementById('description').value = item.description || '';
+            document.getElementById('event_date').value = item.event_date || '';
+            document.getElementById('event_time').value = item.event_time || '';
+            document.getElementById('location').value = item.location || '';
+            document.getElementById('deadline').value = item.deadline || '';
+            document.getElementById('capacity').value = item.capacity || '';
+            document.getElementById('current_applicants').value = item.current_applicants || 0;
+            document.getElementById('fee').value = item.fee || '';
+            document.getElementById('contact_phone').value = item.contact_phone || '';
+            document.getElementById('contact_email').value = item.contact_email || '';
+            document.getElementById('rating').value = item.rating || '';
+            document.getElementById('review_count').value = item.review_count || 0;
+            document.getElementById('image_url').value = item.image_url || '';
+            document.getElementById('detail_url').value = item.detail_url || '';
+
+            benefits = Array.isArray(item.benefits) ? item.benefits : [];
+            requirements = Array.isArray(item.requirements) ? item.requirements : [];
+            tags = Array.isArray(item.tags) ? item.tags : [];
+            updateArrayDisplay();
+
+            document.getElementById('announcementModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('announcementModal').style.display = 'none';
+        }
+
+        function setupArrayInputs() {
+            // 혜택
+            document.getElementById('benefitInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const value = e.target.value.trim();
+                    if (value) {
+                        benefits.push(value);
+                        e.target.value = '';
+                        updateArrayDisplay();
+                    }
+                }
+            });
+
+            // 준비사항
+            document.getElementById('requirementInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const value = e.target.value.trim();
+                    if (value) {
+                        requirements.push(value);
+                        e.target.value = '';
+                        updateArrayDisplay();
+                    }
+                }
+            });
+
+            // 태그
+            document.getElementById('tagInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const value = e.target.value.trim();
+                    if (value) {
+                        tags.push(value);
+                        e.target.value = '';
+                        updateArrayDisplay();
+                    }
+                }
+            });
+        }
+
+        function updateArrayDisplay() {
+            document.getElementById('benefitsList').innerHTML = benefits.map((item, i) => 
+                `<span class="tag-item">${item} <span class="tag-remove" onclick="removeBenefit(${i})">×</span></span>`
+            ).join('');
+
+            document.getElementById('requirementsList').innerHTML = requirements.map((item, i) => 
+                `<span class="tag-item">${item} <span class="tag-remove" onclick="removeRequirement(${i})">×</span></span>`
+            ).join('');
+
+            document.getElementById('tagsList').innerHTML = tags.map((item, i) => 
+                `<span class="tag-item">${item} <span class="tag-remove" onclick="removeTag(${i})">×</span></span>`
+            ).join('');
+        }
+
+        function removeBenefit(index) {
+            benefits.splice(index, 1);
+            updateArrayDisplay();
+        }
+
+        function removeRequirement(index) {
+            requirements.splice(index, 1);
+            updateArrayDisplay();
+        }
+
+        function removeTag(index) {
+            tags.splice(index, 1);
+            updateArrayDisplay();
+        }
+
+        document.getElementById('announcementForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                type: document.getElementById('announcementType').value,
+                title: document.getElementById('title').value,
+                organizer: document.getElementById('organizer').value,
+                description: document.getElementById('description').value,
+                event_date: document.getElementById('event_date').value || null,
+                event_time: document.getElementById('event_time').value,
+                location: document.getElementById('location').value,
+                deadline: document.getElementById('deadline').value || null,
+                capacity: parseInt(document.getElementById('capacity').value) || null,
+                current_applicants: parseInt(document.getElementById('current_applicants').value) || 0,
+                fee: document.getElementById('fee').value,
+                contact_phone: document.getElementById('contact_phone').value,
+                contact_email: document.getElementById('contact_email').value,
+                rating: parseFloat(document.getElementById('rating').value) || null,
+                review_count: parseInt(document.getElementById('review_count').value) || 0,
+                image_url: document.getElementById('image_url').value,
+                detail_url: document.getElementById('detail_url').value,
+                benefits: benefits,
+                requirements: requirements,
+                tags: tags
+            };
+
+            try {
+                const savedType = data.type;
+                if (editingId) {
+                    await api.put(`/announcements/${editingId}`, data);
+                    alert('공지사항이 수정되었습니다.');
+                } else {
+                    await api.post('/announcements', data);
+                    alert('공지사항이 등록되었습니다.');
+                }
+                closeModal();
+                switchTab(savedType);
+            } catch (error) {
+                console.error('저장 실패:', error);
+                alert(error.response?.data?.error || '저장에 실패했습니다.');
+            }
+        });
+
+        async function deleteAnnouncement(id) {
+            if (!confirm('정말 삭제하시겠습니까?')) return;
+
+            try {
+                await api.delete(`/announcements/${id}`);
+                alert('삭제되었습니다.');
+                loadAnnouncements();
+            } catch (error) {
+                console.error('삭제 실패:', error);
+                alert('삭제에 실패했습니다.');
+            }
+        }
+
+        // 신청 내역 로드
+        async function loadApplications() {
+            const type = document.getElementById('appTypeFilter')?.value || '';
+            try {
+                const response = await api.get(`/announcements/applications/all${type ? '?type=' + type : ''}`);
+                displayApplications(response.applications || []);
+            } catch (error) {
+                console.error('신청 내역 로드 실패:', error);
+                document.getElementById('applicationsTable').innerHTML = '<p style="color:#ef4444; padding:2rem;">신청 내역을 불러오지 못했습니다.</p>';
+            }
+        }
+
+        function displayApplications(apps) {
+            const container = document.getElementById('applicationsTable');
+            if (apps.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:3rem; color:#64748b;"><p style="font-size:3rem;">📋</p><p>신청 내역이 없습니다.</p></div>';
+                return;
+            }
+
+            const typeName = { 'job-fair': '취업박람회', 'industry-visit': '산업체견학', 'certification': '기술자격증' };
+            const statusLabel = { 'pending': '⏳ 접수중', 'approved': '✅ 승인', 'rejected': '❌ 반려' };
+            const statusColor = { 'pending': '#f59e0b', 'approved': '#10b981', 'rejected': '#ef4444' };
+
+            container.innerHTML = `
+                <p style="color:#64748b; margin-bottom:1rem; font-size:0.9rem;">전체 ${apps.length}건</p>
+                <table style="width:100%; border-collapse:collapse; background:white; border-radius:8px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.1);">
+                    <thead>
+                        <tr style="background:#1e3a8a; color:white;">
+                            <th style="padding:1rem; text-align:left;">#</th>
+                            <th style="padding:1rem; text-align:left;">채널</th>
+                            <th style="padding:1rem; text-align:left;">공고명</th>
+                            <th style="padding:1rem; text-align:left;">신청자</th>
+                            <th style="padding:1rem; text-align:left;">연락처</th>
+                            <th style="padding:1rem; text-align:left;">이메일</th>
+                            <th style="padding:1rem; text-align:left;">신청일</th>
+                            <th style="padding:1rem; text-align:left;">상태</th>
+                            <th style="padding:1rem; text-align:left;">처리</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${apps.map((app, idx) => `
+                        <tr style="border-bottom:1px solid #f1f5f9; ${idx % 2 === 0 ? '' : 'background:#fafafa;'}">
+                            <td style="padding:0.875rem 1rem; color:#64748b;">${idx + 1}</td>
+                            <td style="padding:0.875rem 1rem;"><span style="background:#e0e7ff; color:#3730a3; padding:0.2rem 0.6rem; border-radius:20px; font-size:0.8rem;">${typeName[app.announcement_type] || app.announcement_type}</span></td>
+                            <td style="padding:0.875rem 1rem; font-weight:500; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${app.announcement_title}">${app.announcement_title}</td>
+                            <td style="padding:0.875rem 1rem; font-weight:600;">${app.applicant_name}</td>
+                            <td style="padding:0.875rem 1rem;">${app.applicant_phone}</td>
+                            <td style="padding:0.875rem 1rem; color:#64748b; font-size:0.9rem;">${app.applicant_email || '-'}</td>
+                            <td style="padding:0.875rem 1rem; color:#64748b; font-size:0.9rem;">${new Date(app.created_at).toLocaleDateString('ko-KR')}</td>
+                            <td style="padding:0.875rem 1rem;"><span style="color:${statusColor[app.status]}; font-weight:600;">${statusLabel[app.status] || app.status}</span></td>
+                            <td style="padding:0.875rem 1rem;">
+                                <select onchange="updateAppStatus(${app.id}, this.value)" style="padding:0.3rem 0.5rem; border:1px solid #d1d5db; border-radius:6px; font-size:0.85rem; cursor:pointer;">
+                                    <option value="pending" ${app.status === 'pending' ? 'selected' : ''}>접수중</option>
+                                    <option value="approved" ${app.status === 'approved' ? 'selected' : ''}>승인</option>
+                                    <option value="rejected" ${app.status === 'rejected' ? 'selected' : ''}>반려</option>
+                                </select>
+                            </td>
+                        </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        async function updateAppStatus(id, status) {
+            try {
+                await api.put(`/announcements/applications/${id}/status`, { status });
+                loadApplications();
+            } catch (error) {
+                alert('상태 변경에 실패했습니다.');
+                loadApplications();
+            }
+        }
+    </script>
+</body>
+</html>

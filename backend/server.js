@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '.env') });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,6 +26,7 @@ const counselingRoutes = require('./routes/counseling');
 const certificateRoutes = require('./routes/certificates');
 const postRoutes = require('./routes/posts');
 const majorRoutes = require('./routes/majors');
+const announcementRoutes = require('./routes/announcements');
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -36,6 +37,7 @@ app.use('/api/counseling', counselingRoutes);
 app.use('/api/certificates', certificateRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/majors', majorRoutes);
+app.use('/api/announcements', announcementRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

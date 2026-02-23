@@ -17,7 +17,6 @@ class AuthManager {
         if (token) {
             // Skip API call for test tokens and registered user tokens
             if (token.startsWith('test_token_') || token.startsWith('user_token_')) {
-                console.log('Using local token, skipping API validation');
                 return;
             }
             
@@ -29,7 +28,9 @@ class AuthManager {
                 }
             } catch (error) {
                 console.error('Auth check failed:', error);
-                this.logout();
+                // JWT 만료/네트워크 오류 시 로그아웃 대신 조용히 무시
+                // (페이지 진입 후 리다이렉트 방지)
+                // this.logout();
             }
         }
     }
@@ -72,6 +73,11 @@ class AuthManager {
                 userMenu.style.display = 'flex';
                 if (userName) userName.textContent = user.name;
             }
+            // 관리자 메뉴 표시
+            if (user.user_type === 'admin') {
+                const adminMenuSection = document.getElementById('adminMenuSection');
+                if (adminMenuSection) adminMenuSection.style.display = 'block';
+            }
         } else {
             if (authButtons) authButtons.style.display = 'flex';
             if (userMenu) userMenu.style.display = 'none';
@@ -82,7 +88,8 @@ class AuthManager {
     requireAuth() {
         if (!this.isLoggedIn()) {
             alert('로그인이 필요한 서비스입니다.');
-            window.location.href = 'login.html';
+            const returnUrl = encodeURIComponent(window.location.pathname + window.location.search);
+            window.location.href = 'login.html?returnUrl=' + returnUrl;
             return false;
         }
         return true;
@@ -105,7 +112,7 @@ function navigateToService(url) {
         window.location.href = url;
     } else {
         alert('로그인이 필요한 서비스입니다.');
-        window.location.href = 'login.html';
+        window.location.href = 'login.html?returnUrl=' + encodeURIComponent(url);
     }
 }
 
