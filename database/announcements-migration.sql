@@ -47,6 +47,22 @@ BEGIN
     ) THEN
         ALTER TABLE announcements ADD COLUMN is_active BOOLEAN DEFAULT true;
     END IF;
+
+    -- image_url 컬럼 추가 (없을 경우)
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name='announcements' AND column_name='image_url'
+    ) THEN
+        ALTER TABLE announcements ADD COLUMN image_url VARCHAR(500);
+    END IF;
+
+    -- detail_url 컬럼 추가 (없을 경우)
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name='announcements' AND column_name='detail_url'
+    ) THEN
+        ALTER TABLE announcements ADD COLUMN detail_url VARCHAR(500);
+    END IF;
 END $$;
 
 -- fee 컬럼 길이 확장 (VARCHAR(50) -> VARCHAR(200))
