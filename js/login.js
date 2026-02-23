@@ -130,90 +130,74 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Check localStorage for registered users (non-test login)
-        console.log('Checking localStorage for registered users...');
-        const users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
-        console.log('Found users in localStorage:', users.length);
-        console.log('Searching for email:', email);
-        const foundUser = users.find(u => u.email === email && u.password === password);
-        console.log('Found user:', foundUser);
-        
-        if (foundUser) {
-            // Verify user type matches selection
-            // Allow 'student' to match 'student', 'graduate' to match 'graduate',
-            // and both 'student' and 'graduate' can login from either selection
-            const validUserTypes = ['student', 'graduate'];
-            const userTypeMatches = 
-                foundUser.user_type === selectedUserType || 
-                (validUserTypes.includes(foundUser.user_type) && validUserTypes.includes(selectedUserType));
-            
-            if (!userTypeMatches && foundUser.user_type !== selectedUserType) {
-                showError('선택한 사용자 유형과 일치하지 않습니다. 올바른 유형을 선택해주세요.');
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-                return;
-            }
-            
-            // User found in localStorage
-            const loginUser = {
-                id: foundUser.id,
-                email: foundUser.email,
-                name: foundUser.name,
-                user_type: foundUser.user_type || 'graduate',
-                phone: foundUser.phone
-            };
-            
-            // Save to localStorage
-            localStorage.setItem('graduateNetwork_user', JSON.stringify(loginUser));
-            localStorage.setItem('token', 'user_token_' + foundUser.id);
-            
-            // Show success message
-            const successMsg = document.getElementById('loginSuccess');
-            const urlParams = new URLSearchParams(window.location.search);
-            const returnUrl = urlParams.get('returnUrl');
-            
-            if (successMsg) {
-                successMsg.textContent = '로그인 성공! 이동합니다...';
-                successMsg.style.display = 'block';
-            }
-            
-            // Redirect after short delay
-            setTimeout(() => {
-                window.location.href = returnUrl || 'dashboard.html';
-            }, 1000);
-            
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-            return;
-        }
-
-        // If not found in localStorage, try API (will fail without backend)
+        // 백엔드 API 먼저 시도 (실제 JWT 토큰 획득)
         api.auth.login(email, password)
             .then(response => {
-                // Login successful
+                // 백엔드 로그인 성공 → 실제 JWT 저장
                 auth.login(response.user, response.token);
                 
-                // Show success message
                 const successMsg = document.getElementById('loginSuccess');
                 const urlParams = new URLSearchParams(window.location.search);
                 const returnUrl = urlParams.get('returnUrl');
                 
                 if (successMsg) {
-                    const destination = returnUrl || 'dashboard.html';
                     successMsg.textContent = '로그인 성공! 이동합니다...';
                     successMsg.style.display = 'block';
                 }
                 
-                // Redirect after short delay
                 setTimeout(() => {
                     window.location.href = returnUrl || 'dashboard.html';
                 }, 1000);
             })
-            .catch(error => {
-                // Login failed
-                showError(error.message || '로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
+            .catch(() => {
+                // 백엔드 실패 시 localStorage에서 찾기 (오프라인 fallback)
+                const users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
+                const foundUser = users.find(u => u.email === email && u.password === password);
+                
+                if (foundUser) {
+                    const validUserTypes = ['student', 'graduate'];
+                    const userTypeMatches = 
+                        foundUser.user_type === selectedUserType || 
+                        (validUserTypes.includes(foundUser.user_type) && validUserTypes.includes(selectedUserType));
+                    
+                    if (!userTypeMatches && foundUser.user_type !== selectedUserType) {
+                        showError('선택한 사용자 유형과 일치하지 않습니다. 올바른 유형을 선택해주세요.');
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        return;
+                    }
+                    
+                    const loginUser = {
+                        id: foundUser.id,
+                        email: foundUser.email,
+                        name: foundUser.name,
+                        user_type: foundUser.user_type || 'graduate',
+                        phone: foundUser.phone
+                    };
+                    
+                    localStorage.setItem('graduateNetwork_user', JSON.stringify(loginUser));
+                    localStorage.setItem('token', 'user_token_' + foundUser.id);
+                    
+                    const successMsg = document.getElementById('loginSuccess');
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const returnUrl = urlParams.get('returnUrl');
+                    
+                    if (successMsg) {
+                        successMsg.textContent = '로그인 성공! 이동합니다...';
+                        successMsg.style.display = 'block';
+                    }
+                    
+                    setTimeout(() => {
+                        window.location.href = returnUrl || 'dashboard.html';
+                    }, 1000);
+                    
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                } else {
+                    showError('이메일 또는 비밀번호가 올바르지 않습니다.');
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
             });
     }
 
