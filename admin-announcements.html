@@ -724,7 +724,7 @@
                 switchTab(savedType);
             } catch (error) {
                 console.error('저장 실패:', error);
-                alert(error.response?.data?.error || '저장에 실패했습니다.');
+                alert('저장에 실패했습니다.\n' + (error.message || ''));
             }
         });
 

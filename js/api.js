@@ -51,7 +51,9 @@ const api = {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Request failed');
+        const msg = data.error || 'Request failed';
+        const detail = data.detail ? `\n상세: ${data.detail}` : '';
+        throw new Error(msg + detail);
       }
 
       return data;

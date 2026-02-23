@@ -220,8 +220,8 @@ router.post('/', auth, async (req, res) => {
       announcement: result.rows[0]
     });
   } catch (error) {
-    console.error('Create announcement error:', error);
-    res.status(500).json({ error: 'Failed to create announcement' });
+    console.error('Create announcement error:', error.message, error.stack);
+    res.status(500).json({ error: 'Failed to create announcement', detail: error.message });
   }
 });
 
@@ -283,8 +283,8 @@ router.put('/:id', auth, async (req, res) => {
       announcement: result.rows[0]
     });
   } catch (error) {
-    console.error('Update announcement error:', error);
-    res.status(500).json({ error: 'Failed to update announcement' });
+    console.error('Update announcement error:', error.message, error.stack);
+    res.status(500).json({ error: 'Failed to update announcement', detail: error.message });
   }
 });
 
