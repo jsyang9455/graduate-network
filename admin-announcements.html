@@ -418,11 +418,11 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>이미지 URL</label>
-                        <input type="url" id="image_url">
+                        <input type="text" id="image_url" placeholder="선택사항">
                     </div>
                     <div class="form-group">
                         <label>상세페이지 URL</label>
-                        <input type="url" id="detail_url">
+                        <input type="text" id="detail_url" placeholder="선택사항">
                     </div>
                 </div>
 
@@ -704,8 +704,8 @@
                 contact_email: document.getElementById('contact_email').value,
                 rating: parseFloat(document.getElementById('rating').value) || null,
                 review_count: parseInt(document.getElementById('review_count').value) || 0,
-                image_url: document.getElementById('image_url').value,
-                detail_url: document.getElementById('detail_url').value,
+                image_url: document.getElementById('image_url').value || null,
+                detail_url: document.getElementById('detail_url').value || null,
                 benefits: benefits,
                 requirements: requirements,
                 tags: tags
