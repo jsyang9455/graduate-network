@@ -90,48 +90,69 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.disabled = true;
 
         try {
-            // localStorage에 사용자 저장 (테스트용)
+            // 백엔드 API로 회원가입 시도
+            const registerData = {
+                email: formData.email,
+                password: formData.password,
+                name: formData.name,
+                user_type: formData.userType === 'teacher' ? 'teacher' : (formData.userType === 'student' ? 'student' : 'graduate'),
+                phone: formData.phone || '',
+                school_name: formData.schoolName
+            };
+
+            try {
+                const response = await api.auth.register(registerData);
+                // 백엔드 성공 - 토큰 저장 후 이동
+                if (response && response.token) {
+                    auth.login(response.user, response.token);
+                }
+                showSuccess('🎉 회원가입이 완료되었습니다! 로그인 페이지로 이동합니다...');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return;
+            } catch (apiError) {
+                // 이메일 중복은 에러 메시지 표시
+                if (apiError.message && (apiError.message.includes('already') || apiError.message.includes('registered') || apiError.message.includes('중복'))) {
+                    showError('이미 등록된 이메일입니다.');
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    return;
+                }
+                // 기타 API 오류 → localStorage fallback
+                console.warn('백엔드 API 실패, localStorage에 저장:', apiError.message);
+            }
+
+            // localStorage fallback
             let users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
-            
-            // 이메일 중복 체크
             if (users.some(u => u.email === formData.email)) {
                 showError('이미 등록된 이메일입니다.');
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
                 return;
             }
-            
-            // 새 사용자 추가
             const newUser = {
                 id: users.length + 1,
                 email: formData.email,
                 password: formData.password,
                 name: formData.name,
-                user_type: formData.userType === 'teacher' ? 'teacher' : (formData.userType === 'student' ? 'student' : 'graduate'),
+                user_type: registerData.user_type,
                 phone: formData.phone || '',
                 schoolName: formData.schoolName,
                 registeredAt: new Date().toISOString()
             };
-
-            // Add student-specific fields
             if (formData.userType === 'student') {
                 newUser.graduationYear = formData.graduationYear;
                 newUser.major = formData.major;
-                newUser.company = formData.company;
-                newUser.position = formData.position;
             }
-            
             users.push(newUser);
             localStorage.setItem('graduateNetwork_users', JSON.stringify(users));
 
-            // Show success message
             showSuccess('🎉 회원가입이 완료되었습니다! 로그인 페이지로 이동합니다...');
-            
-            // Reset button state
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
-
-            // Redirect to login page after 2 seconds
             setTimeout(() => {
                 window.location.href = 'login.html';
             }, 2000);
