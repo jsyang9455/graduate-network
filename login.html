@@ -82,13 +82,18 @@
                     <div class="form-group">
                         <label for="email">이메일</label>
                         <input type="email" id="email" name="email" required 
-                               placeholder="example@email.com">
+                               placeholder="example@email.com"
+                               autocomplete="email"
+                               autocorrect="off"
+                               autocapitalize="off"
+                               spellcheck="false">
                     </div>
 
                     <div class="form-group">
                         <label for="password">비밀번호</label>
                         <input type="password" id="password" name="password" required 
-                               placeholder="비밀번호를 입력하세요">
+                               placeholder="비밀번호를 입력하세요"
+                               autocomplete="current-password">
                     </div>
 
                     <div class="form-options">
