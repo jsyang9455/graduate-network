@@ -270,12 +270,12 @@
         <div id="studentTab" class="tab-content active">
             <div class="help-section">
                 <h2>🎯 학생 계정 개요</h2>
-                <p>학생 계정은 재학생과 졸업생이 사용하는 계정으로, 채용 정보 조회, 진로 상담 신청, 동문 네트워킹, 경력 관리 등의 기능을 제공합니다.</p>
+                <p>학생 계정은 재학생과 졸업생이 사용하는 계정으로, 채용 정보 조회, 취업박람회·산업체견학·자격증지원 신청, 진로 상담, 동문 네트워킹, 경력 관리 등의 기능을 제공합니다.</p>
             </div>
 
             <div class="help-section">
                 <h2>📝 1. 회원가입 및 로그인</h2>
-                
+
                 <h3>회원가입 방법</h3>
                 <ol>
                     <li>메인 페이지에서 <strong>"회원가입"</strong> 버튼 클릭</li>
@@ -283,16 +283,20 @@
                         <ul>
                             <li>이름</li>
                             <li>이메일 (로그인 ID로 사용)</li>
-                            <li>비밀번호 (8자 이상)</li>
+                            <li>비밀번호 (6자 이상)</li>
                             <li>전화번호</li>
-                            <li>학교 선택 (드롭다운에서 선택)</li>
-                            <li>사용자 유형 (재학생/졸업생)</li>
-                            <li>졸업년도 (졸업생만 입력)</li>
+                            <li>학교 선택</li>
+                            <li>사용자 유형 (재학생/졸업생/교사)</li>
+                            <li>졸업년도 · 전공 (재학생/졸업생만)</li>
                         </ul>
                     </li>
-                    <li><strong>"가입하기"</strong> 버튼 클릭</li>
-                    <li>성공 메시지 확인 후 로그인</li>
+                    <li><strong>"가입하기"</strong> 버튼 클릭 → 서버 DB에 저장됨</li>
+                    <li>성공 메시지 확인 후 로그인 페이지로 자동 이동</li>
                 </ol>
+
+                <div class="info-box">
+                    <strong>💡 안내:</strong> 회원가입 정보는 서버에 저장되므로 다른 기기에서도 동일한 계정으로 로그인할 수 있습니다.
+                </div>
 
                 <h3>로그인 방법</h3>
                 <ol>
@@ -300,6 +304,10 @@
                     <li><strong>"로그인"</strong> 버튼 클릭</li>
                     <li>대시보드로 자동 이동</li>
                 </ol>
+
+                <div class="info-box">
+                    <strong>💡 Mac 사용자 안내:</strong> macOS에서 이메일이 자동으로 대문자로 변환되는 경우 로그인이 실패할 수 있습니다. 이메일을 직접 소문자로 입력해주세요.
+                </div>
             </div>
 
             <div class="help-section">
@@ -317,25 +325,13 @@
                 </div>
 
                 <h3>추천 채용공고</h3>
-                <p>최신 채용공고 3개를 미리보기로 확인할 수 있습니다.</p>
-                <ul>
-                    <li><strong>"지원하기"</strong> 버튼: 채용정보 페이지로 이동</li>
-                    <li><strong>"자세히보기"</strong> 버튼: 공고 상세 정보 확인</li>
-                </ul>
+                <p>최신 채용공고를 미리보기로 확인할 수 있습니다.</p>
 
                 <h3>최근 소식</h3>
-                <p>학교 관리자가 등록한 공지사항을 확인할 수 있습니다.</p>
-                <ul>
-                    <li>항목 클릭 시 상세 내용 팝업으로 표시</li>
-                    <li>작성일 표시</li>
-                </ul>
+                <p>관리자가 등록한 공지사항을 확인할 수 있습니다. 항목 클릭 시 상세 내용 팝업으로 표시됩니다.</p>
 
                 <h3>평생교육프로그램</h3>
-                <p>등록된 교육 프로그램 목록을 확인할 수 있습니다.</p>
-                <ul>
-                    <li>프로그램 클릭 시 상세 정보 확인 (기간, 마감일, 수강료, 설명)</li>
-                    <li>신청 마감일 표시</li>
-                </ul>
+                <p>등록된 교육 프로그램 목록을 확인할 수 있습니다. 항목 클릭 시 기간, 마감일, 수강료, 설명을 확인할 수 있습니다.</p>
             </div>
 
             <div class="help-section">
@@ -344,178 +340,123 @@
                 <h3>채용공고 검색 및 필터링</h3>
                 <ol>
                     <li>좌측 메뉴에서 <strong>"채용 정보"</strong> 클릭</li>
-                    <li>검색 및 필터 사용:
-                        <ul>
-                            <li>키워드 검색 (직무명, 회사명)</li>
-                            <li>지역별 필터</li>
-                            <li>근무형태 (정규직, 계약직, 인턴 등)</li>
-                            <li>경력 요구사항</li>
-                        </ul>
-                    </li>
-                </ol>
-
-                <h3>채용공고 상세보기</h3>
-                <ol>
-                    <li>관심 있는 공고 클릭</li>
-                    <li>상세 정보 확인:
-                        <ul>
-                            <li>회사명 및 위치</li>
-                            <li>직무 설명</li>
-                            <li>자격 요건 및 우대 사항</li>
-                            <li>급여 및 복리후생</li>
-                            <li>마감일</li>
-                        </ul>
-                    </li>
+                    <li>키워드 검색 (직무명, 회사명), 지역, 근무형태, 경력 등 필터 사용</li>
                 </ol>
 
                 <h3>채용공고 지원</h3>
                 <ol>
                     <li>공고 상세 페이지에서 <strong>"지원하기"</strong> 버튼 클릭</li>
-                    <li>지원 양식 작성 (프로필 정보 자동 불러오기)</li>
-                    <li>제출 확인</li>
+                    <li>지원 양식 작성 후 제출</li>
                 </ol>
             </div>
 
             <div class="help-section">
-                <h2>💬 4. 진로 상담 신청하기</h2>
+                <h2>🎪 4. 취업박람회</h2>
+                <p>지역 기업들이 참여하는 취업박람회 정보를 확인하고 참가 신청을 할 수 있습니다.</p>
+
+                <h3>취업박람회 목록 확인</h3>
+                <ol>
+                    <li>좌측 메뉴에서 <strong>"취업박람회"</strong> 클릭</li>
+                    <li>등록된 박람회 목록 확인 (주최기관, 일정, 장소, 참가비 등)</li>
+                    <li>필터로 원하는 박람회 검색</li>
+                </ol>
+
+                <h3>참가 신청</h3>
+                <ol>
+                    <li>원하는 박람회 카드의 <strong>"참가 신청"</strong> 버튼 클릭</li>
+                    <li>신청 정보 입력 (이름, 연락처, 이메일, 메시지)</li>
+                    <li><strong>"신청 확인"</strong> 버튼 클릭</li>
+                </ol>
+
+                <div class="info-box">
+                    <strong>💡 안내:</strong> 로그인 상태에서는 이름과 이메일이 자동으로 입력됩니다.
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h2>🏭 5. 산업체 견학</h2>
+                <p>지역 기업 현장 견학 프로그램 정보를 확인하고 신청할 수 있습니다.</p>
+
+                <h3>산업체 견학 목록 확인</h3>
+                <ol>
+                    <li>좌측 메뉴에서 <strong>"산업체 견학"</strong> 클릭</li>
+                    <li>등록된 견학 프로그램 목록 확인 (기업명, 일정, 모집인원, 혜택 등)</li>
+                </ol>
+
+                <h3>견학 신청</h3>
+                <ol>
+                    <li>원하는 견학 프로그램 카드의 <strong>"견학 신청"</strong> 버튼 클릭</li>
+                    <li>신청 정보 입력 후 <strong>"신청 확인"</strong> 클릭</li>
+                </ol>
+            </div>
+
+            <div class="help-section">
+                <h2>📜 6. 자격증 지원</h2>
+                <p>자격증 취득을 위한 지원 프로그램 정보를 확인하고 신청할 수 있습니다.</p>
+
+                <h3>자격증 지원 목록 확인</h3>
+                <ol>
+                    <li>좌측 메뉴에서 <strong>"자격증 지원"</strong> 클릭</li>
+                    <li>등록된 지원 프로그램 목록 확인 (자격증명, 지원내용, 마감일 등)</li>
+                    <li>유형별 필터 (기사, 기능사, IT자격증 등)로 검색 가능</li>
+                </ol>
+
+                <h3>지원 신청</h3>
+                <ol>
+                    <li>원하는 프로그램 카드의 <strong>"지원 신청"</strong> 버튼 클릭</li>
+                    <li>신청 정보 입력 후 <strong>"신청 확인"</strong> 클릭</li>
+                </ol>
+            </div>
+
+            <div class="help-section">
+                <h2>💬 7. 진로 상담 신청하기</h2>
 
                 <h3>상담 신청 방법</h3>
                 <ol>
                     <li>좌측 메뉴에서 <strong>"진로 상담"</strong> 클릭</li>
                     <li><strong>"상담 신청하기"</strong> 버튼 클릭</li>
-                    <li>상담 정보 입력:
-                        <ul>
-                            <li>상담 유형 선택 (진로, 취업, 학업, 기타)</li>
-                            <li>제목 입력</li>
-                            <li>상담 내용 상세 작성</li>
-                        </ul>
-                    </li>
+                    <li>상담 유형 선택 (진로, 취업, 학업, 기타), 제목, 내용 입력</li>
                     <li><strong>"신청하기"</strong> 버튼 클릭</li>
                 </ol>
 
                 <h3>상담 내역 확인</h3>
-                <ol>
-                    <li>진로 상담 페이지에서 <strong>"내 상담 내역"</strong> 탭 클릭</li>
-                    <li>상담 상태 확인:
-                        <ul>
-                            <li>🟡 <strong>대기중:</strong> 교사 승인 대기</li>
-                            <li>🟢 <strong>승인됨:</strong> 상담 승인 완료 (교사 답변 확인 가능)</li>
-                            <li>🔴 <strong>거절됨:</strong> 상담 거절 (사유 확인)</li>
-                        </ul>
-                    </li>
-                </ol>
-
-                <div class="info-box">
-                    <strong>💡 팁:</strong> 상담 신청 시 구체적인 질문과 상황을 작성하면 더 정확한 답변을 받을 수 있습니다.
-                </div>
+                <ul>
+                    <li>🟡 <strong>대기중:</strong> 교사 승인 대기</li>
+                    <li>🟢 <strong>승인됨:</strong> 상담 승인 완료 (교사 답변 확인 가능)</li>
+                    <li>🔴 <strong>거절됨:</strong> 상담 거절 (사유 확인)</li>
+                </ul>
             </div>
 
             <div class="help-section">
-                <h2>🤝 5. 동문 네트워킹</h2>
+                <h2>🤝 8. 동문 네트워킹</h2>
 
                 <h3>동문 검색</h3>
                 <ol>
                     <li>좌측 메뉴에서 <strong>"동문 네트워킹"</strong> 클릭</li>
-                    <li>검색 필터 사용:
-                        <ul>
-                            <li>이름 검색</li>
-                            <li>졸업년도별 필터</li>
-                            <li>재직 회사</li>
-                            <li>직무 분야</li>
-                        </ul>
-                    </li>
+                    <li>이름, 졸업년도, 재직 회사, 직무 분야 등으로 검색</li>
                 </ol>
 
-                <h3>네트워크 연결</h3>
+                <h3>네트워크 연결 및 메시지</h3>
                 <ol>
-                    <li>연결하고 싶은 동문 프로필 클릭</li>
-                    <li><strong>"네트워크 추가"</strong> 버튼 클릭</li>
-                    <li>연결 요청 메시지 작성 (선택)</li>
-                    <li>상대방 승인 대기</li>
-                </ol>
-
-                <h3>메시지 보내기</h3>
-                <ol>
-                    <li>연결된 동문 목록에서 선택</li>
-                    <li><strong>"메시지 보내기"</strong> 버튼 클릭</li>
-                    <li>메시지 작성 및 전송</li>
+                    <li>동문 프로필에서 <strong>"네트워크 추가"</strong> 버튼 클릭</li>
+                    <li>연결된 동문에게 <strong>"메시지 보내기"</strong> 가능</li>
                 </ol>
             </div>
 
             <div class="help-section">
-                <h2>👤 6. 내 프로필 관리</h2>
+                <h2>👤 9. 내 프로필 및 경력 관리</h2>
 
-                <h3>기본 정보 수정</h3>
+                <h3>프로필 수정</h3>
                 <ol>
-                    <li>좌측 메뉴에서 <strong>"내 프로필"</strong> 클릭</li>
-                    <li><strong>"프로필 수정"</strong> 버튼 클릭</li>
-                    <li>수정 가능 항목:
-                        <ul>
-                            <li>프로필 사진</li>
-                            <li>전화번호</li>
-                            <li>자기소개</li>
-                            <li>관심 분야</li>
-                            <li>SNS 링크 (GitHub, LinkedIn 등)</li>
-                        </ul>
-                    </li>
-                    <li><strong>"저장"</strong> 버튼 클릭</li>
+                    <li>좌측 메뉴에서 <strong>"내 프로필"</strong> 클릭 → <strong>"프로필 수정"</strong></li>
+                    <li>전화번호, 자기소개, 관심 분야, SNS 링크 등 수정 가능</li>
                 </ol>
-            </div>
 
-            <div class="help-section">
-                <h2>📈 7. 경력 관리</h2>
-
-                <h3>경력 사항 등록</h3>
+                <h3>경력 · 자격증 · 교육 · 포트폴리오 관리</h3>
                 <ol>
                     <li>좌측 메뉴에서 <strong>"경력 관리"</strong> 클릭</li>
-                    <li><strong>"경력"</strong> 탭에서 <strong>"경력 추가"</strong> 버튼 클릭</li>
-                    <li>경력 정보 입력:
-                        <ul>
-                            <li>회사명</li>
-                            <li>직위</li>
-                            <li>근무 기간</li>
-                            <li>담당 업무</li>
-                        </ul>
-                    </li>
-                    <li><strong>"저장"</strong> 버튼 클릭</li>
-                </ol>
-
-                <h3>자격증 등록</h3>
-                <ol>
-                    <li><strong>"자격증"</strong> 탭 클릭</li>
-                    <li><strong>"자격증 추가"</strong> 버튼 클릭</li>
-                    <li>자격증 정보 입력:
-                        <ul>
-                            <li>자격증명</li>
-                            <li>발급 기관</li>
-                            <li>취득일</li>
-                            <li>유효기간 (선택)</li>
-                        </ul>
-                    </li>
-                    <li><strong>"저장"</strong> 버튼 클릭</li>
-                </ol>
-
-                <h3>교육 이력 등록</h3>
-                <ol>
-                    <li><strong>"교육"</strong> 탭 클릭</li>
-                    <li><strong>"교육 추가"</strong> 버튼 클릭</li>
-                    <li>교육 정보 입력 및 저장</li>
-                </ol>
-
-                <h3>포트폴리오 등록</h3>
-                <ol>
-                    <li><strong>"포트폴리오"</strong> 탭 클릭</li>
-                    <li><strong>"포트폴리오 추가"</strong> 버튼 클릭</li>
-                    <li>프로젝트 정보 입력:
-                        <ul>
-                            <li>프로젝트명</li>
-                            <li>프로젝트 설명</li>
-                            <li>참여 기간</li>
-                            <li>사용 기술</li>
-                            <li>프로젝트 링크 (GitHub, 웹사이트 등)</li>
-                        </ul>
-                    </li>
-                    <li><strong>"저장"</strong> 버튼 클릭</li>
+                    <li>탭 선택: <strong>경력 / 자격증 / 교육 / 포트폴리오</strong></li>
+                    <li>각 탭에서 추가 버튼으로 정보 입력 후 저장</li>
                 </ol>
             </div>
         </div>
@@ -529,24 +470,13 @@
 
             <div class="help-section">
                 <h2>📊 1. 교사 대시보드</h2>
-                
-                <h3>대시보드 구성</h3>
-                <div class="feature-card">
-                    <ul>
-                        <li><strong>📝 활성 채용공고:</strong> 등록한 채용공고 수</li>
-                        <li><strong>👥 총 지원자:</strong> 채용공고에 지원한 학생 수</li>
-                        <li><strong>👁️ 조회수:</strong> 채용공고 조회 수</li>
-                        <li><strong>✅ 채용 완료:</strong> 채용이 완료된 건수</li>
-                    </ul>
-                </div>
 
                 <h3>주요 섹션</h3>
                 <ul>
-                    <li><strong>내 채용공고:</strong> 등록한 채용공고 목록</li>
+                    <li><strong>내 채용공고:</strong> 내가 등록한 채용공고 목록</li>
                     <li><strong>최근 지원자:</strong> 최근 지원한 학생 목록</li>
                     <li><strong>상담 신청 내역:</strong> 학생들의 진로 상담 요청</li>
-                    <li><strong>최근 소식:</strong> 학교 공지사항</li>
-                    <li><strong>평생교육프로그램:</strong> 교육 프로그램 정보</li>
+                    <li><strong>최근 소식 / 평생교육프로그램:</strong> 관리자 등록 공지 확인</li>
                 </ul>
             </div>
 
@@ -556,37 +486,14 @@
                 <h3>채용공고 등록</h3>
                 <ol>
                     <li>대시보드에서 <strong>"공고 등록"</strong> 버튼 클릭</li>
-                    <li>채용 정보 입력:
-                        <ul>
-                            <li><strong>회사명:</strong> 채용 기업명</li>
-                            <li><strong>직무명:</strong> 채용 포지션</li>
-                            <li><strong>근무 지역:</strong> 근무지</li>
-                            <li><strong>급여:</strong> 급여 정보</li>
-                            <li><strong>고용 형태:</strong> 정규직, 계약직, 인턴 등</li>
-                            <li><strong>경력 요구:</strong> 신입/경력 및 년수</li>
-                            <li><strong>학력 요구:</strong> 최소 학력 요건</li>
-                            <li><strong>직무 설명:</strong> 상세 업무 내용</li>
-                            <li><strong>자격 요건:</strong> 필수 자격 요건</li>
-                            <li><strong>우대 사항:</strong> 우대 조건</li>
-                            <li><strong>복리후생:</strong> 복지 혜택</li>
-                            <li><strong>마감일:</strong> 지원 마감일</li>
-                        </ul>
-                    </li>
+                    <li>회사명, 직무명, 근무지역, 급여, 고용형태, 경력/학력 요구, 직무설명, 자격요건, 복리후생, 마감일 입력</li>
                     <li><strong>"등록하기"</strong> 버튼 클릭</li>
-                    <li>등록 완료 메시지 확인 후 대시보드로 자동 이동</li>
                 </ol>
 
-                <h3>채용공고 수정</h3>
+                <h3>채용공고 수정/삭제</h3>
                 <ol>
-                    <li>대시보드의 "내 채용공고" 섹션에서 수정할 공고 선택</li>
-                    <li><strong>"수정"</strong> 버튼 클릭</li>
-                    <li>정보 수정 후 <strong>"저장"</strong> 버튼 클릭</li>
-                </ol>
-
-                <h3>채용공고 삭제</h3>
-                <ol>
-                    <li>수정 화면에서 <strong>"삭제"</strong> 버튼 클릭</li>
-                    <li>삭제 확인 후 완료</li>
+                    <li>내 채용공고 목록에서 해당 공고 선택</li>
+                    <li><strong>"수정"</strong> 또는 <strong>"삭제"</strong> 버튼 클릭</li>
                 </ol>
 
                 <div class="warning-box">
@@ -596,78 +503,29 @@
 
             <div class="help-section">
                 <h2>👥 3. 지원자 관리</h2>
-
-                <h3>지원자 목록 확인</h3>
                 <ol>
-                    <li>대시보드의 "최근 지원자" 섹션 확인</li>
-                    <li>각 지원자의 기본 정보:
-                        <ul>
-                            <li>이름</li>
-                            <li>지원 직무</li>
-                            <li>지원일</li>
-                            <li>상태 (검토중, 합격, 불합격)</li>
-                        </ul>
-                    </li>
-                </ol>
-
-                <h3>지원자 상세 정보</h3>
-                <ol>
-                    <li>지원자 이름 클릭</li>
-                    <li>지원자 프로필 확인:
-                        <ul>
-                            <li>학력 정보</li>
-                            <li>경력 사항</li>
-                            <li>자격증</li>
-                            <li>포트폴리오</li>
-                        </ul>
-                    </li>
-                    <li>평가 및 메모 작성</li>
+                    <li>대시보드의 "최근 지원자" 섹션에서 지원자 목록 확인</li>
+                    <li>지원자 이름 클릭 → 학력, 경력, 자격증, 포트폴리오 등 상세 프로필 확인</li>
+                    <li>평가 및 메모 작성 가능</li>
                 </ol>
             </div>
 
             <div class="help-section">
                 <h2>💬 4. 진로 상담 관리</h2>
 
-                <h3>상담 신청 확인</h3>
+                <h3>상담 확인 및 답변</h3>
                 <ol>
-                    <li>대시보드의 "상담 신청 내역" 섹션 확인</li>
-                    <li>또는 좌측 메뉴에서 <strong>"진로 상담"</strong> 클릭</li>
-                    <li>대기 중인 상담 요청 목록 확인</li>
-                </ol>
-
-                <h3>상담 승인 및 답변</h3>
-                <ol>
-                    <li>상담 요청 항목 클릭</li>
-                    <li>학생의 상담 내용 확인</li>
-                    <li>두 가지 옵션 선택:
-                        <ul>
-                            <li><strong>"승인":</strong> 상담 승인 후 답변 작성</li>
-                            <li><strong>"거절":</strong> 거절 사유 작성</li>
-                        </ul>
-                    </li>
-                    <li>답변 또는 거절 사유 입력</li>
+                    <li>좌측 메뉴에서 <strong>"진로 상담"</strong> 클릭</li>
+                    <li>대기 중인 상담 요청 클릭</li>
+                    <li><strong>"승인"</strong> (답변 작성) 또는 <strong>"거절"</strong> (사유 작성) 선택</li>
                     <li><strong>"저장"</strong> 버튼 클릭</li>
                 </ol>
 
-                <h3>상담 내역 관리</h3>
-                <p>진로 상담 페이지에서 상태별로 필터링하여 관리할 수 있습니다:</p>
+                <h3>상담 상태</h3>
                 <ul>
-                    <li>🟡 <strong>대기중:</strong> 아직 처리하지 않은 상담</li>
-                    <li>🟢 <strong>승인됨:</strong> 승인하고 답변을 작성한 상담</li>
-                    <li>🔴 <strong>거절됨:</strong> 거절한 상담</li>
-                </ul>
-
-                <div class="info-box">
-                    <strong>💡 팁:</strong> 상담 승인 시 구체적이고 실질적인 조언을 제공하면 학생들에게 큰 도움이 됩니다.
-                </div>
-            </div>
-
-            <div class="help-section">
-                <h2>📢 5. 최근 소식 및 교육프로그램</h2>
-                <p>교사 대시보드에서도 학교의 최근 소식과 평생교육프로그램을 확인할 수 있습니다.</p>
-                <ul>
-                    <li>항목 클릭 시 상세 정보 확인</li>
-                    <li>학생들에게 유용한 정보 공유 가능</li>
+                    <li>🟡 <strong>대기중:</strong> 처리 전</li>
+                    <li>🟢 <strong>승인됨:</strong> 답변 완료</li>
+                    <li>🔴 <strong>거절됨:</strong> 거절 처리</li>
                 </ul>
             </div>
         </div>
@@ -677,73 +535,37 @@
             <div class="help-section">
                 <h2>⚙️ 관리자 계정 개요</h2>
                 <p>관리자는 시스템의 모든 데이터를 관리하고 모니터링할 수 있는 최고 권한을 가진 계정입니다.</p>
-            </div>
-
-            <div class="help-section">
-                <h2>📊 1. 관리자 대시보드</h2>
-
-                <h3>대시보드 통계</h3>
                 <div class="feature-card">
-                    <ul>
-                        <li><strong>🤝 네트워크 수:</strong> 전체 사용자 수</li>
-                        <li><strong>💼 지원한 공고:</strong> 전체 채용공고 수</li>
-                        <li><strong>📝 저장한 공고:</strong> 상담 신청 수</li>
+                    <strong>관리자 전용 메뉴</strong>
+                    <ul style="margin-top:0.5rem;">
+                        <li>👥 회원 관리</li>
+                        <li>💼 채용공고 관리</li>
+                        <li>📋 게시판 관리 (최근 소식 · 평생교육프로그램)</li>
+                        <li>📣 공지사항 관리 (취업박람회 · 산업체견학 · 자격증지원)</li>
+                        <li>⚙️ 코드 관리 (학교 · 전공)</li>
                     </ul>
                 </div>
-
-                <h3>관리자 메뉴</h3>
-                <p>좌측 사이드바에서 다음 메뉴에 접근할 수 있습니다:</p>
-                <ul>
-                    <li>👥 <strong>회원 관리</strong></li>
-                    <li>💼 <strong>채용공고 관리</strong></li>
-                    <li>📋 <strong>게시판 관리</strong></li>
-                    <li>⚙️ <strong>코드 관리</strong></li>
-                </ul>
             </div>
 
             <div class="help-section">
-                <h2>👥 2. 회원 관리</h2>
+                <h2>👥 1. 회원 관리</h2>
 
                 <h3>회원 목록 조회</h3>
                 <ol>
                     <li>좌측 메뉴에서 <strong>"회원 관리"</strong> 클릭</li>
-                    <li>전체 회원 목록 확인</li>
-                    <li>필터 사용:
-                        <ul>
-                            <li><strong>유형별:</strong> 전체, 학생, 교사, 졸업생, 기업, 관리자</li>
-                            <li><strong>검색:</strong> 이름 또는 이메일로 검색</li>
-                        </ul>
-                    </li>
+                    <li>유형별 필터 (전체 / 학생 / 졸업생 / 교사 / 기업 / 관리자) 및 이름·이메일 검색</li>
                 </ol>
 
                 <h3>회원 정보 수정</h3>
                 <ol>
                     <li>회원 목록에서 <strong>"수정"</strong> 버튼 클릭</li>
-                    <li>수정 가능 항목:
-                        <ul>
-                            <li>이름</li>
-                            <li>이메일</li>
-                            <li>전화번호</li>
-                            <li>사용자 유형</li>
-                            <li>학교</li>
-                            <li>졸업년도</li>
-                        </ul>
-                    </li>
+                    <li>이름, 이메일, 전화번호, 사용자 유형, 학교, 졸업년도 수정 가능</li>
                     <li><strong>"저장"</strong> 버튼 클릭</li>
                 </ol>
 
                 <h3>회원 삭제</h3>
                 <ol>
-                    <li>회원 목록에서 <strong>"삭제"</strong> 버튼 클릭</li>
-                    <li>삭제 확인 팝업에서 <strong>"확인"</strong> 클릭</li>
-                    <li>회원 데이터가 완전히 삭제됨</li>
-                </ol>
-
-                <h3>회원 추가</h3>
-                <ol>
-                    <li>상단의 <strong>"회원 추가"</strong> 버튼 클릭</li>
-                    <li>신규 회원 정보 입력</li>
-                    <li><strong>"저장"</strong> 버튼 클릭</li>
+                    <li>회원 목록에서 <strong>"삭제"</strong> 버튼 클릭 → 확인</li>
                 </ol>
 
                 <div class="warning-box">
@@ -752,102 +574,32 @@
             </div>
 
             <div class="help-section">
-                <h2>💼 3. 채용공고 관리</h2>
-
-                <h3>채용공고 목록 조회</h3>
+                <h2>💼 2. 채용공고 관리</h2>
                 <ol>
                     <li>좌측 메뉴에서 <strong>"채용공고 관리"</strong> 클릭</li>
-                    <li>전체 채용공고 목록 확인</li>
-                    <li>상태별 필터:
-                        <ul>
-                            <li>전체</li>
-                            <li>활성 (모집중)</li>
-                            <li>마감</li>
-                            <li>만료</li>
-                        </ul>
-                    </li>
-                </ol>
-
-                <h3>채용공고 등록</h3>
-                <ol>
-                    <li>상단의 <strong>"공고 등록"</strong> 버튼 클릭</li>
-                    <li>채용 정보 입력</li>
-                    <li><strong>"등록하기"</strong> 버튼 클릭</li>
-                </ol>
-
-                <h3>채용공고 수정/삭제</h3>
-                <ol>
-                    <li>채용공고 목록에서 해당 공고 선택</li>
-                    <li><strong>"수정"</strong> 또는 <strong>"삭제"</strong> 버튼 클릭</li>
-                    <li>수정 시 정보 변경 후 저장</li>
-                    <li>삭제 시 확인 후 완전 삭제</li>
-                </ol>
-
-                <h3>채용공고 만료 처리</h3>
-                <ol>
-                    <li>마감일이 지난 공고의 <strong>"만료"</strong> 버튼 클릭</li>
-                    <li>공고 상태가 "만료"로 변경됨</li>
-                    <li>더 이상 학생들에게 표시되지 않음</li>
+                    <li>상태별 필터: 전체 / 활성 / 마감 / 만료</li>
+                    <li><strong>"공고 등록"</strong> 버튼으로 신규 공고 추가</li>
+                    <li>공고 선택 후 <strong>"수정"</strong> 또는 <strong>"삭제"</strong> 처리</li>
+                    <li>마감일 지난 공고는 <strong>"만료"</strong> 처리하면 학생 목록에서 제외됨</li>
                 </ol>
             </div>
 
             <div class="help-section">
-                <h2>📋 4. 게시판 관리</h2>
-                <p>게시판 관리에서는 학교 공지사항과 교육 프로그램을 관리합니다.</p>
+                <h2>📋 3. 게시판 관리</h2>
 
                 <h3>최근 소식 관리</h3>
-                
-                <h4>소식 등록</h4>
                 <ol>
                     <li>좌측 메뉴에서 <strong>"게시판 관리"</strong> 클릭</li>
-                    <li><strong>"최근 소식"</strong> 탭 선택 (기본값)</li>
-                    <li><strong>"소식 등록"</strong> 버튼 클릭</li>
-                    <li>소식 정보 입력:
-                        <ul>
-                            <li>제목</li>
-                            <li>내용</li>
-                        </ul>
-                    </li>
-                    <li><strong>"등록"</strong> 버튼 클릭</li>
-                </ol>
-
-                <h4>소식 수정</h4>
-                <ol>
-                    <li>소식 목록에서 <strong>"수정"</strong> 버튼 클릭</li>
-                    <li>제목 또는 내용 수정</li>
-                    <li><strong>"저장"</strong> 버튼 클릭</li>
-                </ol>
-
-                <h4>소식 삭제</h4>
-                <ol>
-                    <li>소식 목록에서 <strong>"삭제"</strong> 버튼 클릭</li>
-                    <li>삭제 확인 후 완료</li>
+                    <li><strong>"최근 소식"</strong> 탭 선택 → <strong>"소식 등록"</strong> 버튼</li>
+                    <li>제목, 내용 입력 후 <strong>"등록"</strong> 클릭</li>
+                    <li>수정/삭제는 목록에서 해당 버튼 클릭</li>
                 </ol>
 
                 <h3>평생교육프로그램 관리</h3>
-
-                <h4>프로그램 등록</h4>
                 <ol>
-                    <li><strong>"평생교육프로그램"</strong> 탭 클릭</li>
-                    <li><strong>"프로그램 등록"</strong> 버튼 클릭</li>
-                    <li>프로그램 정보 입력:
-                        <ul>
-                            <li>프로그램명</li>
-                            <li>프로그램 설명</li>
-                            <li>시작일</li>
-                            <li>종료일</li>
-                            <li>신청 마감일</li>
-                            <li>수강료 (무료인 경우 "무료" 입력)</li>
-                        </ul>
-                    </li>
-                    <li><strong>"등록"</strong> 버튼 클릭</li>
-                </ol>
-
-                <h4>프로그램 수정/삭제</h4>
-                <ol>
-                    <li>프로그램 목록에서 <strong>"수정"</strong> 또는 <strong>"삭제"</strong> 버튼 클릭</li>
-                    <li>수정 시 정보 변경 후 저장</li>
-                    <li>삭제 시 확인 후 완료</li>
+                    <li><strong>"평생교육프로그램"</strong> 탭 클릭 → <strong>"프로그램 등록"</strong></li>
+                    <li>프로그램명, 설명, 시작일, 종료일, 신청 마감일, 수강료 입력</li>
+                    <li><strong>"등록"</strong> 클릭</li>
                 </ol>
 
                 <div class="info-box">
@@ -856,50 +608,74 @@
             </div>
 
             <div class="help-section">
+                <h2>📣 4. 공지사항 관리 (취업박람회 · 산업체견학 · 자격증지원)</h2>
+                <p>학생들이 조회·신청할 수 있는 취업박람회, 산업체 견학, 자격증 지원 정보를 등록·관리합니다.</p>
+
+                <h3>공지사항 등록</h3>
+                <ol>
+                    <li>대시보드에서 <strong>"공지사항 관리"</strong> 클릭 (또는 admin-announcements.html 접속)</li>
+                    <li><strong>"새 공지사항 등록"</strong> 버튼 클릭</li>
+                    <li>공지 정보 입력:
+                        <ul>
+                            <li><strong>유형:</strong> 취업박람회 / 산업체견학 / 자격증지원</li>
+                            <li><strong>제목:</strong> 행사명</li>
+                            <li><strong>주최기관:</strong> 주관 기관명</li>
+                            <li><strong>행사일:</strong> 행사 날짜</li>
+                            <li><strong>행사시간:</strong> 운영 시간</li>
+                            <li><strong>장소:</strong> 행사 장소</li>
+                            <li><strong>신청 마감일:</strong> 신청 마감 날짜</li>
+                            <li><strong>모집 인원:</strong> 최대 참가 인원</li>
+                            <li><strong>참가비:</strong> 무료 또는 금액</li>
+                            <li><strong>혜택:</strong> 제공 혜택 (쉼표로 구분)</li>
+                            <li><strong>참가 조건:</strong> 자격 요건 (쉼표로 구분)</li>
+                            <li><strong>연락처 / 이메일:</strong> 문의 정보</li>
+                            <li><strong>태그:</strong> 검색 태그 (쉼표로 구분)</li>
+                            <li><strong>이미지 URL:</strong> 대표 이미지 링크 (선택사항)</li>
+                            <li><strong>상세 URL:</strong> 외부 상세 페이지 링크 (선택사항)</li>
+                        </ul>
+                    </li>
+                    <li><strong>"저장"</strong> 버튼 클릭</li>
+                </ol>
+
+                <h3>공지사항 수정</h3>
+                <ol>
+                    <li>공지사항 목록에서 수정할 항목의 <strong>"수정"</strong> 버튼 클릭</li>
+                    <li>내용 변경 후 <strong>"저장"</strong> 클릭</li>
+                </ol>
+
+                <h3>공지사항 삭제</h3>
+                <ol>
+                    <li>목록에서 <strong>"삭제"</strong> 버튼 클릭 → 확인</li>
+                </ol>
+
+                <div class="info-box">
+                    <strong>💡 안내:</strong> 등록된 공지사항은 학생 메뉴의 취업박람회/산업체견학/자격증지원 페이지에 즉시 반영됩니다.
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ 주의:</strong> 공지사항을 삭제하면 해당 공지의 신청 내역도 함께 삭제됩니다.
+                </div>
+            </div>
+
+            <div class="help-section">
                 <h2>⚙️ 5. 코드 관리</h2>
-                <p>코드 관리에서는 시스템에서 사용되는 기준 정보를 관리합니다.</p>
+                <p>회원가입 시 선택 항목으로 사용되는 학교, 전공 정보를 관리합니다.</p>
 
-                <h3>학교 관리</h3>
-
-                <h4>학교 등록</h4>
+                <h3>학교 추가/수정/삭제</h3>
                 <ol>
                     <li>좌측 메뉴에서 <strong>"코드 관리"</strong> 클릭</li>
-                    <li><strong>"학교 관리"</strong> 섹션에서 <strong>"학교 추가"</strong> 버튼 클릭</li>
-                    <li>학교명 입력</li>
-                    <li><strong>"저장"</strong> 버튼 클릭</li>
-                    <li>등록된 학교는 회원가입 시 학교 선택 항목에 자동으로 추가됨</li>
-                </ol>
-
-                <h4>학교 수정</h4>
-                <ol>
-                    <li>학교 목록에서 <strong>"수정"</strong> 버튼 클릭</li>
-                    <li>학교명 변경</li>
-                    <li><strong>"저장"</strong> 버튼 클릭</li>
-                </ol>
-
-                <h4>학교 삭제</h4>
-                <ol>
-                    <li>학교 목록에서 <strong>"삭제"</strong> 버튼 클릭</li>
-                    <li>삭제 확인 팝업에서 <strong>"확인"</strong> 클릭</li>
+                    <li><strong>"학교 추가"</strong>: 학교명 입력 후 저장 → 회원가입 학교 선택 항목에 자동 추가</li>
+                    <li>목록에서 <strong>"수정"</strong> / <strong>"삭제"</strong> 버튼으로 관리</li>
                 </ol>
 
                 <div class="warning-box">
                     <strong>⚠️ 주의:</strong> 해당 학교로 등록된 회원이 있는 경우 먼저 회원의 학교 정보를 변경해야 합니다.
                 </div>
-
-                <h4>기본 학교 정보</h4>
-                <p>시스템 최초 실행 시 "전주공업고등학교"가 기본으로 등록됩니다.</p>
             </div>
 
             <div class="help-section">
                 <h2>📊 6. 데이터 모니터링</h2>
-                <p>관리자는 대시보드를 통해 다음 데이터를 실시간으로 모니터링할 수 있습니다:</p>
-                <ul>
-                    <li>전체 사용자 수</li>
-                    <li>활성 채용공고 수</li>
-                    <li>진행 중인 상담 건수</li>
-                    <li>최근 등록된 소식 및 교육 프로그램</li>
-                </ul>
+                <p>관리자 대시보드에서 전체 사용자 수, 활성 채용공고 수, 진행 중인 상담 건수, 최근 등록된 소식 및 교육 프로그램을 실시간으로 확인할 수 있습니다.</p>
             </div>
         </div>
 
@@ -909,16 +685,16 @@
 
             <h3>보안 관련</h3>
             <ul>
-                <li>비밀번호는 8자 이상 사용</li>
-                <li>정기적으로 비밀번호 변경 권장</li>
+                <li>비밀번호는 6자 이상 사용</li>
                 <li>공용 컴퓨터 사용 후 반드시 로그아웃</li>
+                <li>이메일은 소문자로 입력 (Mac 사용자 주의)</li>
             </ul>
 
             <h3>데이터 관리</h3>
             <ul>
                 <li>정기적으로 프로필 정보 업데이트</li>
                 <li>만료된 채용공고는 정기적으로 정리</li>
-                <li>중요한 상담 내역은 별도로 백업</li>
+                <li>중요한 상담 내역은 별도로 기록 보관</li>
             </ul>
 
             <h3>브라우저 호환성</h3>
@@ -933,38 +709,46 @@
 
             <h3>로그인 안 될 때</h3>
             <ol>
-                <li>이메일과 비밀번호 확인</li>
-                <li>브라우저 쿠키 및 캐시 삭제</li>
-                <li>비밀번호 찾기 기능 사용 (구현 예정)</li>
+                <li>이메일과 비밀번호를 정확히 입력했는지 확인</li>
+                <li>브라우저 쿠키 및 캐시 삭제 후 재시도</li>
+                <li>다른 브라우저(Chrome, Edge)로 시도</li>
+            </ol>
+
+            <h3>Mac(맥)에서 로그인 안 될 때</h3>
+            <ol>
+                <li>macOS가 이메일 첫 글자를 자동으로 <strong>대문자</strong>로 바꾸는 경우가 있습니다.</li>
+                <li>이메일을 직접 <strong>소문자</strong>로 다시 입력하세요.</li>
+                <li>예: <code>Admin@jjobb.com</code> → <code>admin@jjobb.com</code></li>
             </ol>
 
             <h3>데이터가 보이지 않을 때</h3>
             <ol>
-                <li>페이지 새로고침 (F5)</li>
-                <li>브라우저 캐시 삭제</li>
+                <li>페이지 새로고침 (F5 또는 Ctrl+R)</li>
+                <li>브라우저 캐시 강제 삭제 (Ctrl+Shift+R)</li>
+                <li>인터넷 연결 상태 확인</li>
                 <li>다른 브라우저로 시도</li>
             </ol>
 
-            <h3>파일 업로드 안 될 때</h3>
+            <h3>회원가입 후 로그인이 안 될 때</h3>
             <ol>
-                <li>파일 크기 확인 (최대 5MB)</li>
-                <li>지원 형식 확인 (JPG, PNG, PDF 등)</li>
-                <li>인터넷 연결 상태 확인</li>
+                <li>가입 시 사용한 이메일과 비밀번호 확인</li>
+                <li>가입 완료 메시지를 확인했는지 확인 (오류 메시지가 표시된 경우 재가입 필요)</li>
+                <li>관리자에게 계정 확인 요청</li>
             </ol>
         </div>
 
         <div class="help-section">
             <h2>📞 지원 및 문의</h2>
-            <p>기술적 문제나 문의사항이 있을 경우:</p>
+            <p>기술적 문제나 문의사항이 있을 경우 관리자에게 문의해주세요.</p>
             <ul>
-                <li>📧 <strong>이메일:</strong> support@jjobb.com</li>
-                <li>📞 <strong>전화:</strong> 063-XXX-XXXX</li>
+                <li>📧 <strong>이메일:</strong> admin@jjobb.kr</li>
+                <li>🌐 <strong>사이트:</strong> <a href="https://jjobb.kr" target="_blank">jjobb.kr</a></li>
                 <li>🕐 <strong>지원 시간:</strong> 평일 09:00-18:00</li>
             </ul>
         </div>
 
         <div style="text-align: center; padding: 2rem; color: #6b7280;">
-            <p><strong>버전:</strong> v1.0 | <strong>최종 업데이트:</strong> 2026년 2월 2일</p>
+            <p><strong>버전:</strong> v2.0 | <strong>최종 업데이트:</strong> 2026년 2월 26일</p>
             <p>개발: 전주공업고등학교 IT팀</p>
         </div>
     </div>
