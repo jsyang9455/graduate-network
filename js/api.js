@@ -1,8 +1,17 @@
 // API Configuration
-// Use relative path for production (Nginx will proxy to backend)
-const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:5001/api'
-  : '/api';
+const API_BASE_URL = (() => {
+  const hostname = window.location.hostname;
+  // 로컬 개발 (localhost)
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return 'http://localhost:5001/api';
+  }
+  // IP 주소 접속 (모바일 등 로컬 네트워크) → 같은 IP, 포트 5001
+  if (/^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
+    return `http://${hostname}:5001/api`;
+  }
+  // 운영 도메인 (jjobb.kr 등) → Nginx 프록시 사용
+  return '/api';
+})();
 
 // API Helper Functions
 const api = {

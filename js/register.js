@@ -114,48 +114,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 2000);
                 return;
             } catch (apiError) {
-                // 이메일 중복은 에러 메시지 표시
+                // 이메일 중복
                 if (apiError.message && (apiError.message.includes('already') || apiError.message.includes('registered') || apiError.message.includes('중복'))) {
                     showError('이미 등록된 이메일입니다.');
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                    return;
+                } else {
+                    // 서버 연결 실패 또는 기타 오류
+                    showError('회원가입에 실패했습니다. 네트워크 연결을 확인하고 다시 시도해주세요.');
+                    console.error('회원가입 API 오류:', apiError.message);
                 }
-                // 기타 API 오류 → localStorage fallback
-                console.warn('백엔드 API 실패, localStorage에 저장:', apiError.message);
-            }
-
-            // localStorage fallback
-            let users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
-            if (users.some(u => u.email === formData.email)) {
-                showError('이미 등록된 이메일입니다.');
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
                 return;
             }
-            const newUser = {
-                id: users.length + 1,
-                email: formData.email,
-                password: formData.password,
-                name: formData.name,
-                user_type: registerData.user_type,
-                phone: formData.phone || '',
-                schoolName: formData.schoolName,
-                registeredAt: new Date().toISOString()
-            };
-            if (formData.userType === 'student') {
-                newUser.graduationYear = formData.graduationYear;
-                newUser.major = formData.major;
-            }
-            users.push(newUser);
-            localStorage.setItem('graduateNetwork_users', JSON.stringify(users));
-
-            showSuccess('🎉 회원가입이 완료되었습니다! 로그인 페이지로 이동합니다...');
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-            setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 2000);
 
         } catch (error) {
             showError(error.message || '회원가입에 실패했습니다. 다시 시도해주세요.');
