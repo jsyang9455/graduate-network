@@ -386,6 +386,13 @@
         }
 
         async function loadUserFromAPI() {
+            // localStorage 우선 사용 (토큰 재검증 불필요)
+            const localUser = auth.getCurrentUser();
+            if (localUser) {
+                currentUserData = localUser;
+                return currentUserData;
+            }
+            // localStorage에 없을 때만 API 호출
             try {
                 const response = await api.get('/auth/me');
                 if (response && response.user) {
@@ -394,10 +401,9 @@
                     return currentUserData;
                 }
             } catch (e) {
-                console.warn('API 조회 실패, localStorage 사용:', e.message);
+                console.warn('API 조회 실패:', e.message);
             }
-            currentUserData = auth.getCurrentUser();
-            return currentUserData;
+            return null;
         }
 
         document.addEventListener('DOMContentLoaded', async function() {
