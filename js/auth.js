@@ -27,10 +27,17 @@ class AuthManager {
                     this.updateAuthUI();
                 }
             } catch (error) {
-                console.error('Auth check failed:', error);
-                // JWT 만료/네트워크 오류 시 로그아웃 대신 조용히 무시
-                // (페이지 진입 후 리다이렉트 방지)
-                // this.logout();
+                // 401 (토큰 무효/만료) → 로그아웃 처리
+                if (error.message && (error.message.includes('Invalid token') || error.message.includes('401') || error.message.includes('Unauthorized') || error.message.includes('Authentication required'))) {
+                    localStorage.removeItem(this.storageKey);
+                    localStorage.removeItem(this.tokenKey);
+                    this.updateAuthUI();
+                    // 로그인 페이지가 아닌 경우에만 리다이렉트
+                    if (!window.location.pathname.includes('login.html') && !window.location.pathname.includes('index.html') && window.location.pathname !== '/') {
+                        window.location.href = 'login.html';
+                    }
+                }
+                // 네트워크 오류 등 다른 에러는 조용히 무시
             }
         }
     }
