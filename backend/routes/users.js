@@ -368,36 +368,58 @@ router.get('/', async (req, res) => {
 router.put('/:id', auth, async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, user_type, phone } = req.body;
-    
+    const { name, email, user_type, phone, school_name, major, desired_job, graduation_year, department_name } = req.body;
+
     // Only admins can update other users
     if (req.user.user_type !== 'admin') {
       return res.status(403).json({ error: 'Unauthorized' });
     }
-    
-    const result = await query(
-      `UPDATE users 
-       SET name = COALESCE($1, name),
-           email = COALESCE($2, email),
-           user_type = COALESCE($3, user_type),
-           phone = COALESCE($4, phone),
-           updated_at = CURRENT_TIMESTAMP
-       WHERE id = $5
-       RETURNING id, email, name, user_type, phone`,
-      [name, email, user_type, phone, id]
+
+    // 실제 존재하는 컬럼만 SET (information_schema 확인)
+    const colCheck = await query(
+      `SELECT column_name FROM information_schema.columns 
+       WHERE table_name = 'users' AND column_name IN 
+         ('phone','school_name','major','desired_job','graduation_year','department_name')`
     );
-    
+    const existingCols = colCheck.rows.map(r => r.column_name);
+
+    const alwaysFields = { name, email, user_type };
+    const optionalFields = { phone, school_name, major, desired_job, graduation_year: graduation_year || null, department_name };
+
+    const setClauses = ['updated_at = CURRENT_TIMESTAMP'];
+    const params = [];
+    let paramIdx = 0;
+
+    for (const [col, val] of Object.entries(alwaysFields)) {
+      paramIdx++;
+      setClauses.push(`${col} = COALESCE($${paramIdx}, ${col})`);
+      params.push(val);
+    }
+    for (const [col, val] of Object.entries(optionalFields)) {
+      if (existingCols.includes(col)) {
+        paramIdx++;
+        setClauses.push(`${col} = COALESCE($${paramIdx}, ${col})`);
+        params.push(val);
+      }
+    }
+
+    paramIdx++;
+    params.push(id);
+
+    const result = await query(
+      `UPDATE users SET ${setClauses.join(', ')} WHERE id = $${paramIdx} RETURNING *`,
+      params
+    );
+
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
-    
-    res.json({ 
-      message: 'User updated successfully',
-      user: result.rows[0]
-    });
+
+    const { password_hash, ...userData } = result.rows[0];
+    res.json({ message: 'User updated successfully', user: userData });
   } catch (error) {
-    console.error('Update user error:', error);
-    res.status(500).json({ error: 'Failed to update user' });
+    console.error('Update user error:', error.message);
+    res.status(500).json({ error: 'Failed to update user', detail: error.message });
   }
 });
 

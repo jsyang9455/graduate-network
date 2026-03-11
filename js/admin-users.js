@@ -157,18 +157,19 @@ function displayUsers(userList) {
 function editUser(userId) {
     const user = users.find(u => String(u.id) === String(userId));
     if (!user) return;
-    
+
     editingUserId = userId;
     document.getElementById('editUserId').value = user.id;
-    document.getElementById('editUserName').value = user.name;
-    document.getElementById('editUserEmail').value = user.email;
-    
-    // editUserPhone 필드가 있으면 설정
-    const phoneField = document.getElementById('editUserPhone');
-    if (phoneField) phoneField.value = user.phone || '';
-    
-    document.getElementById('editUserType').value = user.user_type;
-    
+    document.getElementById('editUserName').value = user.name || '';
+    document.getElementById('editUserEmail').value = user.email || '';
+    document.getElementById('editUserPhone').value = user.phone || '';
+    document.getElementById('editUserType').value = user.user_type || 'student';
+    document.getElementById('editUserSchool').value = user.school_name || '';
+    document.getElementById('editUserDept').value = user.department_name || '';
+    document.getElementById('editUserMajor').value = user.major || user.gp_major || '';
+    document.getElementById('editUserGradYear').value = user.graduation_year || '';
+    document.getElementById('editUserDesiredJob').value = user.desired_job || '';
+
     document.getElementById('editUserModal').style.display = 'block';
 }
 window.editUser = editUser;
@@ -176,28 +177,38 @@ window.editUser = editUser;
 // 회원 저장
 async function saveUser(event) {
     event.preventDefault();
-    
+
     const userId = document.getElementById('editUserId').value;
-    const name = document.getElementById('editUserName').value;
-    const email = document.getElementById('editUserEmail').value;
-    const userType = document.getElementById('editUserType').value;
-    const phoneField = document.getElementById('editUserPhone');
-    const phone = phoneField ? phoneField.value : '';
-    
+    const gradYearVal = document.getElementById('editUserGradYear').value;
+
+    const payload = {
+        name:            document.getElementById('editUserName').value,
+        email:           document.getElementById('editUserEmail').value,
+        user_type:       document.getElementById('editUserType').value,
+        phone:           document.getElementById('editUserPhone').value,
+        school_name:     document.getElementById('editUserSchool').value,
+        department_name: document.getElementById('editUserDept').value,
+        major:           document.getElementById('editUserMajor').value,
+        graduation_year: gradYearVal ? parseInt(gradYearVal) : null,
+        desired_job:     document.getElementById('editUserDesiredJob').value,
+    };
+
+    const btn = event.submitter || document.querySelector('#editUserForm button[type="submit"]');
+    const origText = btn.textContent;
+    btn.textContent = '저장 중...';
+    btn.disabled = true;
+
     try {
-        await api.put(`/users/${userId}`, {
-            name,
-            email,
-            user_type: userType,
-            phone
-        });
-        
+        await api.put(`/users/${userId}`, payload);
         alert('회원 정보가 수정되었습니다.');
         closeEditUserModal();
         loadUsers();
     } catch (error) {
         console.error('회원 수정 실패:', error);
-        alert('회원 정보 수정에 실패했습니다.');
+        alert('회원 정보 수정에 실패했습니다: ' + (error.message || '다시 시도해주세요.'));
+    } finally {
+        btn.textContent = origText;
+        btn.disabled = false;
     }
 }
 document.getElementById('editUserForm')?.addEventListener('submit', saveUser);

@@ -97,7 +97,7 @@
 
     <!-- 회원 수정 모달 -->
     <div id="editUserModal" class="modal" style="display: none;">
-        <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-content" style="max-width: 640px;">
             <div class="modal-header">
                 <h2>회원 정보 수정</h2>
                 <span class="close" onclick="closeEditUserModal()">&times;</span>
@@ -105,29 +105,58 @@
             <div class="modal-body">
                 <form id="editUserForm">
                     <input type="hidden" id="editUserId">
-                    <div class="form-group">
-                        <label>이름</label>
-                        <input type="text" id="editUserName" required>
+
+                    <h4 style="margin:0 0 1rem;color:#374151;border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem;">기본 정보</h4>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div class="form-group">
+                            <label>이름 <span style="color:red">*</span></label>
+                            <input type="text" id="editUserName" required style="width:100%;">
+                        </div>
+                        <div class="form-group">
+                            <label>이메일 <span style="color:red">*</span></label>
+                            <input type="email" id="editUserEmail" required style="width:100%;">
+                        </div>
+                        <div class="form-group">
+                            <label>전화번호</label>
+                            <input type="tel" id="editUserPhone" placeholder="010-0000-0000" style="width:100%;">
+                        </div>
+                        <div class="form-group">
+                            <label>회원 유형 <span style="color:red">*</span></label>
+                            <select id="editUserType" required style="width:100%;">
+                                <option value="student">학생</option>
+                                <option value="graduate">졸업생</option>
+                                <option value="teacher">선생님</option>
+                                <option value="company">기업</option>
+                                <option value="admin">관리자</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>이메일</label>
-                        <input type="email" id="editUserEmail" required>
+
+                    <h4 style="margin:1.5rem 0 1rem;color:#374151;border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem;">학력 / 직업 정보</h4>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div class="form-group">
+                            <label>학교명</label>
+                            <input type="text" id="editUserSchool" placeholder="학교명" style="width:100%;">
+                        </div>
+                        <div class="form-group">
+                            <label>학과명</label>
+                            <input type="text" id="editUserDept" placeholder="학과명" style="width:100%;">
+                        </div>
+                        <div class="form-group">
+                            <label>전공</label>
+                            <input type="text" id="editUserMajor" placeholder="전공" style="width:100%;">
+                        </div>
+                        <div class="form-group">
+                            <label>졸업연도</label>
+                            <input type="number" id="editUserGradYear" placeholder="예: 2024" min="1990" max="2030" style="width:100%;">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1;">
+                            <label>희망직종</label>
+                            <input type="text" id="editUserDesiredJob" placeholder="희망직종" style="width:100%;">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>전화번호</label>
-                        <input type="tel" id="editUserPhone">
-                    </div>
-                    <div class="form-group">
-                        <label>유형</label>
-                        <select id="editUserType" required>
-                            <option value="student">학생</option>
-                            <option value="graduate">졸업생</option>
-                            <option value="teacher">선생님</option>
-                            <option value="company">기업</option>
-                            <option value="admin">관리자</option>
-                        </select>
-                    </div>
-                    <div class="form-actions">
+
+                    <div class="form-actions" style="margin-top:1.5rem;">
                         <button type="submit" class="btn btn-primary">저장</button>
                         <button type="button" onclick="closeEditUserModal()" class="btn btn-secondary">취소</button>
                     </div>
