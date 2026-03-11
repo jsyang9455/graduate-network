@@ -1,0 +1,142 @@
+[
+  {
+    "id": "01_main",
+    "title": "메인 페이지",
+    "auth": null,
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/01_main.png",
+    "success": true
+  },
+  {
+    "id": "02_login",
+    "title": "로그인",
+    "auth": null,
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/02_login.png",
+    "success": true
+  },
+  {
+    "id": "03_register",
+    "title": "회원가입",
+    "auth": null,
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/03_register.png",
+    "success": true
+  },
+  {
+    "id": "04_student_dashboard",
+    "title": "학생 대시보드",
+    "auth": "student",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/04_student_dashboard.png",
+    "success": true
+  },
+  {
+    "id": "05_student_jobs",
+    "title": "채용 정보",
+    "auth": "student",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/05_student_jobs.png",
+    "success": true
+  },
+  {
+    "id": "06_student_jobfair",
+    "title": "취업박람회",
+    "auth": "student",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/06_student_jobfair.png",
+    "success": true
+  },
+  {
+    "id": "07_student_industryvisit",
+    "title": "산업체 견학",
+    "auth": "student",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/07_student_industryvisit.png",
+    "success": true
+  },
+  {
+    "id": "08_student_certification",
+    "title": "자격증 지원",
+    "auth": "student",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/08_student_certification.png",
+    "success": true
+  },
+  {
+    "id": "09_student_counseling",
+    "title": "진로 상담",
+    "auth": "student",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/09_student_counseling.png",
+    "success": true
+  },
+  {
+    "id": "10_student_networking",
+    "title": "동문 네트워킹",
+    "auth": "student",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/10_student_networking.png",
+    "success": true
+  },
+  {
+    "id": "11_student_profile",
+    "title": "내 프로필",
+    "auth": "student",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/11_student_profile.png",
+    "success": true
+  },
+  {
+    "id": "12_student_career",
+    "title": "경력 관리",
+    "auth": "student",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/12_student_career.png",
+    "success": true
+  },
+  {
+    "id": "13_teacher_dashboard",
+    "title": "교사 대시보드",
+    "auth": "teacher",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/13_teacher_dashboard.png",
+    "success": true
+  },
+  {
+    "id": "14_teacher_counseling",
+    "title": "진로 상담 관리",
+    "auth": "teacher",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/14_teacher_counseling.png",
+    "success": true
+  },
+  {
+    "id": "15_admin_dashboard",
+    "title": "관리자 대시보드",
+    "auth": "admin",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/15_admin_dashboard.png",
+    "success": true
+  },
+  {
+    "id": "16_admin_users",
+    "title": "회원 관리",
+    "auth": "admin",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/16_admin_users.png",
+    "success": true
+  },
+  {
+    "id": "17_admin_jobs",
+    "title": "채용공고 관리",
+    "auth": "admin",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/17_admin_jobs.png",
+    "success": true
+  },
+  {
+    "id": "18_admin_board",
+    "title": "게시판 관리",
+    "auth": "admin",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/18_admin_board.png",
+    "success": true
+  },
+  {
+    "id": "19_admin_announcements",
+    "title": "공지사항 관리",
+    "auth": "admin",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/19_admin_announcements.png",
+    "success": true
+  },
+  {
+    "id": "20_admin_codes",
+    "title": "코드 관리",
+    "auth": "admin",
+    "file": "/Users/yangjongseog/graduate-network/manual-screenshots/20_admin_codes.png",
+    "success": true
+  }
+]
