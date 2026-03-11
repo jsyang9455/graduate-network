@@ -15,7 +15,9 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_login TIMESTAMP,
-    is_active BOOLEAN DEFAULT TRUE
+    is_active BOOLEAN DEFAULT TRUE,
+    withdraw_reason TEXT,
+    withdrawn_at TIMESTAMP
 );
 
 -- Graduate Profiles (졸업생 프로필)

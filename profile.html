@@ -123,6 +123,7 @@
                                     <p id="profileType">사용자 유형</p>
                                 </div>
                                 <button class="btn btn-primary" onclick="editProfile()">프로필 수정</button>
+                                <button class="btn btn-danger" onclick="openWithdrawModal()" style="background:#ef4444;border-color:#ef4444;">회원 탈퇴</button>
                             </div>
                         </div>
 
@@ -202,6 +203,7 @@
                                     <p>🏫 교사</p>
                                 </div>
                                 <button class="btn btn-primary" onclick="editProfile()">프로필 수정</button>
+                                <button class="btn btn-danger" onclick="openWithdrawModal()" style="background:#ef4444;border-color:#ef4444;">회원 탈퇴</button>
                             </div>
                         </div>
 
@@ -258,6 +260,32 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- 회원 탈퇴 모달 -->
+    <div id="withdrawModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 480px;">
+            <div class="modal-header" style="background:#fff1f2;">
+                <h2 style="color:#b91c1c;">⚠️ 회원 탈퇴</h2>
+                <span class="close" onclick="closeWithdrawModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p style="color:#374151;margin-bottom:1rem;">탈퇴하면 모든 데이터가 비활성화되며, 동일 이메일로 재가입이 가능합니다.</p>
+                <div class="form-group">
+                    <label style="font-weight:600;">탈퇴 사유 <span style="color:#9ca3af;font-weight:normal;">(선택)</span></label>
+                    <textarea id="withdrawReason" rows="4" placeholder="탈퇴 사유를 입력해주세요..." style="width:100%;padding:0.75rem;border:2px solid #e5e7eb;border-radius:8px;resize:vertical;font-size:0.95rem;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label style="font-weight:600;">확인 문구 입력 <span style="color:#ef4444;">*</span></label>
+                    <p style="font-size:0.85rem;color:#6b7280;margin-bottom:0.5rem;">탈퇴를 확인하려면 아래에 <strong>"탈퇴합니다"</strong>를 입력하세요.</p>
+                    <input type="text" id="withdrawConfirmText" placeholder="탈퇴합니다" style="width:100%;padding:0.75rem;border:2px solid #e5e7eb;border-radius:8px;font-size:0.95rem;">
+                </div>
+                <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:1.5rem;">
+                    <button onclick="closeWithdrawModal()" class="btn btn-secondary">취소</button>
+                    <button onclick="confirmWithdraw()" id="withdrawBtn" class="btn" style="background:#ef4444;color:#fff;border:none;padding:0.75rem 1.5rem;border-radius:8px;font-weight:600;cursor:pointer;">탈퇴하기</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- 프로필 수정 모달 -->
@@ -482,6 +510,38 @@
 
         function closeEditModal() {
             document.getElementById('editProfileModal').style.display = 'none';
+        }
+
+        function openWithdrawModal() {
+            document.getElementById('withdrawReason').value = '';
+            document.getElementById('withdrawConfirmText').value = '';
+            document.getElementById('withdrawModal').style.display = 'block';
+        }
+
+        function closeWithdrawModal() {
+            document.getElementById('withdrawModal').style.display = 'none';
+        }
+
+        async function confirmWithdraw() {
+            const confirmText = document.getElementById('withdrawConfirmText').value.trim();
+            if (confirmText !== '탈퇴합니다') {
+                alert('"탈퇴합니다"를 정확히 입력해주세요.');
+                return;
+            }
+            const reason = document.getElementById('withdrawReason').value.trim();
+            const btn = document.getElementById('withdrawBtn');
+            btn.textContent = '처리 중...';
+            btn.disabled = true;
+            try {
+                await api.post('/users/withdraw', { reason: reason || null });
+                alert('회원 탈퇴가 완료되었습니다. 이용해주셔서 감사합니다.');
+                auth.logout();
+            } catch (error) {
+                console.error('탈퇴 오류:', error);
+                alert('탈퇴 처리 중 오류가 발생했습니다: ' + (error.message || '다시 시도해주세요.'));
+                btn.textContent = '탈퇴하기';
+                btn.disabled = false;
+            }
         }
 
         async function saveProfile() {

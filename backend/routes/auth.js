@@ -22,12 +22,40 @@ router.post('/register', [
 
     // Check if user exists
     const existingUser = await query(
-      'SELECT id FROM users WHERE email = $1',
+      'SELECT id, is_active FROM users WHERE email = $1',
       [email]
     );
 
     if (existingUser.rows.length > 0) {
-      return res.status(400).json({ error: 'Email already registered' });
+      const found = existingUser.rows[0];
+      if (found.is_active) {
+        // 이미 활성 계정 존재
+        return res.status(400).json({ error: 'Email already registered' });
+      }
+      // 탈퇴한 계정 → 재가입: 기존 레코드 갱신
+      const password_hash = await bcrypt.hash(password, 10);
+      const result = await query(
+        `UPDATE users 
+         SET password_hash = $1, name = $2, user_type = $3, phone = $4,
+             school_name = $5, major = $6, desired_job = $7,
+             is_active = true, withdraw_reason = NULL, withdrawn_at = NULL,
+             updated_at = CURRENT_TIMESTAMP
+         WHERE id = $8
+         RETURNING id, email, name, user_type, school_name, major, desired_job, created_at`,
+        [password_hash, name, user_type, phone, school_name, major || null, desired_job || null, found.id]
+      );
+      const user = result.rows[0];
+      const token = jwt.sign(
+        { id: user.id, email: user.email, user_type: user.user_type },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRE || '7d' }
+      );
+      return res.status(201).json({
+        message: 'User registered successfully',
+        user: { id: user.id, email: user.email, name: user.name, user_type: user.user_type,
+                school_name: user.school_name, major: user.major, desired_job: user.desired_job },
+        token
+      });
     }
 
     // Hash password

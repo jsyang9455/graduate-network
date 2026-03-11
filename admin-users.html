@@ -50,6 +50,12 @@
             </header>
 
             <div class="admin-content">
+                <!-- 탭 네비게이션 -->
+                <div id="userTabs" style="display:flex;gap:0;margin-bottom:1.5rem;border-bottom:2px solid #e5e7eb;">
+                    <button id="tabActive" onclick="switchUserTab('active')" style="padding:0.75rem 1.5rem;background:none;border:none;border-bottom:3px solid #3b82f6;font-size:1rem;font-weight:600;color:#3b82f6;cursor:pointer;">활성 회원 <span id="activeCount" style="background:#dbeafe;color:#1d4ed8;border-radius:12px;padding:2px 8px;font-size:0.8rem;">-</span></button>
+                    <button id="tabWithdrawn" onclick="switchUserTab('withdrawn')" style="padding:0.75rem 1.5rem;background:none;border:none;border-bottom:3px solid transparent;font-size:1rem;font-weight:600;color:#6b7280;cursor:pointer;">탈퇴 회원 <span id="withdrawnCount" style="background:#fee2e2;color:#b91c1c;border-radius:12px;padding:2px 8px;font-size:0.8rem;">-</span></button>
+                </div>
+
                 <div class="filter-section" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
                     <input type="text" id="searchUser" placeholder="이름, 이메일로 검색..." style="flex: 1; padding: 0.8rem; border: 2px solid #e5e7eb; border-radius: 8px;">
                     <select id="userTypeFilter" style="padding: 0.8rem; border: 2px solid #e5e7eb; border-radius: 8px; min-width: 150px;">
@@ -74,8 +80,10 @@
                                 <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">전화번호</th>
                                 <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">학교/회사</th>
                                 <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">학과</th>
-                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">등록일</th>
-                                <th style="padding: 1rem; text-align: center; border-bottom: 2px solid #e5e7eb;">관리</th>
+                                <th id="thJoinDate" style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb;">등록일</th>
+                                <th id="thWithdrawnDate" style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb; display:none;">탈퇴일</th>
+                                <th id="thWithdrawReason" style="padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb; display:none;">탈퇴 사유</th>
+                                <th id="thActions" style="padding: 1rem; text-align: center; border-bottom: 2px solid #e5e7eb;">관리</th>
                             </tr>
                         </thead>
                         <tbody id="usersTableBody">

@@ -3,6 +3,34 @@ const router = express.Router();
 const { query } = require('../config/database');
 const { auth } = require('../middleware/auth');
 
+// Self-withdraw (자진 회원탈퇴)
+router.post('/withdraw', auth, async (req, res) => {
+  try {
+    const { reason } = req.body;
+    const userId = req.user.id;
+
+    const result = await query(
+      `UPDATE users
+       SET is_active = false,
+           withdraw_reason = $1,
+           withdrawn_at = CURRENT_TIMESTAMP,
+           updated_at = CURRENT_TIMESTAMP
+       WHERE id = $2
+       RETURNING id, email, name`,
+      [reason || null, userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({ message: '회원 탈퇴가 완료되었습니다.', user: result.rows[0] });
+  } catch (error) {
+    console.error('Withdraw error:', error);
+    res.status(500).json({ error: 'Failed to withdraw' });
+  }
+});
+
 // Get user profile
 router.get('/:id', async (req, res) => {
   try {
@@ -159,17 +187,21 @@ router.get('/', async (req, res) => {
       graduation_year, 
       major,
       is_mentor,
+      include_withdrawn,
       page = 1, 
       limit = 20 
     } = req.query;
 
+    const showWithdrawn = include_withdrawn === 'true';
+
     let queryText = `
       SELECT u.id, u.email, u.name, u.user_type, u.phone, u.school_name, u.major, u.desired_job, u.profile_image, u.created_at,
+             u.is_active, u.withdraw_reason, u.withdrawn_at,
              gp.graduation_year, gp.major AS gp_major, gp.current_company, 
              gp.current_position, gp.is_mentor
       FROM users u
       LEFT JOIN graduate_profiles gp ON u.id = gp.user_id
-      WHERE u.is_active = true
+      WHERE ${showWithdrawn ? 'u.is_active = false' : 'u.is_active = true'}
     `;
     const params = [];
     let paramCount = 0;
@@ -211,7 +243,7 @@ router.get('/', async (req, res) => {
     let countQuery = `
       SELECT COUNT(*) FROM users u
       LEFT JOIN graduate_profiles gp ON u.id = gp.user_id
-      WHERE u.is_active = true
+      WHERE ${showWithdrawn ? 'u.is_active = false' : 'u.is_active = true'}
     `;
     const countParams = [];
     let countParamNum = 0;
@@ -287,6 +319,7 @@ router.put('/:id', auth, async (req, res) => {
 router.delete('/:id', auth, async (req, res) => {
   try {
     const { id } = req.params;
+    const { reason } = req.body || {};
     
     // Only admins can deactivate users
     if (req.user.user_type !== 'admin') {
@@ -295,11 +328,13 @@ router.delete('/:id', auth, async (req, res) => {
     
     const result = await query(
       `UPDATE users 
-       SET is_active = false, 
+       SET is_active = false,
+           withdraw_reason = COALESCE($1, withdraw_reason),
+           withdrawn_at = CURRENT_TIMESTAMP,
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $1
+       WHERE id = $2
        RETURNING id, email, name`,
-      [id]
+      [reason || null, id]
     );
     
     if (result.rows.length === 0) {

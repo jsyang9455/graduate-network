@@ -2,6 +2,7 @@
 let currentUser = null;
 let users = [];
 let editingUserId = null;
+let currentView = 'active'; // 'active' | 'withdrawn'
 
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
@@ -20,7 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 회원 로드
     loadUsers();
-    
+    loadWithdrawnCount();
+
     // 검색 입력 이벤트
     document.getElementById('searchUser').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
@@ -34,8 +36,10 @@ async function loadUsers() {
     try {
         console.log('회원 목록 로드 시작...');
         
-        // API에서 사용자 목록 가져오기
-        const response = await api.get('/users?limit=1000');
+        const url = currentView === 'withdrawn'
+            ? '/users?include_withdrawn=true&limit=1000'
+            : '/users?limit=1000';
+        const response = await api.get(url);
         console.log('API 응답:', response);
         
         if (response && response.users) {
@@ -46,7 +50,15 @@ async function loadUsers() {
             users = [];
         }
         
-        updateStats();
+        if (currentView === 'active') {
+            updateStats();
+            // activeCount 탭 카운트 업데이트
+            const el = document.getElementById('activeCount');
+            if (el) el.textContent = users.length;
+        } else {
+            const el = document.getElementById('withdrawnCount');
+            if (el) el.textContent = users.length;
+        }
         displayUsers(users);
     } catch (error) {
         console.error('회원 로드 실패:', error);
@@ -98,9 +110,29 @@ function displayUsers(userList) {
         }[user.user_type] || user.user_type;
         
         const joinDate = user.created_at ? new Date(user.created_at).toLocaleDateString('ko-KR') : '-';
+        const withdrawnDate = user.withdrawn_at ? new Date(user.withdrawn_at).toLocaleDateString('ko-KR') : '-';
+        const withdrawReason = user.withdraw_reason || '사유 없음';
         const phone = user.phone || '-';
         const schoolName = user.school_name || user.current_company || '-';
         const major = user.major || '-';
+
+        if (currentView === 'withdrawn') {
+            return `
+                <tr style="background:#fff5f5;">
+                    <td>${index + 1}</td>
+                    <td>${user.name || '-'}</td>
+                    <td>${user.email || '-'}</td>
+                    <td><span class="badge badge-${user.user_type}">${userTypeLabel}</span></td>
+                    <td>${phone}</td>
+                    <td>${schoolName}</td>
+                    <td>${major}</td>
+                    <td style="color:#b91c1c;font-weight:600;">${withdrawnDate}</td>
+                    <td style="max-width:200px;">
+                        <span title="${withdrawReason}" style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#374151;">${withdrawReason}</span>
+                    </td>
+                </tr>
+            `;
+        }
         
         return `
             <tr>
@@ -190,42 +222,31 @@ window.deleteUser = deleteUser;
 
 // 검색 기능
 function searchUsers() {
-    const searchQuery = document.getElementById('searchUser').value.toLowerCase();
-    const filtered = users.filter(user => {
-        const name = user.name.toLowerCase();
-        const email = user.email.toLowerCase();
-        
-        return name.includes(searchQuery) || email.includes(searchQuery);
-    });
-    
-    displayUsers(filtered);
+    filterUsers();
 }
 window.searchUsers = searchUsers;
 
 // 필터 적용
-function applyFilters() {
-    const userType = document.getElementById('filterUserType').value;
-    const searchQuery = document.getElementById('searchUser').value.toLowerCase();
-    
+function filterUsers() {
+    const userType = document.getElementById('userTypeFilter')?.value || '';
+    const searchQuery = (document.getElementById('searchUser')?.value || '').toLowerCase();
+
     let filtered = users;
-    
-    // 유형 필터
+
     if (userType) {
         filtered = filtered.filter(u => u.user_type === userType);
     }
-    
-    // 검색어 필터
     if (searchQuery) {
-        filtered = filtered.filter(user => {
-            const name = user.name.toLowerCase();
-            const email = user.email.toLowerCase();
-            
-            return name.includes(searchQuery) || email.includes(searchQuery);
-        });
+        filtered = filtered.filter(u =>
+            (u.name || '').toLowerCase().includes(searchQuery) ||
+            (u.email || '').toLowerCase().includes(searchQuery)
+        );
     }
-    
     displayUsers(filtered);
 }
+window.filterUsers = filterUsers;
+
+function applyFilters() { filterUsers(); }
 window.applyFilters = applyFilters;
 
 // 모달 닫기
