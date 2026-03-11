@@ -3,6 +3,24 @@ const router = express.Router();
 const { query } = require('../config/database');
 const { auth } = require('../middleware/auth');
 
+// Stats endpoint (메인 페이지용 통계)
+router.get('/stats', async (req, res) => {
+  try {
+    const result = await query(`
+      SELECT
+        COUNT(*) FILTER (WHERE is_active = true) AS total_members,
+        COUNT(*) FILTER (WHERE is_active = true AND user_type IN ('student','graduate')) AS total_students,
+        COUNT(*) FILTER (WHERE is_active = true AND user_type = 'company') AS total_companies,
+        COUNT(*) FILTER (WHERE is_active = true AND user_type = 'teacher') AS total_teachers
+      FROM users
+    `);
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Stats error:', error);
+    res.status(500).json({ error: 'Failed to get stats' });
+  }
+});
+
 // Self-withdraw (자진 회원탈퇴)
 router.post('/withdraw', auth, async (req, res) => {
   try {

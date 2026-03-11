@@ -1,8 +1,7 @@
 // Main page functionality
 document.addEventListener('DOMContentLoaded', function() {
-    // Real-time stats update
+    // Real-time stats update (1회만 실행)
     updateStats();
-    setInterval(updateStats, 5000);
 
     // Smooth scroll
     setupSmoothScroll();
@@ -13,40 +12,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function updateStats() {
     try {
-        // API에서 실제 데이터 가져오기
-        const response = await api.get('/users?limit=1000');
-        const users = response.users || [];
-        
-        // 학생 수 카운트 (student + graduate)
-        const totalStudents = users.filter(u => u.user_type === 'student' || u.user_type === 'graduate').length;
-        // 활동 회원 수 (전체 회원 수)
-        const activeMembers = users.length;
-        
+        const stats = await api.get('/users/stats');
+
         const totalStudentsEl = document.getElementById('totalStudents');
         const activeMembersEl = document.getElementById('activeMembers');
-        
+
         if (totalStudentsEl) {
-            totalStudentsEl.textContent = totalStudents.toLocaleString();
+            totalStudentsEl.textContent = parseInt(stats.total_students || 0).toLocaleString();
         }
-        
         if (activeMembersEl) {
-            activeMembersEl.textContent = activeMembers.toLocaleString();
+            activeMembersEl.textContent = parseInt(stats.total_members || 0).toLocaleString();
         }
     } catch (error) {
-        console.error('통계 업데이트 실패:', error);
-        // API 실패 시 localStorage fallback
-        const usersData = localStorage.getItem('graduateNetwork_users');
-        if (usersData) {
-            const users = JSON.parse(usersData);
-            const totalStudents = users.filter(u => u.user_type === 'student' || u.user_type === 'graduate').length;
-            const activeMembers = users.length;
-            
-            const totalStudentsEl = document.getElementById('totalStudents');
-            const activeMembersEl = document.getElementById('activeMembers');
-            
-            if (totalStudentsEl) totalStudentsEl.textContent = totalStudents.toLocaleString();
-            if (activeMembersEl) activeMembersEl.textContent = activeMembers.toLocaleString();
-        }
+        // 조용히 실패 (콘솔 에러 스팸 방지)
     }
 }
 
