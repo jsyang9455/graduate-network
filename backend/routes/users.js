@@ -106,49 +106,61 @@ router.put('/profile', auth, async (req, res) => {
     const { name, phone, profile_image, school_name, major, desired_job, graduation_year, department_name } = req.body;
     const userId = req.user.id;
 
-    let result;
-    try {
-      // graduation_year, department_name 컬럼 포함 시도
-      result = await query(
-        `UPDATE users 
-         SET name = COALESCE($1, name),
-             phone = COALESCE($2, phone),
-             profile_image = COALESCE($3, profile_image),
-             school_name = COALESCE($4, school_name),
-             major = COALESCE($5, major),
-             desired_job = COALESCE($6, desired_job),
-             graduation_year = COALESCE($7, graduation_year),
-             department_name = COALESCE($8, department_name),
-             updated_at = CURRENT_TIMESTAMP
-         WHERE id = $9
-         RETURNING id, email, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name, profile_image`,
-        [name, phone, profile_image, school_name, major, desired_job, graduation_year || null, department_name || null, userId]
-      );
-    } catch (colError) {
-      // 컬럼이 없는 경우 기본 필드만으로 fallback
-      console.warn('Falling back to basic profile update (missing columns):', colError.message);
-      result = await query(
-        `UPDATE users 
-         SET name = COALESCE($1, name),
-             phone = COALESCE($2, phone),
-             profile_image = COALESCE($3, profile_image),
-             school_name = COALESCE($4, school_name),
-             major = COALESCE($5, major),
-             desired_job = COALESCE($6, desired_job),
-             updated_at = CURRENT_TIMESTAMP
-         WHERE id = $7
-         RETURNING id, email, name, user_type, phone, school_name, major, desired_job, profile_image`,
-        [name, phone, profile_image, school_name, major, desired_job, userId]
-      );
+    // DB에 어떤 컬럼이 존재하는지 먼저 확인
+    const colCheck = await query(
+      `SELECT column_name FROM information_schema.columns 
+       WHERE table_name = 'users' AND column_name IN ('graduation_year', 'department_name')`
+    );
+    const existingCols = colCheck.rows.map(r => r.column_name);
+    const hasGradYear = existingCols.includes('graduation_year');
+    const hasDeptName = existingCols.includes('department_name');
+
+    let setClauses = [
+      'name = COALESCE($1, name)',
+      'phone = COALESCE($2, phone)',
+      'profile_image = COALESCE($3, profile_image)',
+      'school_name = COALESCE($4, school_name)',
+      'major = COALESCE($5, major)',
+      'desired_job = COALESCE($6, desired_job)',
+      'updated_at = CURRENT_TIMESTAMP'
+    ];
+    let params = [name, phone, profile_image, school_name, major, desired_job];
+    let paramIdx = 6;
+
+    if (hasGradYear) {
+      paramIdx++;
+      setClauses.splice(6, 0, `graduation_year = COALESCE($${paramIdx}, graduation_year)`);
+      params.push(graduation_year || null);
     }
+    if (hasDeptName) {
+      paramIdx++;
+      setClauses.splice(hasGradYear ? 7 : 6, 0, `department_name = COALESCE($${paramIdx}, department_name)`);
+      params.push(department_name || null);
+    }
+
+    paramIdx++;
+    params.push(userId);
+
+    const returning = `RETURNING id, email, name, user_type, phone, school_name, major, desired_job, profile_image${hasGradYear ? ', graduation_year' : ''}${hasDeptName ? ', department_name' : ''}`;
+
+    const result = await query(
+      `UPDATE users SET ${setClauses.join(', ')} WHERE id = $${paramIdx} ${returning}`,
+      params
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    console.log(`Profile updated for user ${userId} (hasGradYear=${hasGradYear}, hasDeptName=${hasDeptName})`);
 
     res.json({ 
       message: 'Profile updated successfully',
       user: result.rows[0] 
     });
   } catch (error) {
-    console.error('Update profile error:', error);
-    res.status(500).json({ error: 'Failed to update profile' });
+    console.error('Update profile error:', error.message, error.stack);
+    res.status(500).json({ error: 'Failed to update profile', detail: error.message });
   }
 });
 
