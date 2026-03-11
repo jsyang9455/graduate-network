@@ -333,12 +333,13 @@ function loadJobPostings() {
     jobPostingsList.innerHTML = jobs.map(job => `
         <div class="job-posting-item">
             <div class="job-posting-info">
-                <div class="job-posting-title">${job.jobTitle}</div>
+                <div class="job-posting-title">${job.jobTitle || job.title || job.position || '제목 없음'}</div>
                 <div class="job-posting-meta">
                     <span class="job-status ${job.status}">${job.status === 'active' ? '모집중' : '마감완료'}</span>
                     <span>지원자: ${job.applicants || 0}명</span>
                     <span>조회: ${job.views || 0}회</span>
                     <span>마감: ${job.deadline || '-'}</span>
+                    ${job.headcount ? `<span>모집인원: ${job.headcount}명</span>` : ''}
                 </div>
             </div>
             <div class="job-posting-actions">

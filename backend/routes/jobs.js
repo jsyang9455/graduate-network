@@ -119,17 +119,18 @@ router.post('/', auth, checkRole('company', 'admin'), async (req, res) => {
       job_type,
       salary_range,
       experience_level,
+      headcount,
       deadline
     } = req.body;
 
     const result = await query(
       `INSERT INTO jobs 
        (company_id, title, description, requirements, location, job_type, 
-        salary_range, experience_level, deadline)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        salary_range, experience_level, headcount, deadline)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
        RETURNING *`,
       [req.user.id, title, description, requirements, location, job_type,
-       salary_range, experience_level, deadline]
+       salary_range, experience_level, headcount || 1, deadline]
     );
 
     res.status(201).json({
@@ -154,6 +155,7 @@ router.put('/:id', auth, checkRole('company', 'admin'), async (req, res) => {
       job_type,
       salary_range,
       experience_level,
+      headcount,
       deadline,
       status
     } = req.body;
@@ -181,13 +183,14 @@ router.put('/:id', auth, checkRole('company', 'admin'), async (req, res) => {
            job_type = COALESCE($5, job_type),
            salary_range = COALESCE($6, salary_range),
            experience_level = COALESCE($7, experience_level),
-           deadline = COALESCE($8, deadline),
-           status = COALESCE($9, status),
+           headcount = COALESCE($8, headcount),
+           deadline = COALESCE($9, deadline),
+           status = COALESCE($10, status),
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $10
+       WHERE id = $11
        RETURNING *`,
       [title, description, requirements, location, job_type, salary_range,
-       experience_level, deadline, status, id]
+       experience_level, headcount, deadline, status, id]
     );
 
     res.json({

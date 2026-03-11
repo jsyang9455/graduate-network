@@ -382,6 +382,7 @@ function setupJobCreateForm() {
             location: document.getElementById('location').value || '미정',
             salary: document.getElementById('salary').value || '협의',
             deadline: document.getElementById('deadline').value || '상시채용',
+            headcount: document.getElementById('headcount')?.value ? parseInt(document.getElementById('headcount').value) : null,
             status: 'active',
             createdAt: new Date().toISOString(),
             views: 0,
@@ -418,6 +419,9 @@ function setupJobEditForm() {
             document.getElementById('location').value = job.location;
             document.getElementById('salary').value = job.salary;
             document.getElementById('deadline').value = job.deadline;
+            if (document.getElementById('headcount')) {
+                document.getElementById('headcount').value = job.headcount || '';
+            }
             if (document.getElementById('status')) {
                 document.getElementById('status').value = job.status;
             }
@@ -444,6 +448,10 @@ function setupJobEditForm() {
             jobs[jobIndex].location = document.getElementById('location').value;
             jobs[jobIndex].salary = document.getElementById('salary').value;
             jobs[jobIndex].deadline = document.getElementById('deadline').value;
+            if (document.getElementById('headcount')) {
+                const hc = document.getElementById('headcount').value;
+                jobs[jobIndex].headcount = hc ? parseInt(hc) : null;
+            }
             if (document.getElementById('status')) {
                 jobs[jobIndex].status = document.getElementById('status').value;
             }

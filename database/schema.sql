@@ -64,6 +64,7 @@ CREATE TABLE jobs (
     job_type VARCHAR(50) CHECK (job_type IN ('full-time', 'part-time', 'contract', 'internship')),
     salary_range VARCHAR(100),
     experience_level VARCHAR(50),
+    headcount INTEGER DEFAULT 1,
     deadline DATE,
     status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'closed', 'draft')),
     views_count INTEGER DEFAULT 0,
