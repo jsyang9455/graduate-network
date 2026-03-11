@@ -41,43 +41,7 @@
             <div id="loginError" class="error-message" style="display: none;"></div>
             <div id="loginSuccess" class="success-message" style="display: none;"></div>
 
-            <div id="userTypeSelection" class="user-type-selection">
-                <h3>사용자 유형을 선택하세요</h3>
-                <div class="user-type-grid">
-                    <button type="button" class="user-type-btn" data-type="student">
-                        <div class="user-type-icon">🎓</div>
-                        <div class="user-type-name">재학생</div>
-                        <div class="user-type-desc">학생 계정</div>
-                    </button>
-                    <button type="button" class="user-type-btn" data-type="graduate">
-                        <div class="user-type-icon">👨‍🎓</div>
-                        <div class="user-type-name">졸업생</div>
-                        <div class="user-type-desc">동문 계정</div>
-                    </button>
-                    <button type="button" class="user-type-btn" data-type="teacher">
-                        <div class="user-type-icon">👨‍🏫</div>
-                        <div class="user-type-name">교사</div>
-                        <div class="user-type-desc">상담 교사</div>
-                    </button>
-                    <button type="button" class="user-type-btn" data-type="company">
-                        <div class="user-type-icon">🏢</div>
-                        <div class="user-type-name">기업</div>
-                        <div class="user-type-desc">채용 담당자</div>
-                    </button>
-                    <button type="button" class="user-type-btn" data-type="admin">
-                        <div class="user-type-icon">⚙️</div>
-                        <div class="user-type-name">관리자</div>
-                        <div class="user-type-desc">시스템 관리</div>
-                    </button>
-                </div>
-            </div>
-
-            <div id="loginFormContainer" style="display: none;">
-                <div class="selected-type">
-                    <span>로그인 유형: <strong id="selectedUserTypeName"></strong></span>
-                    <button type="button" id="changeTypeBtn" class="btn btn-secondary btn-sm">변경</button>
-                </div>
-
+            <div id="loginFormContainer">
                 <form id="loginForm">
                     <div class="form-group">
                         <label for="email">이메일</label>
