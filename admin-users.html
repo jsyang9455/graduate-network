@@ -90,6 +90,7 @@
                             <!-- Users will be loaded here -->
                         </tbody>
                     </table>
+                    <div id="paginationContainer"></div>
                 </div>
             </div>
         </main>
@@ -148,7 +149,7 @@
                         </div>
                         <div class="form-group">
                             <label>졸업연도</label>
-                            <input type="number" id="editUserGradYear" placeholder="예: 2024" min="1990" max="2030" style="width:100%;">
+                            <input type="text" id="editUserGradYear" inputmode="numeric" pattern="[0-9]{4}" placeholder="예: 2024" maxlength="4" style="width:100%;box-sizing:border-box;">
                         </div>
                         <div class="form-group" style="grid-column:1/-1;">
                             <label>희망직종</label>

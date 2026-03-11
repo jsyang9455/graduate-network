@@ -3,6 +3,9 @@ let currentUser = null;
 let users = [];
 let editingUserId = null;
 let currentView = 'active'; // 'active' | 'withdrawn'
+let currentPage = 1;
+const PAGE_SIZE = 20;
+let filteredUsers = [];
 
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
@@ -35,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
 async function loadUsers() {
     try {
         console.log('회원 목록 로드 시작...');
+        currentPage = 1;
         
         const url = currentView === 'withdrawn'
             ? '/users?include_withdrawn=true&limit=1000'
@@ -93,14 +97,22 @@ function updateStats() {
 
 // 회원 목록 표시
 function displayUsers(userList) {
+    filteredUsers = userList;
+    renderPagination();
     const tbody = document.getElementById('usersTableBody');
-    
-    if (userList.length === 0) {
+
+    const totalPages = Math.ceil(filteredUsers.length / PAGE_SIZE) || 1;
+    if (currentPage > totalPages) currentPage = totalPages;
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageUsers = filteredUsers.slice(start, start + PAGE_SIZE);
+
+    if (pageUsers.length === 0) {
         tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: #999; padding: 40px;">회원이 없습니다.</td></tr>';
         return;
     }
     
-    tbody.innerHTML = userList.map((user, index) => {
+    tbody.innerHTML = pageUsers.map((user, index) => {
+        const index2 = start + index;
         const userTypeLabel = {
             'student': '학생',
             'graduate': '졸업생',
@@ -119,7 +131,7 @@ function displayUsers(userList) {
         if (currentView === 'withdrawn') {
             return `
                 <tr style="background:#fff5f5;">
-                    <td>${index + 1}</td>
+                    <td>${index2 + 1}</td>
                     <td>${user.name || '-'}</td>
                     <td>${user.email || '-'}</td>
                     <td><span class="badge badge-${user.user_type}">${userTypeLabel}</span></td>
@@ -136,7 +148,7 @@ function displayUsers(userList) {
         
         return `
             <tr>
-                <td>${index + 1}</td>
+                <td>${index2 + 1}</td>
                 <td>${user.name || '-'}</td>
                 <td>${user.email || '-'}</td>
                 <td><span class="badge badge-${user.user_type}">${userTypeLabel}</span></td>
@@ -253,7 +265,54 @@ function filterUsers() {
             (u.email || '').toLowerCase().includes(searchQuery)
         );
     }
+    currentPage = 1;
     displayUsers(filtered);
+}
+
+// 페이지 이동
+function goToPage(page) {
+    const totalPages = Math.ceil(filteredUsers.length / PAGE_SIZE) || 1;
+    if (page < 1 || page > totalPages) return;
+    currentPage = page;
+    displayUsers(filteredUsers);
+    document.getElementById('usersTableBody')?.closest('.table-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+window.goToPage = goToPage;
+
+// 페이지네이션 렌더링
+function renderPagination() {
+    const container = document.getElementById('paginationContainer');
+    if (!container) return;
+    const total = filteredUsers.length;
+    const totalPages = Math.ceil(total / PAGE_SIZE) || 1;
+
+    if (totalPages <= 1) {
+        container.innerHTML = `<p style="text-align:center;color:#6b7280;font-size:0.875rem;">총 ${total}명</p>`;
+        return;
+    }
+
+    const start = (currentPage - 1) * PAGE_SIZE + 1;
+    const end = Math.min(currentPage * PAGE_SIZE, total);
+
+    // 표시할 페이지 번호 범위 (최대 5개)
+    const PAGES_SHOWN = 5;
+    let pageStart = Math.max(1, currentPage - Math.floor(PAGES_SHOWN / 2));
+    let pageEnd = pageStart + PAGES_SHOWN - 1;
+    if (pageEnd > totalPages) { pageEnd = totalPages; pageStart = Math.max(1, pageEnd - PAGES_SHOWN + 1); }
+
+    const btnStyle = (active) => `style="padding:0.35rem 0.7rem;margin:0 2px;border:1px solid ${active ? '#3b82f6' : '#d1d5db'};background:${active ? '#3b82f6' : '#fff'};color:${active ? '#fff' : '#374151'};border-radius:6px;cursor:${active ? 'default' : 'pointer'};font-size:0.875rem;"`;
+
+    let html = `<div style="display:flex;align-items:center;justify-content:center;gap:4px;padding:1rem 0;">`;
+    html += `<span style="margin-right:12px;color:#6b7280;font-size:0.875rem;">${start}–${end} / ${total}명</span>`;
+    html += `<button onclick="goToPage(1)" ${btnStyle(false)} ${currentPage === 1 ? 'disabled' : ''}>«</button>`;
+    html += `<button onclick="goToPage(${currentPage - 1})" ${btnStyle(false)} ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+    for (let p = pageStart; p <= pageEnd; p++) {
+        html += `<button onclick="goToPage(${p})" ${btnStyle(p === currentPage)}>${p}</button>`;
+    }
+    html += `<button onclick="goToPage(${currentPage + 1})" ${btnStyle(false)} ${currentPage === totalPages ? 'disabled' : ''}>›</button>`;
+    html += `<button onclick="goToPage(${totalPages})" ${btnStyle(false)} ${currentPage === totalPages ? 'disabled' : ''}>»</button>`;
+    html += `</div>`;
+    container.innerHTML = html;
 }
 window.filterUsers = filterUsers;
 
