@@ -34,16 +34,30 @@ router.post('/register', [
       }
       // 탈퇴한 계정 → 재가입: 기존 레코드 갱신
       const password_hash = await bcrypt.hash(password, 10);
-      const result = await query(
-        `UPDATE users 
-         SET password_hash = $1, name = $2, user_type = $3, phone = $4,
-             school_name = $5, major = $6, desired_job = $7, graduation_year = $8, department_name = $9,
-             is_active = true, withdraw_reason = NULL, withdrawn_at = NULL,
-             updated_at = CURRENT_TIMESTAMP
-         WHERE id = $10
-         RETURNING id, email, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name, created_at`,
-        [password_hash, name, user_type, phone, school_name, major || null, desired_job || null, graduation_year || null, department_name || null, found.id]
-      );
+      let result;
+      try {
+        result = await query(
+          `UPDATE users 
+           SET password_hash = $1, name = $2, user_type = $3, phone = $4,
+               school_name = $5, major = $6, desired_job = $7, graduation_year = $8, department_name = $9,
+               is_active = true, withdraw_reason = NULL, withdrawn_at = NULL,
+               updated_at = CURRENT_TIMESTAMP
+           WHERE id = $10
+           RETURNING id, email, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name, created_at`,
+          [password_hash, name, user_type, phone, school_name, major || null, desired_job || null, graduation_year || null, department_name || null, found.id]
+        );
+      } catch (colError) {
+        console.warn('Re-register fallback (missing columns):', colError.message);
+        result = await query(
+          `UPDATE users 
+           SET password_hash = $1, name = $2, user_type = $3, phone = $4,
+               school_name = $5, major = $6, desired_job = $7,
+               is_active = true, updated_at = CURRENT_TIMESTAMP
+           WHERE id = $8
+           RETURNING id, email, name, user_type, phone, school_name, major, desired_job, created_at`,
+          [password_hash, name, user_type, phone, school_name, major || null, desired_job || null, found.id]
+        );
+      }
       const user = result.rows[0];
       const token = jwt.sign(
         { id: user.id, email: user.email, user_type: user.user_type },
@@ -63,12 +77,23 @@ router.post('/register', [
     const password_hash = await bcrypt.hash(password, 10);
 
     // Create user
-    const result = await query(
-      `INSERT INTO users (email, password_hash, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
-       RETURNING id, email, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name, created_at`,
-      [email, password_hash, name, user_type, phone, school_name, major || null, desired_job || null, graduation_year || null, department_name || null]
-    );
+    let result;
+    try {
+      result = await query(
+        `INSERT INTO users (email, password_hash, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
+         RETURNING id, email, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name, created_at`,
+        [email, password_hash, name, user_type, phone, school_name, major || null, desired_job || null, graduation_year || null, department_name || null]
+      );
+    } catch (colError) {
+      console.warn('Register fallback (missing columns):', colError.message);
+      result = await query(
+        `INSERT INTO users (email, password_hash, name, user_type, phone, school_name, major, desired_job) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+         RETURNING id, email, name, user_type, phone, school_name, major, desired_job, created_at`,
+        [email, password_hash, name, user_type, phone, school_name, major || null, desired_job || null]
+      );
+    }
 
     const user = result.rows[0];
 
@@ -182,11 +207,21 @@ router.get('/me', async (req, res) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    const result = await query(
-      `SELECT id, email, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name, profile_image, created_at, last_login 
-       FROM users WHERE id = $1 AND is_active = true`,
-      [decoded.id]
-    );
+    let result;
+    try {
+      result = await query(
+        `SELECT id, email, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name, profile_image, created_at, last_login 
+         FROM users WHERE id = $1 AND is_active = true`,
+        [decoded.id]
+      );
+    } catch (colError) {
+      console.warn('/me fallback (missing columns):', colError.message);
+      result = await query(
+        `SELECT id, email, name, user_type, phone, school_name, major, desired_job, profile_image, created_at, last_login 
+         FROM users WHERE id = $1 AND is_active = true`,
+        [decoded.id]
+      );
+    }
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'User not found' });

@@ -255,3 +255,37 @@ function closeEditUserModal() {
     editingUserId = null;
 }
 window.closeEditUserModal = closeEditUserModal;
+
+// 탈퇴 회원 수 로드
+async function loadWithdrawnCount() {
+    try {
+        const response = await api.get('/users?include_withdrawn=true&limit=1&page=1');
+        const count = response?.pagination?.total || 0;
+        const el = document.getElementById('withdrawnCount');
+        if (el) el.textContent = count;
+    } catch (error) {
+        console.warn('탈퇴 회원 수 조회 실패:', error.message);
+        const el = document.getElementById('withdrawnCount');
+        if (el) el.textContent = '0';
+    }
+}
+window.loadWithdrawnCount = loadWithdrawnCount;
+
+// 탭 전환 (활성/탈퇴)
+function switchUserTab(tab) {
+    currentView = tab;
+
+    const tabActive = document.getElementById('tabActive');
+    const tabWithdrawn = document.getElementById('tabWithdrawn');
+    if (tabActive) {
+        tabActive.style.borderBottomColor = tab === 'active' ? '#3b82f6' : 'transparent';
+        tabActive.style.color = tab === 'active' ? '#3b82f6' : '#6b7280';
+    }
+    if (tabWithdrawn) {
+        tabWithdrawn.style.borderBottomColor = tab === 'withdrawn' ? '#3b82f6' : 'transparent';
+        tabWithdrawn.style.color = tab === 'withdrawn' ? '#3b82f6' : '#6b7280';
+    }
+
+    loadUsers();
+}
+window.switchUserTab = switchUserTab;

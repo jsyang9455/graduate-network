@@ -27,16 +27,25 @@ router.post('/withdraw', auth, async (req, res) => {
     const { reason } = req.body;
     const userId = req.user.id;
 
-    const result = await query(
-      `UPDATE users
-       SET is_active = false,
-           withdraw_reason = $1,
-           withdrawn_at = CURRENT_TIMESTAMP,
-           updated_at = CURRENT_TIMESTAMP
-       WHERE id = $2
-       RETURNING id, email, name`,
-      [reason || null, userId]
-    );
+    let result;
+    try {
+      result = await query(
+        `UPDATE users
+         SET is_active = false,
+             withdraw_reason = $1,
+             withdrawn_at = CURRENT_TIMESTAMP,
+             updated_at = CURRENT_TIMESTAMP
+         WHERE id = $2
+         RETURNING id, email, name`,
+        [reason || null, userId]
+      );
+    } catch (colError) {
+      console.warn('Withdraw fallback (missing columns):', colError.message);
+      result = await query(
+        `UPDATE users SET is_active = false, updated_at = CURRENT_TIMESTAMP WHERE id = $1 RETURNING id, email, name`,
+        [userId]
+      );
+    }
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'User not found' });
@@ -54,16 +63,31 @@ router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
-    const result = await query(
-      `SELECT u.id, u.email, u.name, u.user_type, u.phone, u.school_name, u.major, u.desired_job, u.profile_image, u.created_at,
-              u.graduation_year, u.department_name,
-              gp.major AS gp_major, gp.current_company, gp.current_position, 
-              gp.bio, gp.skills, gp.is_mentor
-       FROM users u
-       LEFT JOIN graduate_profiles gp ON u.id = gp.user_id
-       WHERE u.id = $1 AND u.is_active = true`,
-      [id]
-    );
+    let result;
+    try {
+      result = await query(
+        `SELECT u.id, u.email, u.name, u.user_type, u.phone, u.school_name, u.major, u.desired_job, u.profile_image, u.created_at,
+                u.graduation_year, u.department_name,
+                gp.major AS gp_major, gp.current_company, gp.current_position, 
+                gp.bio, gp.skills, gp.is_mentor
+         FROM users u
+         LEFT JOIN graduate_profiles gp ON u.id = gp.user_id
+         WHERE u.id = $1 AND u.is_active = true`,
+        [id]
+      );
+    } catch (colError) {
+      console.warn('GET /:id fallback (missing columns):', colError.message);
+      result = await query(
+        `SELECT u.id, u.email, u.name, u.user_type, u.phone, u.school_name, u.major, u.desired_job, u.profile_image, u.created_at,
+                null AS graduation_year, null AS department_name,
+                gp.major AS gp_major, gp.current_company, gp.current_position, 
+                gp.bio, gp.skills, gp.is_mentor
+         FROM users u
+         LEFT JOIN graduate_profiles gp ON u.id = gp.user_id
+         WHERE u.id = $1 AND u.is_active = true`,
+        [id]
+      );
+    }
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'User not found' });
@@ -235,50 +259,60 @@ router.get('/', async (req, res) => {
 
     const showWithdrawn = include_withdrawn === 'true';
 
-    let queryText = `
-      SELECT u.id, u.email, u.name, u.user_type, u.phone, u.school_name, u.major, u.desired_job, u.profile_image, u.created_at,
-             u.is_active, u.withdraw_reason, u.withdrawn_at,
-             gp.graduation_year, gp.major AS gp_major, gp.current_company, 
-             gp.current_position, gp.is_mentor
-      FROM users u
-      LEFT JOIN graduate_profiles gp ON u.id = gp.user_id
-      WHERE ${showWithdrawn ? 'u.is_active = false' : 'u.is_active = true'}
-    `;
+    const buildQuery = (withExtra) => {
+      const extraCols = withExtra
+        ? ', u.withdraw_reason, u.withdrawn_at'
+        : ', null AS withdraw_reason, null AS withdrawn_at';
+      let q = `
+        SELECT u.id, u.email, u.name, u.user_type, u.phone, u.school_name, u.major, u.desired_job, u.profile_image, u.created_at,
+               u.is_active${extraCols},
+               gp.graduation_year, gp.major AS gp_major, gp.current_company, 
+               gp.current_position, gp.is_mentor
+        FROM users u
+        LEFT JOIN graduate_profiles gp ON u.id = gp.user_id
+        WHERE ${showWithdrawn ? 'u.is_active = false' : 'u.is_active = true'}
+      `;
+      return q;
+    };
+
     const params = [];
     let paramCount = 0;
+    let filterSql = '';
 
     if (search) {
       paramCount++;
-      queryText += ` AND (u.name ILIKE $${paramCount} OR gp.current_company ILIKE $${paramCount})`;
+      filterSql += ` AND (u.name ILIKE $${paramCount} OR gp.current_company ILIKE $${paramCount})`;
       params.push(`%${search}%`);
     }
-
     if (user_type) {
       paramCount++;
-      queryText += ` AND u.user_type = $${paramCount}`;
+      filterSql += ` AND u.user_type = $${paramCount}`;
       params.push(user_type);
     }
-
     if (graduation_year) {
       paramCount++;
-      queryText += ` AND gp.graduation_year = $${paramCount}`;
+      filterSql += ` AND gp.graduation_year = $${paramCount}`;
       params.push(graduation_year);
     }
-
     if (major) {
       paramCount++;
-      queryText += ` AND gp.major ILIKE $${paramCount}`;
+      filterSql += ` AND gp.major ILIKE $${paramCount}`;
       params.push(`%${major}%`);
     }
-
     if (is_mentor === 'true') {
-      queryText += ` AND gp.is_mentor = true`;
+      filterSql += ` AND gp.is_mentor = true`;
     }
 
-    queryText += ` ORDER BY u.created_at DESC LIMIT $${paramCount + 1} OFFSET $${paramCount + 2}`;
-    params.push(limit, (page - 1) * limit);
+    const orderLimit = ` ORDER BY u.created_at DESC LIMIT $${paramCount + 1} OFFSET $${paramCount + 2}`;
+    const pageParams = [...params, limit, (page - 1) * limit];
 
-    const result = await query(queryText, params);
+    let result;
+    try {
+      result = await query(buildQuery(true) + filterSql + orderLimit, pageParams);
+    } catch (colError) {
+      console.warn('Falling back to basic user list (missing columns):', colError.message);
+      result = await query(buildQuery(false) + filterSql + orderLimit, pageParams);
+    }
 
     // Get total count
     let countQuery = `
@@ -294,7 +328,6 @@ router.get('/', async (req, res) => {
       countQuery += ` AND (u.name ILIKE $${countParamNum} OR gp.current_company ILIKE $${countParamNum})`;
       countParams.push(`%${search}%`);
     }
-
     if (user_type) {
       countParamNum++;
       countQuery += ` AND u.user_type = $${countParamNum}`;
@@ -367,16 +400,25 @@ router.delete('/:id', auth, async (req, res) => {
       return res.status(403).json({ error: 'Unauthorized' });
     }
     
-    const result = await query(
-      `UPDATE users 
-       SET is_active = false,
-           withdraw_reason = COALESCE($1, withdraw_reason),
-           withdrawn_at = CURRENT_TIMESTAMP,
-           updated_at = CURRENT_TIMESTAMP
-       WHERE id = $2
-       RETURNING id, email, name`,
-      [reason || null, id]
-    );
+    let result;
+    try {
+      result = await query(
+        `UPDATE users 
+         SET is_active = false,
+             withdraw_reason = COALESCE($1, withdraw_reason),
+             withdrawn_at = CURRENT_TIMESTAMP,
+             updated_at = CURRENT_TIMESTAMP
+         WHERE id = $2
+         RETURNING id, email, name`,
+        [reason || null, id]
+      );
+    } catch (colError) {
+      console.warn('Deactivate fallback (missing columns):', colError.message);
+      result = await query(
+        `UPDATE users SET is_active = false, updated_at = CURRENT_TIMESTAMP WHERE id = $1 RETURNING id, email, name`,
+        [id]
+      );
+    }
     
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'User not found' });
