@@ -15,7 +15,14 @@ class AuthManager {
     async checkAuth() {
         const token = localStorage.getItem(this.tokenKey);
         if (token) {
-            // Skip API call for test tokens and registered user tokens
+            // 이미 localStorage에 유저 데이터가 있으면 재검증 skip
+            const existingUser = localStorage.getItem(this.storageKey);
+            if (existingUser) {
+                this.updateAuthUI();
+                return;
+            }
+
+            // test/user 토큰도 skip
             if (token.startsWith('test_token_') || token.startsWith('user_token_')) {
                 return;
             }
@@ -27,14 +34,12 @@ class AuthManager {
                     this.updateAuthUI();
                 }
             } catch (error) {
-                // 401 (토큰 무효/만료) → 로컬 토큰만 삭제, 강제 리다이렉트 없음
-                // 강제 리다이렉트는 requireAuth()에서만 처리 (로그인 직후 오동작 방지)
+                // 401 (토큰 무효/만료) → 로컬 토큰만 삭제
                 if (error.message && (error.message.includes('Invalid token') || error.message.includes('Unauthorized') || error.message.includes('Authentication required'))) {
                     localStorage.removeItem(this.storageKey);
                     localStorage.removeItem(this.tokenKey);
                     this.updateAuthUI();
                 }
-                // 네트워크 오류 등 다른 에러는 무시 (토큰 유지)
             }
         }
     }
