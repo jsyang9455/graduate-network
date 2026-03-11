@@ -82,21 +82,41 @@ router.put('/profile', auth, async (req, res) => {
     const { name, phone, profile_image, school_name, major, desired_job, graduation_year, department_name } = req.body;
     const userId = req.user.id;
 
-    const result = await query(
-      `UPDATE users 
-       SET name = COALESCE($1, name),
-           phone = COALESCE($2, phone),
-           profile_image = COALESCE($3, profile_image),
-           school_name = COALESCE($4, school_name),
-           major = COALESCE($5, major),
-           desired_job = COALESCE($6, desired_job),
-           graduation_year = COALESCE($7, graduation_year),
-           department_name = COALESCE($8, department_name),
-           updated_at = CURRENT_TIMESTAMP
-       WHERE id = $9
-       RETURNING id, email, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name, profile_image`,
-      [name, phone, profile_image, school_name, major, desired_job, graduation_year || null, department_name || null, userId]
-    );
+    let result;
+    try {
+      // graduation_year, department_name 컬럼 포함 시도
+      result = await query(
+        `UPDATE users 
+         SET name = COALESCE($1, name),
+             phone = COALESCE($2, phone),
+             profile_image = COALESCE($3, profile_image),
+             school_name = COALESCE($4, school_name),
+             major = COALESCE($5, major),
+             desired_job = COALESCE($6, desired_job),
+             graduation_year = COALESCE($7, graduation_year),
+             department_name = COALESCE($8, department_name),
+             updated_at = CURRENT_TIMESTAMP
+         WHERE id = $9
+         RETURNING id, email, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name, profile_image`,
+        [name, phone, profile_image, school_name, major, desired_job, graduation_year || null, department_name || null, userId]
+      );
+    } catch (colError) {
+      // 컬럼이 없는 경우 기본 필드만으로 fallback
+      console.warn('Falling back to basic profile update (missing columns):', colError.message);
+      result = await query(
+        `UPDATE users 
+         SET name = COALESCE($1, name),
+             phone = COALESCE($2, phone),
+             profile_image = COALESCE($3, profile_image),
+             school_name = COALESCE($4, school_name),
+             major = COALESCE($5, major),
+             desired_job = COALESCE($6, desired_job),
+             updated_at = CURRENT_TIMESTAMP
+         WHERE id = $7
+         RETURNING id, email, name, user_type, phone, school_name, major, desired_job, profile_image`,
+        [name, phone, profile_image, school_name, major, desired_job, userId]
+      );
+    }
 
     res.json({ 
       message: 'Profile updated successfully',
