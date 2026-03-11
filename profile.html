@@ -135,12 +135,12 @@
                                     <p id="profileSchool">-</p>
                                 </div>
                                 <div class="info-item">
-                                    <label>학번</label>
-                                    <p id="profileStudentId">-</p>
-                                </div>
-                                <div class="info-item">
                                     <label>전공</label>
                                     <p id="profileMajor">-</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>학과명</label>
+                                    <p id="profileDepartmentName">-</p>
                                 </div>
                                 <div class="info-item">
                                     <label>졸업년도</label>
@@ -317,14 +317,14 @@
                             <input type="text" id="editSchool">
                         </div>
                         <div class="form-group">
-                            <label>학번</label>
-                            <input type="text" id="editStudentId">
+                            <label>전공 (선택사항)</label>
+                            <select id="editMajor">
+                                <option value="">전공 선택 (선택사항)</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label>전공</label>
-                            <select id="editMajor">
-                                <option value="">전공 선택</option>
-                            </select>
+                            <label>학과명</label>
+                            <input type="text" id="editDepartmentName" placeholder="예: 기계설계과, 전기제어과">
                         </div>
                         <div class="form-group">
                             <label>졸업년도</label>
@@ -441,8 +441,8 @@
             document.getElementById('profileType').textContent = '📚 ' + typeText;
 
             document.getElementById('profileSchool').textContent = user.school_name || user.schoolName || '-';
-            document.getElementById('profileStudentId').textContent = user.studentId || '-';
             document.getElementById('profileMajor').textContent = user.major || '-';
+            document.getElementById('profileDepartmentName').textContent = user.department_name || '-';
             document.getElementById('profileGradYear').textContent = user.graduation_year || user.graduationYear || '-';
             document.getElementById('profileDesiredJob').textContent = user.desired_job || user.desiredJob || '-';
             document.getElementById('profilePhone').textContent = user.phone || '-';
@@ -488,7 +488,7 @@
                 document.getElementById('editTeacherFields').style.display = 'none';
 
                 document.getElementById('editSchool').value = user.school_name || user.schoolName || '';
-                document.getElementById('editStudentId').value = user.studentId || '';
+                document.getElementById('editDepartmentName').value = user.department_name || '';
                 document.getElementById('editGradYear').value = user.graduation_year || user.graduationYear || '';
                 document.getElementById('editDesiredJob').value = user.desired_job || user.desiredJob || '';
 
@@ -562,6 +562,8 @@
                 if (user.user_type === 'student' || user.user_type === 'graduate') {
                     updateData.school_name = document.getElementById('editSchool').value;
                     updateData.major = document.getElementById('editMajor').value;
+                    updateData.department_name = document.getElementById('editDepartmentName').value;
+                    updateData.graduation_year = document.getElementById('editGradYear').value ? parseInt(document.getElementById('editGradYear').value) : null;
                     updateData.desired_job = document.getElementById('editDesiredJob').value;
                 } else if (user.user_type === 'teacher') {
                     updateData.school_name = document.getElementById('editTeacherSchool').value;

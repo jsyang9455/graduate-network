@@ -18,7 +18,7 @@ router.post('/register', [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, password, name, user_type, phone, school_name, major, desired_job } = req.body;
+    const { email, password, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name } = req.body;
 
     // Check if user exists
     const existingUser = await query(
@@ -37,12 +37,12 @@ router.post('/register', [
       const result = await query(
         `UPDATE users 
          SET password_hash = $1, name = $2, user_type = $3, phone = $4,
-             school_name = $5, major = $6, desired_job = $7,
+             school_name = $5, major = $6, desired_job = $7, graduation_year = $8, department_name = $9,
              is_active = true, withdraw_reason = NULL, withdrawn_at = NULL,
              updated_at = CURRENT_TIMESTAMP
-         WHERE id = $8
-         RETURNING id, email, name, user_type, school_name, major, desired_job, created_at`,
-        [password_hash, name, user_type, phone, school_name, major || null, desired_job || null, found.id]
+         WHERE id = $10
+         RETURNING id, email, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name, created_at`,
+        [password_hash, name, user_type, phone, school_name, major || null, desired_job || null, graduation_year || null, department_name || null, found.id]
       );
       const user = result.rows[0];
       const token = jwt.sign(
@@ -53,7 +53,8 @@ router.post('/register', [
       return res.status(201).json({
         message: 'User registered successfully',
         user: { id: user.id, email: user.email, name: user.name, user_type: user.user_type,
-                school_name: user.school_name, major: user.major, desired_job: user.desired_job },
+                phone: user.phone, school_name: user.school_name, major: user.major,
+                desired_job: user.desired_job, graduation_year: user.graduation_year, department_name: user.department_name },
         token
       });
     }
@@ -63,10 +64,10 @@ router.post('/register', [
 
     // Create user
     const result = await query(
-      `INSERT INTO users (email, password_hash, name, user_type, phone, school_name, major, desired_job) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
-       RETURNING id, email, name, user_type, school_name, major, desired_job, created_at`,
-      [email, password_hash, name, user_type, phone, school_name, major || null, desired_job || null]
+      `INSERT INTO users (email, password_hash, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
+       RETURNING id, email, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name, created_at`,
+      [email, password_hash, name, user_type, phone, school_name, major || null, desired_job || null, graduation_year || null, department_name || null]
     );
 
     const user = result.rows[0];
@@ -85,9 +86,13 @@ router.post('/register', [
         email: user.email,
         name: user.name,
         user_type: user.user_type,
+        phone: user.phone,
         school_name: user.school_name,
         major: user.major,
-        desired_job: user.desired_job
+        desired_job: user.desired_job,
+        graduation_year: user.graduation_year,
+        department_name: user.department_name,
+        profile_image: user.profile_image
       },
       token
     });
@@ -178,7 +183,7 @@ router.get('/me', async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
     const result = await query(
-      `SELECT id, email, name, user_type, phone, school_name, major, desired_job, profile_image, created_at, last_login 
+      `SELECT id, email, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name, profile_image, created_at, last_login 
        FROM users WHERE id = $1 AND is_active = true`,
       [decoded.id]
     );
