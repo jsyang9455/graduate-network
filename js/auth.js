@@ -27,17 +27,14 @@ class AuthManager {
                     this.updateAuthUI();
                 }
             } catch (error) {
-                // 401 (토큰 무효/만료) → 로그아웃 처리
-                if (error.message && (error.message.includes('Invalid token') || error.message.includes('401') || error.message.includes('Unauthorized') || error.message.includes('Authentication required'))) {
+                // 401 (토큰 무효/만료) → 로컬 토큰만 삭제, 강제 리다이렉트 없음
+                // 강제 리다이렉트는 requireAuth()에서만 처리 (로그인 직후 오동작 방지)
+                if (error.message && (error.message.includes('Invalid token') || error.message.includes('Unauthorized') || error.message.includes('Authentication required'))) {
                     localStorage.removeItem(this.storageKey);
                     localStorage.removeItem(this.tokenKey);
                     this.updateAuthUI();
-                    // 로그인 페이지가 아닌 경우에만 리다이렉트
-                    if (!window.location.pathname.includes('login.html') && !window.location.pathname.includes('index.html') && window.location.pathname !== '/') {
-                        window.location.href = 'login.html';
-                    }
                 }
-                // 네트워크 오류 등 다른 에러는 조용히 무시
+                // 네트워크 오류 등 다른 에러는 무시 (토큰 유지)
             }
         }
     }
