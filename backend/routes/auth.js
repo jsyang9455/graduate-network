@@ -34,31 +34,37 @@ router.post('/register', [
       }
       // 탈퇴한 계정 → 재가입: 기존 레코드 갱신
       const password_hash = await bcrypt.hash(password, 10);
-      let result;
-      try {
-        result = await query(
-          `UPDATE users 
-           SET password_hash = $1, name = $2, user_type = $3, phone = $4,
-               school_name = $5, major = $6, desired_job = $7, graduation_year = $8, department_name = $9,
-               is_active = true, withdraw_reason = NULL, withdrawn_at = NULL,
-               updated_at = CURRENT_TIMESTAMP
-           WHERE id = $10
-           RETURNING id, email, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name, created_at`,
-          [password_hash, name, user_type, phone, school_name, major || null, desired_job || null, graduation_year || null, department_name || null, found.id]
-        );
-      } catch (colError) {
-        console.warn('Re-register fallback (missing columns):', colError.message);
-        result = await query(
-          `UPDATE users 
-           SET password_hash = $1, name = $2, user_type = $3, phone = $4,
-               school_name = $5, major = $6, desired_job = $7,
-               is_active = true, updated_at = CURRENT_TIMESTAMP
-           WHERE id = $8
-           RETURNING id, email, name, user_type, phone, school_name, major, desired_job, created_at`,
-          [password_hash, name, user_type, phone, school_name, major || null, desired_job || null, found.id]
-        );
+
+      const reColCheck = await query(
+        `SELECT column_name FROM information_schema.columns 
+         WHERE table_name = 'users' AND column_name IN 
+           ('phone','school_name','major','desired_job','graduation_year','department_name','withdraw_reason','withdrawn_at')`
+      );
+      const reExistingCols = reColCheck.rows.map(r => r.column_name);
+
+      const reOptional = { phone, school_name, major: major || null, desired_job: desired_job || null, graduation_year: graduation_year || null, department_name: department_name || null };
+      let setClauses = ['password_hash = $1', 'name = $2', 'user_type = $3', 'is_active = true', 'updated_at = CURRENT_TIMESTAMP'];
+      let updateVals = [password_hash, name, user_type];
+      let pIdx = 3;
+
+      for (const [col, val] of Object.entries(reOptional)) {
+        if (reExistingCols.includes(col)) {
+          pIdx++;
+          setClauses.push(`${col} = $${pIdx}`);
+          updateVals.push(val);
+        }
       }
-      const user = result.rows[0];
+      if (reExistingCols.includes('withdraw_reason')) setClauses.push('withdraw_reason = NULL');
+      if (reExistingCols.includes('withdrawn_at')) setClauses.push('withdrawn_at = NULL');
+
+      pIdx++;
+      updateVals.push(found.id);
+
+      const reResult = await query(
+        `UPDATE users SET ${setClauses.join(', ')} WHERE id = $${pIdx} RETURNING *`,
+        updateVals
+      );
+      const { password_hash: _ph, ...user } = reResult.rows[0];
       const token = jwt.sign(
         { id: user.id, email: user.email, user_type: user.user_type },
         process.env.JWT_SECRET,
@@ -76,26 +82,32 @@ router.post('/register', [
     // Hash password
     const password_hash = await bcrypt.hash(password, 10);
 
-    // Create user
-    let result;
-    try {
-      result = await query(
-        `INSERT INTO users (email, password_hash, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name) 
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
-         RETURNING id, email, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name, created_at`,
-        [email, password_hash, name, user_type, phone, school_name, major || null, desired_job || null, graduation_year || null, department_name || null]
-      );
-    } catch (colError) {
-      console.warn('Register fallback (missing columns):', colError.message);
-      result = await query(
-        `INSERT INTO users (email, password_hash, name, user_type, phone, school_name, major, desired_job) 
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
-         RETURNING id, email, name, user_type, phone, school_name, major, desired_job, created_at`,
-        [email, password_hash, name, user_type, phone, school_name, major || null, desired_job || null]
-      );
+    // 실제 존재하는 컬럼만 INSERT (AWS DB가 구버전일 수 있음)
+    const colCheck = await query(
+      `SELECT column_name FROM information_schema.columns 
+       WHERE table_name = 'users' AND column_name IN 
+         ('phone','school_name','major','desired_job','graduation_year','department_name')`
+    );
+    const existingCols = colCheck.rows.map(r => r.column_name);
+
+    const optionalFields = { phone, school_name, major: major || null, desired_job: desired_job || null, graduation_year: graduation_year || null, department_name: department_name || null };
+    const insertCols = ['email', 'password_hash', 'name', 'user_type'];
+    const insertVals = [email, password_hash, name, user_type];
+
+    for (const [col, val] of Object.entries(optionalFields)) {
+      if (existingCols.includes(col)) {
+        insertCols.push(col);
+        insertVals.push(val);
+      }
     }
 
-    const user = result.rows[0];
+    const placeholders = insertVals.map((_, i) => `$${i + 1}`).join(', ');
+    const result = await query(
+      `INSERT INTO users (${insertCols.join(', ')}) VALUES (${placeholders}) RETURNING *`,
+      insertVals
+    );
+
+    const { password_hash: _, ...user } = result.rows[0];
 
     // Generate token
     const token = jwt.sign(
@@ -207,27 +219,19 @@ router.get('/me', async (req, res) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    let result;
-    try {
-      result = await query(
-        `SELECT id, email, name, user_type, phone, school_name, major, desired_job, graduation_year, department_name, profile_image, created_at, last_login 
-         FROM users WHERE id = $1 AND is_active = true`,
-        [decoded.id]
-      );
-    } catch (colError) {
-      console.warn('/me fallback (missing columns):', colError.message);
-      result = await query(
-        `SELECT id, email, name, user_type, phone, school_name, major, desired_job, profile_image, created_at, last_login 
-         FROM users WHERE id = $1 AND is_active = true`,
-        [decoded.id]
-      );
-    }
+    // SELECT * 사용으로 컬럼 존재 여부에 무관하게 동작
+    const result = await query(
+      `SELECT * FROM users WHERE id = $1 AND is_active = true`,
+      [decoded.id]
+    );
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    res.json({ user: result.rows[0] });
+    // password_hash 제외하고 반환
+    const { password_hash, ...userData } = result.rows[0];
+    res.json({ user: userData });
   } catch (error) {
     console.error('Get user error:', error);
     res.status(401).json({ error: 'Invalid token' });

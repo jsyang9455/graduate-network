@@ -63,31 +63,27 @@ router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
-    let result;
-    try {
-      result = await query(
-        `SELECT u.id, u.email, u.name, u.user_type, u.phone, u.school_name, u.major, u.desired_job, u.profile_image, u.created_at,
-                u.graduation_year, u.department_name,
-                gp.major AS gp_major, gp.current_company, gp.current_position, 
-                gp.bio, gp.skills, gp.is_mentor
-         FROM users u
-         LEFT JOIN graduate_profiles gp ON u.id = gp.user_id
-         WHERE u.id = $1 AND u.is_active = true`,
-        [id]
-      );
-    } catch (colError) {
-      console.warn('GET /:id fallback (missing columns):', colError.message);
-      result = await query(
-        `SELECT u.id, u.email, u.name, u.user_type, u.phone, u.school_name, u.major, u.desired_job, u.profile_image, u.created_at,
-                null AS graduation_year, null AS department_name,
-                gp.major AS gp_major, gp.current_company, gp.current_position, 
-                gp.bio, gp.skills, gp.is_mentor
-         FROM users u
-         LEFT JOIN graduate_profiles gp ON u.id = gp.user_id
-         WHERE u.id = $1 AND u.is_active = true`,
-        [id]
-      );
-    }
+    const colCheckResult = await query(
+      `SELECT column_name FROM information_schema.columns 
+       WHERE table_name = 'users' AND column_name IN ('major','desired_job','school_name','graduation_year','department_name')`
+    );
+    const existingCols = colCheckResult.rows.map(r => r.column_name);
+    const sel = (col, alias) => existingCols.includes(col)
+      ? `u.${col}${alias ? ` AS ${alias}` : ''}`
+      : `null AS ${alias || col}`;
+
+    const result = await query(
+      `SELECT u.id, u.email, u.name, u.user_type, u.phone,
+              ${sel('school_name')}, ${sel('major')}, ${sel('desired_job')},
+              u.profile_image, u.created_at,
+              ${sel('graduation_year')}, ${sel('department_name')},
+              gp.major AS gp_major, gp.current_company, gp.current_position, 
+              gp.bio, gp.skills, gp.is_mentor
+       FROM users u
+       LEFT JOIN graduate_profiles gp ON u.id = gp.user_id
+       WHERE u.id = $1 AND u.is_active = true`,
+      [id]
+    );
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'User not found' });
@@ -106,45 +102,46 @@ router.put('/profile', auth, async (req, res) => {
     const { name, phone, profile_image, school_name, major, desired_job, graduation_year, department_name } = req.body;
     const userId = req.user.id;
 
-    // DB에 어떤 컬럼이 존재하는지 먼저 확인
+    // 실제 존재하는 컬럼만 SET절에 포함
     const colCheck = await query(
       `SELECT column_name FROM information_schema.columns 
-       WHERE table_name = 'users' AND column_name IN ('graduation_year', 'department_name')`
+       WHERE table_name = 'users' AND column_name IN 
+         ('phone','profile_image','school_name','major','desired_job','graduation_year','department_name')`
     );
     const existingCols = colCheck.rows.map(r => r.column_name);
-    const hasGradYear = existingCols.includes('graduation_year');
-    const hasDeptName = existingCols.includes('department_name');
 
-    let setClauses = [
-      'name = COALESCE($1, name)',
-      'phone = COALESCE($2, phone)',
-      'profile_image = COALESCE($3, profile_image)',
-      'school_name = COALESCE($4, school_name)',
-      'major = COALESCE($5, major)',
-      'desired_job = COALESCE($6, desired_job)',
-      'updated_at = CURRENT_TIMESTAMP'
-    ];
-    let params = [name, phone, profile_image, school_name, major, desired_job];
-    let paramIdx = 6;
+    const fieldMap = {
+      phone:           phone,
+      profile_image:   profile_image,
+      school_name:     school_name,
+      major:           major,
+      desired_job:     desired_job,
+      graduation_year: graduation_year || null,
+      department_name: department_name || null,
+    };
 
-    if (hasGradYear) {
-      paramIdx++;
-      setClauses.splice(6, 0, `graduation_year = COALESCE($${paramIdx}, graduation_year)`);
-      params.push(graduation_year || null);
-    }
-    if (hasDeptName) {
-      paramIdx++;
-      setClauses.splice(hasGradYear ? 7 : 6, 0, `department_name = COALESCE($${paramIdx}, department_name)`);
-      params.push(department_name || null);
+    const setClauses = ['name = COALESCE($1, name)', 'updated_at = CURRENT_TIMESTAMP'];
+    const params = [name];
+    let paramIdx = 1;
+
+    for (const [col, val] of Object.entries(fieldMap)) {
+      if (existingCols.includes(col)) {
+        paramIdx++;
+        setClauses.push(`${col} = COALESCE($${paramIdx}, ${col})`);
+        params.push(val);
+      }
     }
 
     paramIdx++;
     params.push(userId);
 
-    const returning = `RETURNING id, email, name, user_type, phone, school_name, major, desired_job, profile_image${hasGradYear ? ', graduation_year' : ''}${hasDeptName ? ', department_name' : ''}`;
+    const baseReturn = 'id, email, name, user_type, profile_image';
+    const extraReturn = Object.keys(fieldMap)
+      .filter(c => existingCols.includes(c))
+      .join(', ');
 
     const result = await query(
-      `UPDATE users SET ${setClauses.join(', ')} WHERE id = $${paramIdx} ${returning}`,
+      `UPDATE users SET ${setClauses.join(', ')} WHERE id = $${paramIdx} RETURNING ${baseReturn}${extraReturn ? ', ' + extraReturn : ''}`,
       params
     );
 
@@ -152,7 +149,7 @@ router.put('/profile', auth, async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    console.log(`Profile updated for user ${userId} (hasGradYear=${hasGradYear}, hasDeptName=${hasDeptName})`);
+    console.log(`Profile updated for user ${userId}, cols: [${existingCols.join(',')}]`);
 
     res.json({ 
       message: 'Profile updated successfully',
@@ -271,60 +268,63 @@ router.get('/', async (req, res) => {
 
     const showWithdrawn = include_withdrawn === 'true';
 
-    const buildQuery = (withExtra) => {
-      const extraCols = withExtra
-        ? ', u.withdraw_reason, u.withdrawn_at'
-        : ', null AS withdraw_reason, null AS withdrawn_at';
-      let q = `
-        SELECT u.id, u.email, u.name, u.user_type, u.phone, u.school_name, u.major, u.desired_job, u.profile_image, u.created_at,
-               u.is_active${extraCols},
-               gp.graduation_year, gp.major AS gp_major, gp.current_company, 
-               gp.current_position, gp.is_mentor
-        FROM users u
-        LEFT JOIN graduate_profiles gp ON u.id = gp.user_id
-        WHERE ${showWithdrawn ? 'u.is_active = false' : 'u.is_active = true'}
-      `;
-      return q;
-    };
+    // users 테이블에 실제 존재하는 컬럼만 SELECT (AWS DB가 구버전일 수 있음)
+    const colCheckResult = await query(
+      `SELECT column_name FROM information_schema.columns 
+       WHERE table_name = 'users' AND column_name IN ('major','desired_job','school_name','withdraw_reason','withdrawn_at')`
+    );
+    const existingCols = colCheckResult.rows.map(r => r.column_name);
+
+    const sel = (col, alias) => existingCols.includes(col)
+      ? `u.${col}${alias ? ` AS ${alias}` : ''}`
+      : `null AS ${alias || col}`;
+
+    const extraWithdraw = existingCols.includes('withdraw_reason')
+      ? ', u.withdraw_reason, u.withdrawn_at'
+      : ', null AS withdraw_reason, null AS withdrawn_at';
+
+    let queryText = `
+      SELECT u.id, u.email, u.name, u.user_type, u.phone,
+             ${sel('school_name')}, ${sel('major')}, ${sel('desired_job')},
+             u.profile_image, u.created_at, u.is_active${extraWithdraw},
+             gp.graduation_year, gp.major AS gp_major, gp.current_company, 
+             gp.current_position, gp.is_mentor
+      FROM users u
+      LEFT JOIN graduate_profiles gp ON u.id = gp.user_id
+      WHERE ${showWithdrawn ? 'u.is_active = false' : 'u.is_active = true'}
+    `;
 
     const params = [];
     let paramCount = 0;
-    let filterSql = '';
 
     if (search) {
       paramCount++;
-      filterSql += ` AND (u.name ILIKE $${paramCount} OR gp.current_company ILIKE $${paramCount})`;
+      queryText += ` AND (u.name ILIKE $${paramCount} OR gp.current_company ILIKE $${paramCount})`;
       params.push(`%${search}%`);
     }
     if (user_type) {
       paramCount++;
-      filterSql += ` AND u.user_type = $${paramCount}`;
+      queryText += ` AND u.user_type = $${paramCount}`;
       params.push(user_type);
     }
     if (graduation_year) {
       paramCount++;
-      filterSql += ` AND gp.graduation_year = $${paramCount}`;
+      queryText += ` AND gp.graduation_year = $${paramCount}`;
       params.push(graduation_year);
     }
     if (major) {
       paramCount++;
-      filterSql += ` AND gp.major ILIKE $${paramCount}`;
+      queryText += ` AND gp.major ILIKE $${paramCount}`;
       params.push(`%${major}%`);
     }
     if (is_mentor === 'true') {
-      filterSql += ` AND gp.is_mentor = true`;
+      queryText += ` AND gp.is_mentor = true`;
     }
 
-    const orderLimit = ` ORDER BY u.created_at DESC LIMIT $${paramCount + 1} OFFSET $${paramCount + 2}`;
-    const pageParams = [...params, limit, (page - 1) * limit];
+    queryText += ` ORDER BY u.created_at DESC LIMIT $${paramCount + 1} OFFSET $${paramCount + 2}`;
+    params.push(limit, (page - 1) * limit);
 
-    let result;
-    try {
-      result = await query(buildQuery(true) + filterSql + orderLimit, pageParams);
-    } catch (colError) {
-      console.warn('Falling back to basic user list (missing columns):', colError.message);
-      result = await query(buildQuery(false) + filterSql + orderLimit, pageParams);
-    }
+    const result = await query(queryText, params);
 
     // Get total count
     let countQuery = `
