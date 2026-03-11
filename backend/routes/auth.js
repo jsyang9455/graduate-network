@@ -18,7 +18,7 @@ router.post('/register', [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, password, name, user_type, phone, school_name } = req.body;
+    const { email, password, name, user_type, phone, school_name, major, desired_job } = req.body;
 
     // Check if user exists
     const existingUser = await query(
@@ -35,10 +35,10 @@ router.post('/register', [
 
     // Create user
     const result = await query(
-      `INSERT INTO users (email, password_hash, name, user_type, phone, school_name) 
-       VALUES ($1, $2, $3, $4, $5, $6) 
-       RETURNING id, email, name, user_type, school_name, created_at`,
-      [email, password_hash, name, user_type, phone, school_name]
+      `INSERT INTO users (email, password_hash, name, user_type, phone, school_name, major, desired_job) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+       RETURNING id, email, name, user_type, school_name, major, desired_job, created_at`,
+      [email, password_hash, name, user_type, phone, school_name, major || null, desired_job || null]
     );
 
     const user = result.rows[0];
@@ -56,7 +56,10 @@ router.post('/register', [
         id: user.id,
         email: user.email,
         name: user.name,
-        user_type: user.user_type
+        user_type: user.user_type,
+        school_name: user.school_name,
+        major: user.major,
+        desired_job: user.desired_job
       },
       token
     });
@@ -121,6 +124,10 @@ router.post('/login', [
         email: user.email,
         name: user.name,
         user_type: user.user_type,
+        phone: user.phone,
+        school_name: user.school_name,
+        major: user.major,
+        desired_job: user.desired_job,
         profile_image: user.profile_image
       },
       token
@@ -143,7 +150,7 @@ router.get('/me', async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
     const result = await query(
-      `SELECT id, email, name, user_type, phone, profile_image, created_at, last_login 
+      `SELECT id, email, name, user_type, phone, school_name, major, desired_job, profile_image, created_at, last_login 
        FROM users WHERE id = $1 AND is_active = true`,
       [decoded.id]
     );

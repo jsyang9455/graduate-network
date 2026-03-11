@@ -9,8 +9,8 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params;
 
     const result = await query(
-      `SELECT u.id, u.email, u.name, u.user_type, u.phone, u.profile_image, u.created_at,
-              gp.graduation_year, gp.major, gp.current_company, gp.current_position, 
+      `SELECT u.id, u.email, u.name, u.user_type, u.phone, u.school_name, u.major, u.desired_job, u.profile_image, u.created_at,
+              gp.graduation_year, gp.major AS gp_major, gp.current_company, gp.current_position, 
               gp.bio, gp.skills, gp.is_mentor
        FROM users u
        LEFT JOIN graduate_profiles gp ON u.id = gp.user_id
@@ -32,7 +32,7 @@ router.get('/:id', async (req, res) => {
 // Update user profile
 router.put('/profile', auth, async (req, res) => {
   try {
-    const { name, phone, profile_image } = req.body;
+    const { name, phone, profile_image, school_name, major, desired_job } = req.body;
     const userId = req.user.id;
 
     const result = await query(
@@ -40,10 +40,13 @@ router.put('/profile', auth, async (req, res) => {
        SET name = COALESCE($1, name),
            phone = COALESCE($2, phone),
            profile_image = COALESCE($3, profile_image),
+           school_name = COALESCE($4, school_name),
+           major = COALESCE($5, major),
+           desired_job = COALESCE($6, desired_job),
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $4
-       RETURNING id, email, name, user_type, phone, profile_image`,
-      [name, phone, profile_image, userId]
+       WHERE id = $7
+       RETURNING id, email, name, user_type, phone, school_name, major, desired_job, profile_image`,
+      [name, phone, profile_image, school_name, major, desired_job, userId]
     );
 
     res.json({ 
@@ -161,8 +164,8 @@ router.get('/', async (req, res) => {
     } = req.query;
 
     let queryText = `
-      SELECT u.id, u.email, u.name, u.user_type, u.phone, u.school_name, u.profile_image, u.created_at,
-             gp.graduation_year, gp.major, gp.current_company, 
+      SELECT u.id, u.email, u.name, u.user_type, u.phone, u.school_name, u.major, u.desired_job, u.profile_image, u.created_at,
+             gp.graduation_year, gp.major AS gp_major, gp.current_company, 
              gp.current_position, gp.is_mentor
       FROM users u
       LEFT JOIN graduate_profiles gp ON u.id = gp.user_id

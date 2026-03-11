@@ -9,6 +9,8 @@ CREATE TABLE users (
     user_type VARCHAR(20) NOT NULL CHECK (user_type IN ('student', 'graduate', 'teacher', 'company', 'admin')),
     phone VARCHAR(20),
     school_name VARCHAR(200),
+    major VARCHAR(100),
+    desired_job VARCHAR(100),
     profile_image TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

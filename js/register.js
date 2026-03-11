@@ -66,16 +66,18 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         // Add student-specific fields only if student type
-        if (userType === 'student') {
+        if (userType === 'student' || userType === 'graduate') {
             const phoneInput = document.getElementById('phone');
             const graduationYearInput = document.getElementById('graduationYear');
             const majorInput = document.getElementById('major');
             const studentIdInput = document.getElementById('studentId');
+            const desiredJobInput = document.getElementById('desiredJob');
             
             formData.phone = phoneInput ? phoneInput.value : '';
             formData.graduationYear = graduationYearInput ? graduationYearInput.value : '';
             formData.major = majorInput ? majorInput.value : '';
             formData.studentId = studentIdInput ? studentIdInput.value : '';
+            formData.desiredJob = desiredJobInput ? desiredJobInput.value : '';
         }
 
         // Validation
@@ -97,7 +99,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 name: formData.name,
                 user_type: formData.userType === 'teacher' ? 'teacher' : (formData.userType === 'student' ? 'student' : 'graduate'),
                 phone: formData.phone || '',
-                school_name: formData.schoolName
+                school_name: formData.schoolName,
+                major: formData.major || '',
+                desired_job: formData.desiredJob || ''
             };
 
             try {
