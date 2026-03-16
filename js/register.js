@@ -25,13 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Remove required from student fields
                 const phoneInput = document.getElementById('phone');
                 const graduationYearInput = document.getElementById('graduationYear');
-                const majorInput = document.getElementById('major');
-                const studentIdInput = document.getElementById('studentId');
                 
                 if (phoneInput) phoneInput.removeAttribute('required');
                 if (graduationYearInput) graduationYearInput.removeAttribute('required');
-                if (majorInput) majorInput.removeAttribute('required');
-                if (studentIdInput) studentIdInput.removeAttribute('required');
             } else {
                 // 학생/졸업생: 모든 필드 표시
                 studentFields.style.display = 'block';
@@ -39,11 +35,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Add required to student fields
                 const phoneInput = document.getElementById('phone');
                 const graduationYearInput = document.getElementById('graduationYear');
-                const majorInput = document.getElementById('major');
                 
                 if (phoneInput) phoneInput.setAttribute('required', 'required');
                 if (graduationYearInput) graduationYearInput.setAttribute('required', 'required');
-                if (majorInput) majorInput.setAttribute('required', 'required');
             }
         });
     });
@@ -70,13 +64,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const phoneInput = document.getElementById('phone');
             const graduationYearInput = document.getElementById('graduationYear');
             const majorInput = document.getElementById('major');
-            const studentIdInput = document.getElementById('studentId');
+            const departmentNameInput = document.getElementById('departmentName');
             const desiredJobInput = document.getElementById('desiredJob');
             
             formData.phone = phoneInput ? phoneInput.value : '';
             formData.graduationYear = graduationYearInput ? graduationYearInput.value : '';
             formData.major = majorInput ? majorInput.value : '';
-            formData.studentId = studentIdInput ? studentIdInput.value : '';
+            formData.departmentName = departmentNameInput ? departmentNameInput.value : '';
             formData.desiredJob = desiredJobInput ? desiredJobInput.value : '';
         }
 
@@ -97,10 +91,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 email: formData.email,
                 password: formData.password,
                 name: formData.name,
-                user_type: formData.userType === 'teacher' ? 'teacher' : (formData.userType === 'student' ? 'student' : 'graduate'),
+                user_type: formData.userType,
                 phone: formData.phone || '',
                 school_name: formData.schoolName,
                 major: formData.major || '',
+                department_name: formData.departmentName || '',
+                graduation_year: formData.graduationYear ? parseInt(formData.graduationYear) : null,
                 desired_job: formData.desiredJob || ''
             };
 
@@ -164,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Check student-specific required fields
         if (data.userType === 'student') {
-            if (!data.phone || !data.graduationYear || !data.major) {
+            if (!data.phone || !data.graduationYear) {
                 showError('필수 항목을 모두 입력해주세요.');
                 return false;
             }

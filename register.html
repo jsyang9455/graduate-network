@@ -22,7 +22,11 @@
                     <div style="display: flex; gap: 20px; margin-top: 0.5rem;">
                         <label class="radio-label">
                             <input type="radio" name="userType" value="student" checked>
-                            <span>학생/졸업생</span>
+                            <span>학생</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="userType" value="graduate">
+                            <span>졸업생</span>
                         </label>
                         <label class="radio-label">
                             <input type="radio" name="userType" value="teacher">
@@ -65,17 +69,18 @@
                         <label for="phone">전화번호 *</label>
                         <input type="tel" id="phone" name="phone" required placeholder="010-1234-5678">
                     </div>
-                    <div class="form-group">
-                        <label for="studentId">학번</label>
-                        <input type="text" id="studentId" name="studentId" placeholder="예: 20230101">
-                    </div>
                     
                     <div class="form-group">
-                        <label for="major">전공 *</label>
-                        <select id="major" name="major" required>
-                            <option value="">전공 선택</option>
+                        <label for="major">전공</label>
+                        <select id="major" name="major">
+                            <option value="">전공 선택 (선택사항)</option>
                             <!-- Options will be loaded dynamically from API -->
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="departmentName">학과명</label>
+                        <input type="text" id="departmentName" name="departmentName" placeholder="예: 기계설계과, 전기제어과">
                     </div>
                     
                     <div class="form-group">
