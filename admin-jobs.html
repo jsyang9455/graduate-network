@@ -95,44 +95,73 @@
             <div class="modal-body">
                 <form id="jobForm">
                     <input type="hidden" id="jobId">
-                    <div class="form-group">
-                        <label>채용 제목 *</label>
-                        <input type="text" id="jobTitle" required>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div class="form-group" style="grid-column:1/-1;">
+                            <label>채용 제목 (포지션) *</label>
+                            <input type="text" id="jobPosition" required placeholder="예: 전기차 배터리 엔지니어">
+                        </div>
+                        <div class="form-group">
+                            <label>기업명 *</label>
+                            <input type="text" id="jobCompany" required placeholder="예: 현대자동차">
+                        </div>
+                        <div class="form-group">
+                            <label>기업 유형</label>
+                            <select id="jobCompanyType">
+                                <option value="대기업">대기업</option>
+                                <option value="중견기업">중견기업</option>
+                                <option value="중소기업">중소기업</option>
+                                <option value="스타트업">스타트업</option>
+                                <option value="공공기관">공공기관</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1;">
+                            <label>채용 내용 *</label>
+                            <textarea id="jobDescription" rows="5" required placeholder="업무 내용, 자격요건 등을 입력하세요"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>경력</label>
+                            <select id="jobExperience">
+                                <option value="신입">신입</option>
+                                <option value="1-3년">1-3년</option>
+                                <option value="3-5년">3-5년</option>
+                                <option value="5년 이상">5년 이상</option>
+                                <option value="경력무관">경력무관</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>채용 유형</label>
+                            <select id="jobType">
+                                <option value="정규직">정규직</option>
+                                <option value="계약직">계약직</option>
+                                <option value="인턴">인턴</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>근무 지역</label>
+                            <input type="text" id="jobLocation" placeholder="예: 서울, 전북">
+                        </div>
+                        <div class="form-group">
+                            <label>채용 인원</label>
+                            <input type="text" id="jobRecruitCount" placeholder="예: 3명">
+                        </div>
+                        <div class="form-group">
+                            <label>급여 정보</label>
+                            <input type="text" id="jobSalary" placeholder="예: 4,000만원 이상">
+                        </div>
+                        <div class="form-group">
+                            <label>마감일</label>
+                            <input type="date" id="jobDeadline">
+                        </div>
+                        <div class="form-group">
+                            <label>상태</label>
+                            <select id="jobStatus">
+                                <option value="active">진행중</option>
+                                <option value="closed">마감</option>
+                                <option value="expired">만료</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>채용 내용 *</label>
-                        <textarea id="jobDescription" rows="6" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>채용 유형 *</label>
-                        <select id="jobType" required>
-                            <option value="">선택하세요</option>
-                            <option value="정규직">정규직</option>
-                            <option value="계약직">계약직</option>
-                            <option value="인턴">인턴</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>근무 지역</label>
-                        <input type="text" id="jobLocation">
-                    </div>
-                    <div class="form-group">
-                        <label>급여 정보</label>
-                        <input type="text" id="jobSalary">
-                    </div>
-                    <div class="form-group">
-                        <label>마감일</label>
-                        <input type="date" id="jobDeadline">
-                    </div>
-                    <div class="form-group">
-                        <label>상태</label>
-                        <select id="jobStatus">
-                            <option value="active">진행중</option>
-                            <option value="closed">마감</option>
-                            <option value="expired">만료</option>
-                        </select>
-                    </div>
-                    <div class="form-actions">
+                    <div class="form-actions" style="margin-top:1rem;">
                         <button type="submit" class="btn btn-primary">저장</button>
                         <button type="button" onclick="closeJobModal()" class="btn btn-secondary">취소</button>
                     </div>
@@ -185,25 +214,17 @@
             }
 
             tbody.innerHTML = jobs.map((job, index) => {
-                const statusText = {
-                    'active': '진행중',
-                    'closed': '마감',
-                    'expired': '만료'
-                };
-                const statusClass = {
-                    'active': 'success',
-                    'closed': 'warning',
-                    'expired': 'danger'
-                };
+                const statusText = { 'active': '진행중', 'closed': '마감', 'expired': '만료' };
+                const statusClass = { 'active': 'success', 'closed': 'warning', 'expired': 'danger' };
 
                 return `
                     <tr style="border-bottom: 1px solid #e5e7eb;">
                         <td style="padding: 1rem;">${index + 1}</td>
-                        <td style="padding: 1rem;">${job.companyName || '-'}</td>
-                        <td style="padding: 1rem;">${job.jobTitle || job.title}</td>
+                        <td style="padding: 1rem;">${job.company || job.companyName || '-'}</td>
+                        <td style="padding: 1rem;">${job.position || job.jobTitle || job.title || '-'}</td>
                         <td style="padding: 1rem;">${job.deadline || '상시채용'}</td>
                         <td style="padding: 1rem;">${job.applicants || 0}명</td>
-                        <td style="padding: 1rem;"><span class="badge badge-${statusClass[job.status]}">${statusText[job.status] || job.status}</span></td>
+                        <td style="padding: 1rem;"><span class="badge badge-${statusClass[job.status] || 'secondary'}">${statusText[job.status] || job.status}</span></td>
                         <td style="padding: 1rem; text-align: center;">
                             <button onclick="viewJob(${job.id})" class="btn btn-sm btn-secondary" style="margin-right: 0.5rem;">보기</button>
                             <button onclick="editJob(${job.id})" class="btn btn-sm btn-primary" style="margin-right: 0.5rem;">수정</button>
@@ -223,8 +244,8 @@
 
             if (searchTerm) {
                 filtered = filtered.filter(job => 
-                    (job.jobTitle || job.title || '').toLowerCase().includes(searchTerm) ||
-                    (job.companyName || '').toLowerCase().includes(searchTerm)
+                    (job.position || job.jobTitle || job.title || '').toLowerCase().includes(searchTerm) ||
+                    (job.company || job.companyName || '').toLowerCase().includes(searchTerm)
                 );
             }
 
@@ -246,7 +267,21 @@
             const job = allJobs.find(j => j.id === jobId);
             if (!job) return;
             
-            alert(`채용 제목: ${job.jobTitle || job.title}\n\n${job.description}\n\n상태: ${job.status}\n지원자: ${job.applicants || 0}명`);
+            alert([
+                `[채용 제목] ${job.position || job.jobTitle || job.title || '-'}`,
+                `[기업명] ${job.company || job.companyName || '-'}`,
+                `[기업유형] ${job.companyType || '-'}`,
+                `[경력] ${job.experience || '-'}`,
+                `[채용유형] ${job.type || '-'}`,
+                `[근무지역] ${job.location || '-'}`,
+                `[채용인원] ${job.recruitCount || '-'}`,
+                `[급여] ${job.salary || '-'}`,
+                `[마감일] ${job.deadline || '상시채용'}`,
+                `[상태] ${job.status}`,
+                `[지원자수] ${job.applicants || 0}명`,
+                '',
+                `[내용] ${job.description || '-'}`
+            ].join('\n'));
         }
 
         function editJob(jobId) {
@@ -255,13 +290,17 @@
 
             document.getElementById('jobModalTitle').textContent = '채용공고 수정';
             document.getElementById('jobId').value = job.id;
-            document.getElementById('jobTitle').value = job.jobTitle || job.title;
-            document.getElementById('jobDescription').value = job.description;
-            document.getElementById('jobType').value = job.type;
-            document.getElementById('jobLocation').value = job.location;
-            document.getElementById('jobSalary').value = job.salary;
-            document.getElementById('jobDeadline').value = job.deadline;
-            document.getElementById('jobStatus').value = job.status;
+            document.getElementById('jobPosition').value = job.position || job.jobTitle || job.title || '';
+            document.getElementById('jobCompany').value = job.company || job.companyName || '';
+            document.getElementById('jobCompanyType').value = job.companyType || '중소기업';
+            document.getElementById('jobDescription').value = job.description || '';
+            document.getElementById('jobExperience').value = job.experience || '신입';
+            document.getElementById('jobType').value = job.type || '정규직';
+            document.getElementById('jobLocation').value = job.location || '';
+            document.getElementById('jobRecruitCount').value = job.recruitCount || '';
+            document.getElementById('jobSalary').value = job.salary || '';
+            document.getElementById('jobDeadline').value = job.deadline || '';
+            document.getElementById('jobStatus').value = job.status || 'active';
 
             document.getElementById('jobModal').style.display = 'flex';
         }
@@ -276,13 +315,17 @@
             const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
 
             const jobData = {
-                jobTitle: document.getElementById('jobTitle').value,
+                position:    document.getElementById('jobPosition').value,
+                company:     document.getElementById('jobCompany').value,
+                companyType: document.getElementById('jobCompanyType').value,
                 description: document.getElementById('jobDescription').value,
-                type: document.getElementById('jobType').value,
-                location: document.getElementById('jobLocation').value || '미정',
-                salary: document.getElementById('jobSalary').value || '협의',
-                deadline: document.getElementById('jobDeadline').value || '상시채용',
-                status: document.getElementById('jobStatus').value
+                experience:  document.getElementById('jobExperience').value,
+                type:        document.getElementById('jobType').value,
+                location:    document.getElementById('jobLocation').value || '미정',
+                recruitCount: document.getElementById('jobRecruitCount').value || '-',
+                salary:      document.getElementById('jobSalary').value || '협의',
+                deadline:    document.getElementById('jobDeadline').value || '상시채용',
+                status:      document.getElementById('jobStatus').value
             };
 
             if (jobId) {
@@ -296,7 +339,7 @@
                 const newJob = {
                     id: Date.now(),
                     companyId: 0,
-                    companyName: '관리자',
+                    companyName: jobData.company,
                     ...jobData,
                     createdAt: new Date().toISOString(),
                     views: 0,

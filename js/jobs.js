@@ -235,9 +235,9 @@ function applyFilters(companyType, experience, location, searchQuery = '') {
     if (searchQuery) {
         const lowerQuery = searchQuery.toLowerCase();
         filtered = filtered.filter(job => 
-            job.company.toLowerCase().includes(lowerQuery) ||
-            job.position.toLowerCase().includes(lowerQuery) ||
-            job.description.toLowerCase().includes(lowerQuery)
+            (job.company || job.companyName || '').toLowerCase().includes(lowerQuery) ||
+            (job.position || job.jobTitle || job.title || '').toLowerCase().includes(lowerQuery) ||
+            (job.description || '').toLowerCase().includes(lowerQuery)
         );
     }
     
@@ -375,13 +375,18 @@ function setupJobCreateForm() {
         const jobData = {
             id: Date.now(),
             companyId: user.id,
+            company: user.name,
             companyName: user.name,
+            companyType: '중소기업',
+            position: document.getElementById('title').value,
             jobTitle: document.getElementById('title').value,
             description: document.getElementById('description').value,
             type: document.getElementById('type').value,
+            experience: '경력무관',
             location: document.getElementById('location').value || '미정',
             salary: document.getElementById('salary').value || '협의',
             deadline: document.getElementById('deadline').value || '상시채용',
+            recruitCount: document.getElementById('headcount')?.value ? document.getElementById('headcount').value + '명' : '-',
             headcount: document.getElementById('headcount')?.value ? parseInt(document.getElementById('headcount').value) : null,
             status: 'active',
             createdAt: new Date().toISOString(),
@@ -413,17 +418,17 @@ function setupJobEditForm() {
 
         if (job) {
             document.getElementById('jobId').value = job.id;
-            document.getElementById('title').value = job.jobTitle;
-            document.getElementById('description').value = job.description;
-            document.getElementById('type').value = job.type;
-            document.getElementById('location').value = job.location;
-            document.getElementById('salary').value = job.salary;
-            document.getElementById('deadline').value = job.deadline;
+            document.getElementById('title').value = job.position || job.jobTitle || '';
+            document.getElementById('description').value = job.description || '';
+            document.getElementById('type').value = job.type || '';
+            document.getElementById('location').value = job.location || '';
+            document.getElementById('salary').value = job.salary || '';
+            document.getElementById('deadline').value = job.deadline || '';
             if (document.getElementById('headcount')) {
                 document.getElementById('headcount').value = job.headcount || '';
             }
             if (document.getElementById('status')) {
-                document.getElementById('status').value = job.status;
+                document.getElementById('status').value = job.status || 'active';
             }
         }
     }
@@ -442,6 +447,7 @@ function setupJobEditForm() {
         const jobIndex = jobs.findIndex(j => j.id == jobId);
 
         if (jobIndex !== -1) {
+            jobs[jobIndex].position = document.getElementById('title').value;
             jobs[jobIndex].jobTitle = document.getElementById('title').value;
             jobs[jobIndex].description = document.getElementById('description').value;
             jobs[jobIndex].type = document.getElementById('type').value;
