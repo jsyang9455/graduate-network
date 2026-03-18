@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         setupSearch();
         setupFilters();
+        loadMajorFilter();
     }
 });
 
@@ -327,6 +328,40 @@ function searchAlumni() {
     });
     
     displayAlumni(filtered);
+}
+
+// 전공 필터 옵션 동적 로드 (회원가입과 동일한 목록)
+async function loadMajorFilter() {
+    const majorSelect = document.getElementById('filterMajor');
+    if (!majorSelect) return;
+
+    try {
+        const response = await api.get('/majors');
+        const majors = response.majors || [];
+
+        // 기존 옵션 제거 (첫 번째 "전공" 옵션 제외)
+        while (majorSelect.options.length > 1) {
+            majorSelect.remove(1);
+        }
+
+        majors.forEach(major => {
+            const option = document.createElement('option');
+            option.value = major.name;
+            option.textContent = major.name;
+            majorSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('전공 목록 로드 실패:', error);
+        // API 실패 시 기본 학과 목록 사용
+        const defaultMajors = ['기계과', '전기과', '전자과', '컴퓨터과', '건축과', '토목과'];
+        while (majorSelect.options.length > 1) majorSelect.remove(1);
+        defaultMajors.forEach(name => {
+            const option = document.createElement('option');
+            option.value = name;
+            option.textContent = name;
+            majorSelect.appendChild(option);
+        });
+    }
 }
 
 // 필터 설정
