@@ -255,17 +255,17 @@ function loadRecommendedJobs() {
     recommendedJobsContainer.innerHTML = activeJobs.map(job => `
         <div class="job-card">
             <div class="job-card-header">
-                <h3>${job.companyName || '회사명'}</h3>
+                <h3>${job.company || job.companyName || '-'}</h3>
                 <span class="job-badge">${job.status === 'active' ? '모집중' : '마감'}</span>
             </div>
             <div class="job-card-body">
-                <h4>${job.jobTitle || job.title}</h4>
+                <h4>${job.position || job.jobTitle || job.title || '-'}</h4>
                 <div class="job-meta">
                     <span>📍 ${job.location || '위치 미정'}</span>
                     <span>💰 ${job.salary || '협의'}</span>
                     <span>📅 ${job.deadline || '상시채용'}</span>
                 </div>
-                <p class="job-description">${(job.description || '').substring(0, 80)}...</p>
+                <p class="job-description">${(job.description || '').substring(0, 80)}${job.description && job.description.length > 80 ? '...' : ''}</p>
             </div>
             <div class="job-card-footer">
                 <button class="btn btn-primary btn-sm" onclick="location.href='jobs.html'">지원하기</button>
