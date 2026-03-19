@@ -82,7 +82,7 @@ function loadTeachers() {
         teachers.forEach(teacher => {
             const option = document.createElement('option');
             option.value = teacher.id;
-            option.textContent = `${teacher.name} 선생님 (${teacher.schoolName || '전주공업고등학교'})`;
+            option.textContent = `${teacher.name} 선생님 (${teacher.schoolName || '전북지역 졸업생 네트워크'})`;
             counselorSelect.appendChild(option);
         });
     }
@@ -100,7 +100,7 @@ function loadTeachers() {
                     </div>
                     <div class="teacher-info">
                         <h3>${teacher.name} 선생님</h3>
-                        <p>🏫 ${teacher.schoolName || '전주공업고등학교'}</p>
+                        <p>🏫 ${teacher.schoolName || '전북지역 졸업생 네트워크'}</p>
                         <p>📧 ${teacher.email}</p>
                         <p>📚 전문 분야: ${teacher.subject || '종합 상담'}</p>
                     </div>
@@ -310,8 +310,9 @@ function loadTeacherCounselingRequests() {
     const users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
     
     container.innerHTML = myRequests.map(req => {
+        // req.studentName 우선 사용 (API 로그인 사용자는 graduateNetwork_users 배열에 없을 수 있으므로)
         const student = users.find(u => String(u.id) === String(req.studentId));
-        const studentName = student ? student.name : '알 수 없음';
+        const studentName = req.studentName || (student ? student.name : '알 수 없음');
         const statusText = req.status === 'pending' ? '대기중' : req.status === 'approved' ? '승인됨' : '거절됨';
         const statusClass = req.status === 'pending' ? 'status-pending' : req.status === 'approved' ? 'status-approved' : 'status-rejected';
         
@@ -369,15 +370,17 @@ function approveCounselingRequest(requestId, studentName) {
     requests[requestIndex].respondedAt = new Date().toISOString();
     localStorage.setItem('counseling_requests', JSON.stringify(requests));
     
-    // Send message to student
+    // Send message to student (networking.js 필드명과 통일)
     const messages = JSON.parse(localStorage.getItem('graduateNetwork_messages') || '[]');
+    const req = requests[requestIndex];
     messages.push({
-        id: Date.now(),
-        senderId: user.id,
-        senderName: user.name,
-        receiverId: requests[requestIndex].studentId,
-        content: `[상담 승인] ${message}`,
-        timestamp: new Date().toISOString(),
+        id: Date.now().toString(),
+        fromUserId: String(user.id),
+        fromUserName: user.name,
+        toUserId: String(req.studentId),
+        toUserName: req.studentName || studentName,
+        message: `[상담 승인] ${message}`,
+        sentAt: new Date().toISOString(),
         read: false
     });
     localStorage.setItem('graduateNetwork_messages', JSON.stringify(messages));
@@ -407,15 +410,17 @@ function rejectCounselingRequest(requestId, studentName) {
     requests[requestIndex].respondedAt = new Date().toISOString();
     localStorage.setItem('counseling_requests', JSON.stringify(requests));
     
-    // Send message to student
+    // Send message to student (networking.js 필드명과 통일)
     const messages = JSON.parse(localStorage.getItem('graduateNetwork_messages') || '[]');
+    const req = requests[requestIndex];
     messages.push({
-        id: Date.now(),
-        senderId: user.id,
-        senderName: user.name,
-        receiverId: requests[requestIndex].studentId,
-        content: `[상담 거절] ${message}`,
-        timestamp: new Date().toISOString(),
+        id: Date.now().toString(),
+        fromUserId: String(user.id),
+        fromUserName: user.name,
+        toUserId: String(req.studentId),
+        toUserName: req.studentName || studentName,
+        message: `[상담 거절] ${message}`,
+        sentAt: new Date().toISOString(),
         read: false
     });
     localStorage.setItem('graduateNetwork_messages', JSON.stringify(messages));
