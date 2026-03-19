@@ -158,14 +158,14 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
 
-        // Check student-specific required fields
-        if (data.userType === 'student') {
+        // Check student/graduate-specific required fields
+        if (data.userType === 'student' || data.userType === 'graduate') {
             if (!data.phone || !data.graduationYear) {
-                showError('필수 항목을 모두 입력해주세요.');
+                showError('필수 항목을 모두 입력해주세요. (전화번호, 졸업년도)');
                 return false;
             }
             
-            // Check phone format only for students
+            // Check phone format for students and graduates
             const phoneRegex = /^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$/;
             if (!phoneRegex.test(data.phone.replace(/-/g, ''))) {
                 showError('올바른 연락처 형식이 아닙니다. (예: 010-1234-5678)');

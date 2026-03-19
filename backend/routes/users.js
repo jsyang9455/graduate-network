@@ -423,6 +423,45 @@ router.put('/:id', auth, async (req, res) => {
   }
 });
 
+// Restore (reactivate) withdrawn user (admin only)
+router.patch('/:id/restore', auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (req.user.user_type !== 'admin') {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+
+    let result;
+    try {
+      result = await query(
+        `UPDATE users
+         SET is_active = true,
+             withdraw_reason = NULL,
+             withdrawn_at = NULL,
+             updated_at = CURRENT_TIMESTAMP
+         WHERE id = $1 AND is_active = false
+         RETURNING id, email, name, user_type`,
+        [id]
+      );
+    } catch (colError) {
+      result = await query(
+        `UPDATE users SET is_active = true, updated_at = CURRENT_TIMESTAMP WHERE id = $1 AND is_active = false RETURNING id, email, name, user_type`,
+        [id]
+      );
+    }
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: '해당 탈퇴 회원을 찾을 수 없습니다.' });
+    }
+
+    res.json({ message: '회원이 복구되었습니다.', user: result.rows[0] });
+  } catch (error) {
+    console.error('Restore user error:', error);
+    res.status(500).json({ error: 'Failed to restore user' });
+  }
+});
+
 // Deactivate user (soft delete)
 router.delete('/:id', auth, async (req, res) => {
   try {

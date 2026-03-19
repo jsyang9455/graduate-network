@@ -107,7 +107,8 @@ function displayUsers(userList) {
     const pageUsers = filteredUsers.slice(start, start + PAGE_SIZE);
 
     if (pageUsers.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: #999; padding: 40px;">회원이 없습니다.</td></tr>';
+        const colCount = currentView === 'withdrawn' ? 10 : 9;
+        tbody.innerHTML = `<tr><td colspan="${colCount}" style="text-align: center; color: #999; padding: 40px;">회원이 없습니다.</td></tr>`;
         return;
     }
     
@@ -141,6 +142,10 @@ function displayUsers(userList) {
                     <td style="color:#b91c1c;font-weight:600;">${withdrawnDate}</td>
                     <td style="max-width:200px;">
                         <span title="${withdrawReason}" style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#374151;">${withdrawReason}</span>
+                    </td>
+                    <td>
+                        <button class="btn-small" style="background:#16a34a;color:#fff;border:none;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:0.78rem;" onclick="restoreUser('${user.id}')">복구</button>
+                        <button class="btn-small btn-primary" onclick="editUser('${user.id}')">수정</button>
                     </td>
                 </tr>
             `;
@@ -242,6 +247,25 @@ async function deleteUser(userId) {
     }
 }
 window.deleteUser = deleteUser;
+
+// 탈퇴 회원 복구
+async function restoreUser(userId) {
+    const user = users.find(u => String(u.id) === String(userId));
+    if (!user) return;
+
+    if (!confirm(`${user.name}(${user.email}) 회원을 복구(재활성화)하시겠습니까?`)) return;
+
+    try {
+        await api.patch(`/users/${userId}/restore`);
+        alert(`${user.name} 회원이 정상 회원으로 복구되었습니다.`);
+        loadUsers();
+        loadWithdrawnCount();
+    } catch (error) {
+        console.error('회원 복구 실패:', error);
+        alert('회원 복구에 실패했습니다: ' + (error.message || '다시 시도해주세요.'));
+    }
+}
+window.restoreUser = restoreUser;
 
 // 검색 기능
 function searchUsers() {
@@ -354,6 +378,20 @@ function switchUserTab(tab) {
     if (tabWithdrawn) {
         tabWithdrawn.style.borderBottomColor = tab === 'withdrawn' ? '#3b82f6' : 'transparent';
         tabWithdrawn.style.color = tab === 'withdrawn' ? '#3b82f6' : '#6b7280';
+    }
+
+    // 컬럼 헤더 가시성 토글
+    const thJoinDate = document.getElementById('thJoinDate');
+    const thWithdrawnDate = document.getElementById('thWithdrawnDate');
+    const thWithdrawReason = document.getElementById('thWithdrawReason');
+    if (tab === 'withdrawn') {
+        if (thJoinDate) thJoinDate.style.display = 'none';
+        if (thWithdrawnDate) thWithdrawnDate.style.display = '';
+        if (thWithdrawReason) thWithdrawReason.style.display = '';
+    } else {
+        if (thJoinDate) thJoinDate.style.display = '';
+        if (thWithdrawnDate) thWithdrawnDate.style.display = 'none';
+        if (thWithdrawReason) thWithdrawReason.style.display = 'none';
     }
 
     loadUsers();

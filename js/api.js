@@ -93,6 +93,14 @@ const api = {
     });
   },
 
+  // PATCH request
+  async patch(endpoint, body) {
+    return this.request(endpoint, {
+      method: 'PATCH',
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  },
+
   // DELETE request
   async delete(endpoint) {
     return this.request(endpoint, { method: 'DELETE' });
