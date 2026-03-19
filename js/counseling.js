@@ -72,54 +72,69 @@ async function loadTeachers() {
     const counselorSelect = document.getElementById('counselor');
     const teachersList = document.getElementById('teachersList');
 
+    let teachers = [];
+
+    // 1차: /counseling/teachers (신규 엔드포인트)
+    // 2차: /users?user_type=teacher (구버전 백엔드 fallback)
     try {
         const data = await api.get('/counseling/teachers');
-        const teachers = data.teachers || [];
-
-        // Load into dropdown
-        if (counselorSelect) {
-            counselorSelect.innerHTML = '<option value="">상담교사를 선택하세요</option>';
-            if (teachers.length === 0) {
-                counselorSelect.innerHTML += '<option disabled>등록된 상담교사가 없습니다</option>';
-            } else {
-                teachers.forEach(teacher => {
-                    const option = document.createElement('option');
-                    option.value = teacher.id;
-                    option.textContent = `${teacher.name} 선생님 (${teacher.school_name || '전북지역 졸업생 네트워크'})`;
-                    counselorSelect.appendChild(option);
-                });
+        teachers = data.teachers || [];
+    } catch (firstErr) {
+        console.warn('/counseling/teachers 실패, fallback 시도:', firstErr.message);
+        try {
+            const data2 = await fetch(
+                (typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : '/api')
+                + '/users?user_type=teacher&limit=100'
+            );
+            if (data2.ok) {
+                const json = await data2.json();
+                teachers = (json.users || []).map(u => ({
+                    id: u.id,
+                    name: u.name,
+                    email: u.email,
+                    school_name: u.school_name || null
+                }));
             }
+        } catch (secondErr) {
+            console.error('교사 목록 fallback도 실패:', secondErr.message);
         }
+    }
 
-        // Load into teachers list
-        if (teachersList) {
-            if (teachers.length === 0) {
-                teachersList.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">등록된 상담교사가 없습니다.</p>';
-            } else {
-                teachersList.innerHTML = teachers.map(teacher => `
-                    <div class="teacher-card">
-                        <div class="teacher-avatar"><span>${teacher.name ? teacher.name.charAt(0) : 'T'}</span></div>
-                        <div class="teacher-info">
-                            <h3>${teacher.name} 선생님</h3>
-                            <p>🏫 ${teacher.school_name || '전북지역 졸업생 네트워크'}</p>
-                            <p>📧 ${teacher.email}</p>
-                            <p>📚 전문 분야: 종합 상담</p>
-                        </div>
-                        <div class="teacher-actions">
-                            <button class="btn btn-primary" onclick="requestCounselingWithTeacher('${teacher.id}', '${teacher.name}')">상담 신청</button>
-                            <button class="btn btn-secondary" onclick="sendMessageToTeacher('${teacher.id}', '${teacher.name}')">메시지 보내기</button>
-                        </div>
+    // Load into dropdown
+    if (counselorSelect) {
+        counselorSelect.innerHTML = '<option value="">상담교사를 선택하세요</option>';
+        if (teachers.length === 0) {
+            counselorSelect.innerHTML += '<option disabled>등록된 상담교사가 없습니다</option>';
+        } else {
+            teachers.forEach(teacher => {
+                const option = document.createElement('option');
+                option.value = teacher.id;
+                option.textContent = `${teacher.name} 선생님 (${teacher.school_name || '전북지역 졸업생 네트워크'})`;
+                counselorSelect.appendChild(option);
+            });
+        }
+    }
+
+    // Load into teachers list
+    if (teachersList) {
+        if (teachers.length === 0) {
+            teachersList.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">등록된 상담교사가 없습니다.</p>';
+        } else {
+            teachersList.innerHTML = teachers.map(teacher => `
+                <div class="teacher-card">
+                    <div class="teacher-avatar"><span>${teacher.name ? teacher.name.charAt(0) : 'T'}</span></div>
+                    <div class="teacher-info">
+                        <h3>${teacher.name} 선생님</h3>
+                        <p>🏫 ${teacher.school_name || '전북지역 졸업생 네트워크'}</p>
+                        <p>📧 ${teacher.email}</p>
+                        <p>📚 전문 분야: 종합 상담</p>
                     </div>
-                `).join('');
-            }
-        }
-    } catch (err) {
-        console.error('교사 목록 로드 실패:', err.message);
-        if (counselorSelect) {
-            counselorSelect.innerHTML = '<option value="">상담교사 목록을 불러올 수 없습니다</option>';
-        }
-        if (teachersList) {
-            teachersList.innerHTML = '<p style="text-align: center; color: #e74c3c; padding: 2rem;">상담교사 목록을 불러오지 못했습니다.<br>잠시 후 새로고침 해주세요.</p>';
+                    <div class="teacher-actions">
+                        <button class="btn btn-primary" onclick="requestCounselingWithTeacher('${teacher.id}', '${teacher.name}')">상담 신청</button>
+                        <button class="btn btn-secondary" onclick="sendMessageToTeacher('${teacher.id}', '${teacher.name}')">메시지 보내기</button>
+                    </div>
+                </div>
+            `).join('');
         }
     }
 }
