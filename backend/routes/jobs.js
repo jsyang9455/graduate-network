@@ -19,14 +19,21 @@ router.get('/', async (req, res) => {
     // status=all means no status filter (admin use)
     const statusAll = status === 'all';
 
+    // job_applications 테이블에서 실제 지원자 수를 집계 (stored count와 무관하게 항상 정확)
     let queryText = `
-      SELECT j.*, 
+      SELECT j.*,
              u.name as company_name,
-             cp.logo_url as company_logo
+             cp.logo_url as company_logo,
+             COALESCE(ja_cnt.cnt, 0) AS applications_count
       FROM jobs j
       JOIN users u ON j.company_id = u.id
       LEFT JOIN company_profiles cp ON u.id = cp.user_id
-      ${statusAll ? 'WHERE 1=1' : 'WHERE j.status = $1'}
+      LEFT JOIN (
+        SELECT job_id, COUNT(*) AS cnt
+        FROM job_applications
+        GROUP BY job_id
+      ) ja_cnt ON j.id = ja_cnt.job_id
+      WHERE ${statusAll ? '1=1' : 'j.status = $1'}
     `;
     const params = statusAll ? [] : [status];
     let paramCount = statusAll ? 0 : 1;
@@ -56,7 +63,7 @@ router.get('/', async (req, res) => {
     }
 
     queryText += ` ORDER BY j.created_at DESC LIMIT $${paramCount + 1} OFFSET $${paramCount + 2}`;
-    params.push(limit, (page - 1) * limit);
+    params.push(parseInt(limit), (parseInt(page) - 1) * parseInt(limit));
 
     const result = await query(queryText, params);
 
@@ -72,12 +79,32 @@ router.get('/', async (req, res) => {
         page: parseInt(page),
         limit: parseInt(limit),
         total: parseInt(countResult.rows[0].count),
-        pages: Math.ceil(countResult.rows[0].count / limit)
+        pages: Math.ceil(countResult.rows[0].count / parseInt(limit))
       }
     });
   } catch (error) {
     console.error('Get jobs error:', error);
     res.status(500).json({ error: 'Failed to get jobs' });
+  }
+});
+
+// Sync applications_count from actual job_applications (admin only)
+router.post('/admin/sync-counts', auth, checkRole('admin'), async (req, res) => {
+  try {
+    const result = await query(`
+      UPDATE jobs j
+      SET applications_count = (
+        SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = j.id
+      )
+      RETURNING id, title, applications_count
+    `);
+    res.json({
+      message: `${result.rows.length}개 공고의 지원자 수가 동기화되었습니다.`,
+      updated: result.rows
+    });
+  } catch (error) {
+    console.error('Sync counts error:', error);
+    res.status(500).json({ error: 'Failed to sync counts' });
   }
 });
 
@@ -90,9 +117,12 @@ router.get('/:id', async (req, res) => {
     await query('UPDATE jobs SET views_count = views_count + 1 WHERE id = $1', [id]);
 
     const result = await query(
-      `SELECT j.*, 
+      `SELECT j.*,
               u.name as company_name, u.email as company_email, u.phone as company_phone,
-              cp.logo_url, cp.website, cp.description as company_description
+              cp.logo_url, cp.website, cp.description as company_description,
+              COALESCE((
+                SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = j.id
+              ), 0) AS applications_count
        FROM jobs j
        JOIN users u ON j.company_id = u.id
        LEFT JOIN company_profiles cp ON u.id = cp.user_id
