@@ -59,7 +59,7 @@ services:
       dockerfile: Dockerfile
     container_name: graduate-network-frontend
     volumes:
-      - ./images:/usr/share/nginx/html/images
+      - .:/usr/share/nginx/html:ro
     ports:
       - "80:80"
     depends_on:
