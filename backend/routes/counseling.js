@@ -28,17 +28,38 @@ router.get('/teachers', async (req, res) => {
 // Get counseling sessions
 router.get('/', auth, async (req, res) => {
   try {
-    const result = await query(
-      `SELECT cs.*,
-              u1.name as user_name, u1.email as user_email,
-              u2.name as counselor_name
-       FROM counseling_sessions cs
-       JOIN users u1 ON cs.user_id = u1.id
-       LEFT JOIN users u2 ON cs.counselor_id = u2.id
-       WHERE cs.user_id = $1 OR cs.counselor_id = $1
-       ORDER BY cs.session_date DESC`,
-      [req.user.id]
+    // counselor_id 컬럼 존재 여부 동적 확인 (AWS DB 버전 차이 대응)
+    const colCheck = await query(
+      `SELECT column_name FROM information_schema.columns
+       WHERE table_name = 'counseling_sessions' AND column_name = 'counselor_id'`
     );
+    const hasCounselorId = colCheck.rows.length > 0;
+
+    let result;
+    if (hasCounselorId) {
+      result = await query(
+        `SELECT cs.*,
+                u1.name as user_name, u1.email as user_email,
+                u2.name as counselor_name
+         FROM counseling_sessions cs
+         JOIN users u1 ON cs.user_id = u1.id
+         LEFT JOIN users u2 ON cs.counselor_id = u2.id
+         WHERE cs.user_id = $1 OR cs.counselor_id = $1
+         ORDER BY cs.session_date DESC`,
+        [req.user.id]
+      );
+    } else {
+      result = await query(
+        `SELECT cs.*,
+                u1.name as user_name, u1.email as user_email,
+                null as counselor_name
+         FROM counseling_sessions cs
+         JOIN users u1 ON cs.user_id = u1.id
+         WHERE cs.user_id = $1
+         ORDER BY cs.session_date DESC`,
+        [req.user.id]
+      );
+    }
 
     res.json({ sessions: result.rows });
   } catch (error) {
@@ -62,13 +83,43 @@ router.post('/', auth, async (req, res) => {
       return res.status(400).json({ error: 'Session date is required' });
     }
 
-    const result = await query(
-      `INSERT INTO counseling_sessions 
-       (user_id, counselor_id, session_type, session_date, duration_minutes, topic, status)
-       VALUES ($1, $2, $3, $4, $5, $6, 'pending')
-       RETURNING *`,
-      [req.user.id, counselor_id || null, session_type, session_date, duration_minutes, topic]
+    // counselor_id 컬럼 존재 여부 확인
+    const colCheck = await query(
+      `SELECT column_name FROM information_schema.columns
+       WHERE table_name = 'counseling_sessions' AND column_name = 'counselor_id'`
     );
+    const hasCounselorId = colCheck.rows.length > 0;
+
+    // status 제약조건 확인 - 'pending' 허용 여부
+    const statusCheck = await query(
+      `SELECT pg_get_constraintdef(c.oid) as def
+       FROM pg_constraint c
+       JOIN pg_class t ON c.conrelid = t.oid
+       WHERE t.relname = 'counseling_sessions' AND c.contype = 'c'
+         AND c.conname LIKE '%status%'`
+    );
+    const allowsPending = !statusCheck.rows.length ||
+      statusCheck.rows.some(r => r.def && r.def.includes('pending'));
+    const insertStatus = allowsPending ? 'pending' : 'scheduled';
+
+    let result;
+    if (hasCounselorId) {
+      result = await query(
+        `INSERT INTO counseling_sessions
+         (user_id, counselor_id, session_type, session_date, duration_minutes, topic, status)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
+         RETURNING *`,
+        [req.user.id, counselor_id || null, session_type, session_date, duration_minutes, topic, insertStatus]
+      );
+    } else {
+      result = await query(
+        `INSERT INTO counseling_sessions
+         (user_id, session_type, session_date, duration_minutes, topic, status)
+         VALUES ($1, $2, $3, $4, $5, $6)
+         RETURNING *`,
+        [req.user.id, session_type, session_date, duration_minutes, topic, insertStatus]
+      );
+    }
 
     res.status(201).json({
       message: 'Counseling session booked successfully',

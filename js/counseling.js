@@ -69,24 +69,29 @@ function setupTabNavigation() {
 }
 
 async function loadTeachers() {
+    const counselorSelect = document.getElementById('counselor');
+    const teachersList = document.getElementById('teachersList');
+
     try {
         const data = await api.get('/counseling/teachers');
         const teachers = data.teachers || [];
 
         // Load into dropdown
-        const counselorSelect = document.getElementById('counselor');
         if (counselorSelect) {
             counselorSelect.innerHTML = '<option value="">상담교사를 선택하세요</option>';
-            teachers.forEach(teacher => {
-                const option = document.createElement('option');
-                option.value = teacher.id;
-                option.textContent = `${teacher.name} 선생님 (${teacher.school_name || '전북지역 졸업생 네트워크'})`;
-                counselorSelect.appendChild(option);
-            });
+            if (teachers.length === 0) {
+                counselorSelect.innerHTML += '<option disabled>등록된 상담교사가 없습니다</option>';
+            } else {
+                teachers.forEach(teacher => {
+                    const option = document.createElement('option');
+                    option.value = teacher.id;
+                    option.textContent = `${teacher.name} 선생님 (${teacher.school_name || '전북지역 졸업생 네트워크'})`;
+                    counselorSelect.appendChild(option);
+                });
+            }
         }
 
         // Load into teachers list
-        const teachersList = document.getElementById('teachersList');
         if (teachersList) {
             if (teachers.length === 0) {
                 teachersList.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">등록된 상담교사가 없습니다.</p>';
@@ -109,7 +114,13 @@ async function loadTeachers() {
             }
         }
     } catch (err) {
-        console.warn('교사 목록 로드 실패:', err.message);
+        console.error('교사 목록 로드 실패:', err.message);
+        if (counselorSelect) {
+            counselorSelect.innerHTML = '<option value="">상담교사 목록을 불러올 수 없습니다</option>';
+        }
+        if (teachersList) {
+            teachersList.innerHTML = '<p style="text-align: center; color: #e74c3c; padding: 2rem;">상담교사 목록을 불러오지 못했습니다.<br>잠시 후 새로고침 해주세요.</p>';
+        }
     }
 }
 
