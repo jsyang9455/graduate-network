@@ -98,12 +98,29 @@ function showTeacherDashboard() {
             const user = auth.getCurrentUser();
             welcomeMessage.textContent = `환영합니다, ${user.name} 선생님!`;
         }
+        
+        // 교사 전용 통계 카드 레이블·아이콘 변경
+        const statCards = companyDashboard.querySelectorAll('.stat-card');
+        if (statCards.length >= 4) {
+            statCards[0].querySelector('.stat-icon').textContent = '📚';
+            statCards[0].querySelector('.stat-info p').textContent = '진행 중 프로그램';
+            statCards[1].querySelector('.stat-icon').textContent = '🙋';
+            statCards[1].querySelector('.stat-info p').textContent = '참여 학생 수';
+            statCards[2].querySelector('.stat-icon').textContent = '💬';
+            statCards[2].querySelector('.stat-info p').textContent = '상담 진행 건수';
+            statCards[3].querySelector('.stat-icon').textContent = '🎓';
+            statCards[3].querySelector('.stat-info p').textContent = '수료 완료 학생';
+        }
+        
+        // 교사에게 불필요한 채용공고/지원자 섹션 숨김
+        const jobPostingsSection = document.getElementById('jobPostingsList')?.closest('.dashboard-section');
+        const applicantsSection = document.getElementById('recentApplicantsList')?.closest('.dashboard-section');
+        if (jobPostingsSection) jobPostingsSection.style.display = 'none';
+        if (applicantsSection) applicantsSection.style.display = 'none';
     }
     
-    // Load company dashboard data (job postings and applicants)
-    loadCompanyStats();
-    loadCompanyJobPostings();
-    loadRecentApplicants();
+    // 교사 전용 통계 데이터 로드
+    loadTeacherDashboardStats();
     loadTeacherCounselingRequests();
     loadRecentNewsForCompany();
     loadEducationProgramsForCompany();
@@ -159,46 +176,35 @@ function loadAdminStats() {
 }
 
 function loadTeacherStats() {
+    // legacy: not used anymore, replaced by loadTeacherDashboardStats()
+}
+
+function loadTeacherDashboardStats() {
     const user = auth.getCurrentUser();
     if (!user) return;
     
-    // Load counseling requests (mock data for now)
-    const newJobCount = document.getElementById('newJobCount');
-    if (newJobCount) {
-        newJobCount.textContent = '5';
-    }
+    // 진행 중 프로그램: 내가 등록한 교육프로그램 수
+    const programs = JSON.parse(localStorage.getItem('graduateNetwork_programs') || '[]');
+    const myPrograms = programs.filter(p => String(p.createdBy) === String(user.id));
+    const activeJobCountEl = document.getElementById('activeJobCount');
+    if (activeJobCountEl) activeJobCountEl.textContent = myPrograms.length;
     
-    // Load application count (students counseled)
-    const applicationCount = document.getElementById('applicationCount');
-    if (applicationCount) {
-        applicationCount.textContent = '12';
-        // Change label for teacher
-        const parent = applicationCount.parentElement;
-        if (parent) {
-            const label = parent.querySelector('p');
-            if (label) label.textContent = '상담 요청';
-        }
-    }
+    // 참여 학생 수: 내 프로그램에 신청한 학생 수
+    const enrollments = JSON.parse(localStorage.getItem('program_enrollments') || '[]');
+    const myProgramIds = myPrograms.map(p => String(p.id));
+    const myEnrollments = enrollments.filter(e => myProgramIds.includes(String(e.programId)));
+    const totalApplicantsEl = document.getElementById('totalApplicants');
+    if (totalApplicantsEl) totalApplicantsEl.textContent = myEnrollments.length;
     
-    // Load network connections
-    const connections = JSON.parse(localStorage.getItem('graduateNetwork_connections') || '[]');
-    const myConnections = connections.filter(c => 
-        String(c.userId) === String(user.id) || String(c.connectedUserId) === String(user.id)
-    );
-    const networkCount = document.getElementById('networkCount');
-    if (networkCount) {
-        networkCount.textContent = myConnections.length;
-    }
+    // 상담 진행 건수: 나에게 온 상담 요청 전체
+    const counselingRequests = JSON.parse(localStorage.getItem('counseling_requests') || '[]');
+    const myCounselings = counselingRequests.filter(r => String(r.counselorId) === String(user.id));
+    const totalViewsEl = document.getElementById('totalViews');
+    if (totalViewsEl) totalViewsEl.textContent = myCounselings.length;
     
-    // Load messages
-    const messages = JSON.parse(localStorage.getItem('graduateNetwork_messages') || '[]');
-    const unreadMessages = messages.filter(m => 
-        String(m.toUserId) === String(user.id) && !m.read
-    );
-    const messageCount = document.getElementById('messageCount');
-    if (messageCount) {
-        messageCount.textContent = unreadMessages.length;
-    }
+    // 수료 완료 학생: 내 프로그램 신청 누적 학생 수 (참여 학생과 동일 소스)
+    const hiredCountEl = document.getElementById('hiredCount');
+    if (hiredCountEl) hiredCountEl.textContent = myEnrollments.length;
 }
 
 function loadStudentStats() {
