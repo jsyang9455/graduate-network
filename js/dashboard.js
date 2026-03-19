@@ -153,6 +153,12 @@ function showTeacherDashboard() {
     loadTeacherCounseledStudents();
     loadTeacherCounselingRequests();
     loadEducationProgramsForCompany();
+    loadTeacherCounselingJournal();
+
+    // 상담일지 섹션 표시
+    const journalSection = document.getElementById('journalSection');
+    if (journalSection) journalSection.style.display = '';
+
     setupCompanyEventListeners();
 }
 
@@ -789,4 +795,47 @@ function loadEducationProgramsForCompany() {
             </div>
         </div>
     `).join('');
+}
+
+// 교사 대시보드 - 상담일지 최근 3건 표시
+function loadTeacherCounselingJournal() {
+    const container = document.getElementById('journalDashboardList');
+    if (!container) return;
+
+    const user = auth.getCurrentUser();
+    if (!user) return;
+
+    let journals = [];
+    try {
+        journals = JSON.parse(localStorage.getItem('counseling_journals')) || [];
+    } catch (e) {
+        journals = [];
+    }
+
+    const myJournals = journals
+        .filter(j => String(j.teacherId) === String(user.id))
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 3);
+
+    if (myJournals.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color:#6b7280; padding:2rem;">작성된 상담일지가 없습니다.</p>`;
+        return;
+    }
+
+    function escH(str) {
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    container.innerHTML = myJournals.map(j => {
+        const dateStr = j.counselingDate || '-';
+        return `
+        <div class="applicant-item" style="cursor:pointer;" onclick="window.location.href='counseling-journal.html'">
+            <div class="applicant-name">${escH(j.title || '')}</div>
+            <div class="applicant-info">
+                <span>📅 ${dateStr}</span>
+                <span style="margin-left:0.8rem;">👤 ${escH(j.studentName || '-')}</span>
+                <span style="margin-left:0.8rem; background:#e0e7ff; color:#3730a3; padding:0.15rem 0.5rem; border-radius:12px; font-size:0.78rem;">${escH(j.type || '')}</span>
+            </div>
+        </div>`;
+    }).join('');
 }
