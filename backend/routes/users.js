@@ -58,6 +58,32 @@ router.post('/withdraw', auth, async (req, res) => {
   }
 });
 
+// List users (for networking page)
+router.get('/', auth, async (req, res) => {
+  try {
+    const { user_type } = req.query;
+    const types = user_type ? user_type.split(',') : ['student', 'graduate'];
+
+    const result = await query(
+      `SELECT u.id, u.name, u.email, u.user_type, u.profile_image,
+              u.school_name, u.graduation_year, u.major,
+              gp.current_company, gp.current_position, gp.bio, gp.is_mentor,
+              gp.graduation_year AS gp_graduation_year, gp.major AS gp_major
+       FROM users u
+       LEFT JOIN graduate_profiles gp ON u.id = gp.user_id
+       WHERE u.is_active = true AND u.id != $1
+         AND u.user_type = ANY($2::text[])
+       ORDER BY u.name`,
+      [req.user.id, types]
+    );
+
+    res.json({ users: result.rows });
+  } catch (error) {
+    console.error('List users error:', error);
+    res.status(500).json({ error: 'Failed to get users' });
+  }
+});
+
 // Get user profile
 router.get('/:id', async (req, res) => {
   try {

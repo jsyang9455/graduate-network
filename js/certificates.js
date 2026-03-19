@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupCertificateForm();
     setupCostCalculation();
     setupHistoryActions();
+    loadCertificateHistory();
 });
 
 function selectCertType(type) {
@@ -27,60 +28,86 @@ function setupCertificateSelection() {
 
 function setupCertificateForm() {
     const form = document.getElementById('certificateForm');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
+    if (!form) return;
 
-            if (!auth.isLoggedIn()) {
-                alert('로그인이 필요한 서비스입니다.');
-                window.location.href = 'login.html';
-                return;
-            }
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
 
-            const formData = {
-                certType: document.getElementById('certType').value,
-                name: document.getElementById('applicantName').value,
-                graduationYear: document.getElementById('graduationYear').value,
-                studentId: document.getElementById('studentId').value,
-                birthDate: document.getElementById('birthDate').value,
-                purpose: document.getElementById('purpose').value,
-                copies: document.getElementById('copies').value,
-                deliveryMethod: document.getElementById('deliveryMethod').value,
-                address: document.getElementById('address').value,
-                phone: document.getElementById('contactPhone').value
-            };
+        if (!auth.isLoggedIn()) {
+            alert('로그인이 필요한 서비스입니다.');
+            window.location.href = 'login.html';
+            return;
+        }
 
-            // Validate
-            if (!formData.certType || !formData.name || !formData.graduationYear || 
-                !formData.studentId || !formData.birthDate || !formData.purpose || 
-                !formData.copies || !formData.deliveryMethod || !formData.phone) {
-                alert('모든 필수 항목을 입력해주세요.');
-                return;
-            }
+        const formData = {
+            certType:       document.getElementById('certType').value,
+            name:           document.getElementById('applicantName').value,
+            graduationYear: document.getElementById('graduationYear').value,
+            studentId:      document.getElementById('studentId').value,
+            birthDate:      document.getElementById('birthDate').value,
+            purpose:        document.getElementById('purpose').value,
+            copies:         document.getElementById('copies').value,
+            deliveryMethod: document.getElementById('deliveryMethod').value,
+            address:        document.getElementById('address').value,
+            phone:          document.getElementById('contactPhone').value
+        };
 
-            if (formData.deliveryMethod === '우편' && !formData.address) {
-                alert('수령 주소를 입력해주세요.');
-                return;
-            }
+        // Validate
+        if (!formData.certType || !formData.name || !formData.graduationYear ||
+            !formData.studentId || !formData.birthDate || !formData.purpose ||
+            !formData.copies || !formData.deliveryMethod || !formData.phone) {
+            alert('모든 필수 항목을 입력해주세요.');
+            return;
+        }
 
-            // Calculate total cost
-            const totalCost = document.getElementById('totalCost').textContent;
+        if (formData.deliveryMethod === '우편' && !formData.address) {
+            alert('수령 주소를 입력해주세요.');
+            return;
+        }
 
-            // Save certificate request
-            const certificates = JSON.parse(localStorage.getItem('certificate_requests') || '[]');
-            certificates.push({
-                ...formData,
-                totalCost: totalCost,
-                user: auth.getCurrentUser().name,
-                requestedAt: new Date().toISOString(),
-                status: 'pending'
+        const totalCost = document.getElementById('totalCost').textContent;
+
+        try {
+            await api.post('/certificates', {
+                certificate_type: formData.certType,
+                purpose: formData.purpose
             });
-            localStorage.setItem('certificate_requests', JSON.stringify(certificates));
-
-            alert(`증명서 신청이 완료되었습니다!\n총 비용: ${totalCost}\n\n결제 페이지로 이동합니다.`);
+            alert(`증명서 신청이 완료되었습니다!\n총 비용: ${totalCost}`);
             form.reset();
             calculateCost();
-        });
+            await loadCertificateHistory();
+        } catch (err) {
+            alert('신청 실패: ' + err.message);
+        }
+    });
+}
+
+async function loadCertificateHistory() {
+    if (!auth.isLoggedIn()) return;
+
+    const tbody = document.querySelector('.history-table tbody');
+    if (!tbody) return;
+
+    try {
+        const data = await api.get('/certificates');
+        const certs = data.certificates || [];
+
+        if (certs.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#888;">신청 내역이 없습니다.</td></tr>';
+            return;
+        }
+
+        const statusLabel = { pending: '처리중', issued: '발급완료', rejected: '반려' };
+        tbody.innerHTML = certs.map(c => `
+            <tr>
+                <td>${new Date(c.requested_at).toLocaleDateString('ko-KR')}</td>
+                <td>${c.certificate_type || ''}</td>
+                <td>-</td>
+                <td><span class="status-badge status-${c.status}">${statusLabel[c.status] || c.status}</span></td>
+                <td><button class="btn-detail btn btn-sm btn-outline" onclick="alert('신청일: ${new Date(c.requested_at).toLocaleDateString('ko-KR')}\\n증명서: ${c.certificate_type}\\n상태: ${statusLabel[c.status] || c.status}')">상세</button></td>
+            </tr>`).join('');
+    } catch (err) {
+        console.warn('증명서 내역 로드 실패:', err.message);
     }
 }
 

@@ -4,7 +4,7 @@ let allUsers = [];
 let connections = [];
 let messages = [];
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     // Initialize auth and load data
     auth.requireAuth();
     currentUser = auth.getCurrentUser();
@@ -21,9 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.getElementById('userName').textContent = currentUser.name;
         
-        loadConnections();
+        await loadConnections();
         loadMessages();
-        loadAllUsers();
+        await loadAllUsers();
         updateStats();
         
         setupSearch();
@@ -46,11 +46,17 @@ function hideCareerMenuForTeacher() {
 }
 
 // 연결 정보 로드
-function loadConnections() {
-    const connectionsData = localStorage.getItem('graduateNetwork_connections');
-    if (connectionsData) {
-        connections = JSON.parse(connectionsData);
-    } else {
+async function loadConnections() {
+    try {
+        const data = await api.get('/networking/connections');
+        connections = (data.connections || []).map(c => ({
+            id: String(c.id),
+            userId: String(c.requester_id || c.connection_id),
+            connectedUserId: String(c.connection_id || c.receiver_id),
+            raw: c
+        }));
+    } catch (err) {
+        console.warn('Connections load failed:', err.message);
         connections = [];
     }
 }
@@ -66,19 +72,14 @@ function loadMessages() {
 }
 
 // 모든 사용자 로드 (본인 제외)
-function loadAllUsers() {
-    const usersData = localStorage.getItem('graduateNetwork_users');
-    if (usersData) {
-        const users = JSON.parse(usersData);
-        // 본인 제외하고 학생/졸업생만 표시
-        allUsers = users.filter(u => 
-            u.id !== currentUser.id && 
-            (u.user_type === 'student' || u.user_type === 'graduate')
-        );
-    } else {
+async function loadAllUsers() {
+    try {
+        const data = await api.get('/users?user_type=student,graduate');
+        allUsers = data.users || [];
+    } catch (err) {
+        console.warn('Users load failed:', err.message);
         allUsers = [];
     }
-    
     displayAlumni(allUsers);
 }
 
@@ -92,16 +93,18 @@ function displayAlumni(users) {
     }
     
     alumniGrid.innerHTML = users.map(user => {
-        const isConnected = connections.some(c => 
-            (c.userId === currentUser.id && c.connectedUserId === user.id) ||
-            (c.connectedUserId === currentUser.id && c.userId === user.id)
+        const uid = String(user.id);
+        const curUid = String(currentUser.id);
+        const isConnected = connections.some(c =>
+            (String(c.userId) === curUid && String(c.connectedUserId) === uid) ||
+            (String(c.connectedUserId) === curUid && String(c.userId) === uid)
         );
         
-        const avatar = user.name.charAt(0);
-        const graduationYear = user.graduationYear || '미상';
-        const major = user.major || '전공 미상';
-        const company = user.company || '정보 없음';
-        const position = user.position || '직책 미상';
+        const avatar = user.name ? user.name.charAt(0) : '?';
+        const graduationYear = user.graduation_year || user.gp_graduation_year || '미상';
+        const major = user.major || user.gp_major || '전공 미상';
+        const company = user.current_company || '정보 없음';
+        const position = user.current_position || '직책 미상';
         
         return `
             <div class="alumni-card" data-user-id="${user.id}">
@@ -132,37 +135,40 @@ function displayAlumni(users) {
 }
 
 // 연결 토글
-function toggleConnection(userId) {
-    // userId 타입 변환 처리
-    const normalizedUserId = String(userId);
-    const normalizedCurrentUserId = String(currentUser.id);
-    
-    const existingConnection = connections.findIndex(c => 
-        (String(c.userId) === normalizedCurrentUserId && String(c.connectedUserId) === normalizedUserId) ||
-        (String(c.connectedUserId) === normalizedCurrentUserId && String(c.userId) === normalizedUserId)
+async function toggleConnection(userId) {
+    const uid = String(userId);
+    const curUid = String(currentUser.id);
+
+    const existingIdx = connections.findIndex(c =>
+        (String(c.userId) === curUid && String(c.connectedUserId) === uid) ||
+        (String(c.connectedUserId) === curUid && String(c.userId) === uid)
     );
-    
-    if (existingConnection !== -1) {
-        // 연결 해제
-        if (confirm('연결을 해제하시겠습니까?')) {
-            connections.splice(existingConnection, 1);
-            localStorage.setItem('graduateNetwork_connections', JSON.stringify(connections));
-            loadAllUsers();
+
+    if (existingIdx !== -1) {
+        if (!confirm('연결을 해제하시겠습니까?')) return;
+        try {
+            await api.delete('/networking/connect/' + userId);
+            connections.splice(existingIdx, 1);
+            displayAlumni(allUsers);
             updateStats();
             alert('연결이 해제되었습니다.');
+        } catch (err) {
+            alert('연결 해제 실패: ' + err.message);
         }
     } else {
-        // 연결 추가
-        connections.push({
-            id: Date.now().toString(),
-            userId: String(currentUser.id),
-            connectedUserId: String(userId),
-            connectedAt: new Date().toISOString()
-        });
-        localStorage.setItem('graduateNetwork_connections', JSON.stringify(connections));
-        loadAllUsers();
-        updateStats();
-        alert('연결되었습니다!');
+        try {
+            await api.post('/networking/connect/' + userId, {});
+            await loadConnections();
+            displayAlumni(allUsers);
+            updateStats();
+            alert('연결 요청이 전송되었습니다!');
+        } catch (err) {
+            if (err.message && err.message.includes('already exists')) {
+                alert('이미 연결 요청을 보냈습니다.');
+            } else {
+                alert('연결 실패: ' + err.message);
+            }
+        }
     }
 }
 window.toggleConnection = toggleConnection;

@@ -35,80 +35,44 @@ function hideCareerMenuForTeacher() {
     if (careerMenu) careerMenu.style.display = 'none';
 }
 
-function loadJobs() {
-    // localStorage에서 채용 공고 가져오기
-    let jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
-    
-    // 샘플 데이터가 없으면 생성
-    if (jobs.length === 0) {
-        jobs = [
-            {
-                id: 1,
-                company: '현대자동차',
-                companyType: '대기업',
-                position: '전기차 배터리 시스템 엔지니어',
-                description: '차세대 전기차 배터리 시스템 개발 및 테스트',
-                experience: '신입',
-                location: '서울',
-                salary: '4,500만원 이상',
-                deadline: '2026-02-15',
-                recruitCount: '5명',
-                status: 'active',
-                views: 234,
-                applicants: 12
-            },
-            {
-                id: 2,
-                company: '삼성전자',
-                companyType: '대기업',
-                position: '반도체 공정 엔지니어',
-                description: '반도체 제조 공정 관리 및 최적화',
-                experience: '1-3년',
-                location: '경기',
-                salary: '5,000만원 이상',
-                deadline: '2026-02-28',
-                recruitCount: '10명',
-                status: 'active',
-                views: 456,
-                applicants: 23
-            },
-            {
-                id: 3,
-                company: 'LG화학',
-                companyType: '대기업',
-                position: '화학공정 설계 엔지니어',
-                description: '화학 플랜트 공정 설계 및 시뮬레이션',
-                experience: '신입',
-                location: '전북',
-                salary: '4,000만원 이상',
-                deadline: '2026-03-10',
-                recruitCount: '3명',
-                status: 'active',
-                views: 189,
-                applicants: 8
-            },
-            {
-                id: 4,
-                company: '포스코',
-                companyType: '대기업',
-                position: '제철 공정 관리',
-                description: '제철소 생산 공정 모니터링 및 품질 관리',
-                experience: '3-5년',
-                location: '전북',
-                salary: '4,000만원 이상',
-                deadline: '2026-02-20',
-                recruitCount: '7명',
-                status: 'active',
-                views: 312,
-                applicants: 15
-            }
-        ];
-        localStorage.setItem('jobPostings', JSON.stringify(jobs));
+// DB 필드 → 화면 표시용 필드 정규화
+function normalizeJob(j) {
+    return {
+        id:          j.id,
+        company:     j.company_name    || '',
+        companyType: j.company_size    || '',
+        position:    j.title           || '',
+        description: j.description     || '',
+        requirements:j.requirements    || '',
+        experience:  j.experience_level|| '',
+        location:    j.location        || '',
+        salary:      j.salary_range    || '',
+        jobType:     j.job_type        || '',
+        deadline:    j.deadline ? String(j.deadline).substring(0,10) : '',
+        recruitCount:j.headcount       || '',
+        status:      j.status          || 'active',
+        views:       j.views_count     || 0,
+        applicants:  j.applications_count || 0,
+        company_id:  j.company_id,
+    };
+}
+
+function escHtmlJ(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function loadJobs() {
+    const container = document.querySelector('.jobs-container');
+    if (container) container.innerHTML = '<p style="text-align:center;padding:3rem;color:#6b7280;">불러오는 중...</p>';
+    try {
+        const data = await api.get('/jobs');
+        allJobs = (data.jobs || []).map(normalizeJob);
+        filteredJobs = [...allJobs];
+        displayJobs(filteredJobs);
+    } catch (e) {
+        console.error('채용 공고 로드 실패:', e);
+        if (container) container.innerHTML = '<p style="text-align:center;padding:3rem;color:#ef4444;">채용 공고를 불러오지 못했습니다.</p>';
     }
-    
-    allJobs = jobs;
-    filteredJobs = jobs;
-    displayJobs(filteredJobs);
 }
 
 function displayJobs(jobs) {
@@ -119,42 +83,53 @@ function displayJobs(jobs) {
         container.innerHTML = '<p style="text-align: center; padding: 3rem; color: #6b7280;">검색 결과가 없습니다.</p>';
         return;
     }
+
+    const user = auth.getCurrentUser();
+    const isCompanyOrAdmin = user && (user.user_type === 'company' || user.user_type === 'admin');
     
     container.innerHTML = jobs.map(job => {
-        const daysLeft = Math.ceil((new Date(job.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+        const daysLeft = job.deadline
+            ? Math.ceil((new Date(job.deadline) - new Date()) / (1000 * 60 * 60 * 24))
+            : null;
+        const deadlineText = daysLeft !== null ? `${job.deadline} (D-${daysLeft})` : '상시채용';
+        const canEdit = isCompanyOrAdmin && (user.user_type === 'admin' || String(job.company_id) === String(user.id));
         return `
             <div class="job-card" data-job-id="${job.id}">
                 <div class="job-card-header">
                     <div class="job-title-section">
-                        <span class="company-badge">${job.companyType}</span>
-                        <h2>${job.company}</h2>
-                        <h3>${job.position}</h3>
+                        ${job.companyType ? `<span class="company-badge">${escHtmlJ(job.companyType)}</span>` : ''}
+                        <h2>${escHtmlJ(job.company)}</h2>
+                        <h3>${escHtmlJ(job.position)}</h3>
                     </div>
+                    ${canEdit ? `<div style="display:flex;gap:0.5rem;">
+                        <button class="btn btn-secondary btn-sm" onclick="openEditJob(${job.id})">수정</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteJob(${job.id})">삭제</button>
+                    </div>` : ''}
                 </div>
                 <div class="job-card-body">
                     <div class="job-info-grid">
                         <div class="info-item">
                             <span class="info-label">🎯 경력</span>
-                            <span class="info-value">${job.experience}</span>
+                            <span class="info-value">${escHtmlJ(job.experience || '-')}</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">📍 지역</span>
-                            <span class="info-value">${job.location}</span>
+                            <span class="info-value">${escHtmlJ(job.location || '-')}</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">💰 연봉</span>
-                            <span class="info-value">${job.salary}</span>
+                            <span class="info-value">${escHtmlJ(job.salary || '-')}</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">📅 마감일</span>
-                            <span class="info-value">${job.deadline} (D-${daysLeft})</span>
+                            <span class="info-value">${escHtmlJ(deadlineText)}</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">👥 채용인원</span>
-                            <span class="info-value">${job.recruitCount}</span>
+                            <span class="info-value">${job.recruitCount || '-'}명</span>
                         </div>
                     </div>
-                    <p class="job-description">${job.description}</p>
+                    <p class="job-description">${escHtmlJ(job.description)}</p>
                 </div>
                 <div class="job-card-footer">
                     <button class="btn btn-secondary" onclick="viewJobDetail(${job.id})">상세보기</button>
@@ -268,41 +243,43 @@ function viewJobDetail(jobId) {
     const job = allJobs.find(j => j.id === jobId);
     if (!job) return;
 
-    const daysLeft = Math.ceil((new Date(job.deadline) - new Date()) / (1000 * 60 * 60 * 24));
-    const deadlineText = daysLeft > 0 ? `${job.deadline} (D-${daysLeft})` : `${job.deadline} (마감)`;
-    const deadlineColor = daysLeft > 7 ? '#166534' : daysLeft > 0 ? '#854d0e' : '#ef4444';
+    const daysLeft = job.deadline
+        ? Math.ceil((new Date(job.deadline) - new Date()) / (1000 * 60 * 60 * 24))
+        : null;
+    const deadlineText = daysLeft !== null ? `${job.deadline} (D-${daysLeft})` : '상시채용';
+    const deadlineColor = daysLeft === null ? '#6b7280' : daysLeft > 7 ? '#166534' : daysLeft > 0 ? '#854d0e' : '#ef4444';
 
-    document.getElementById('jdCompanyType').textContent = job.companyType || '';
-    document.getElementById('jdCompany').textContent = job.company || '';
-    document.getElementById('jdPosition').textContent = job.position || '';
+    if (document.getElementById('jdCompanyType')) document.getElementById('jdCompanyType').textContent = job.companyType || '';
+    if (document.getElementById('jdCompany'))     document.getElementById('jdCompany').textContent     = job.company || '';
+    if (document.getElementById('jdPosition'))    document.getElementById('jdPosition').textContent    = job.position || '';
 
-    document.getElementById('jdContent').innerHTML = `
-        ${job.description ? `<p style="color:#374151; font-size:0.95rem; line-height:1.7; margin:0 0 1.5rem; padding:1rem; background:#f8fafc; border-radius:8px; border-left:3px solid #3b82f6;">${job.description}</p>` : ''}
+    if (document.getElementById('jdContent')) document.getElementById('jdContent').innerHTML = `
+        ${job.description ? `<p style="color:#374151; font-size:0.95rem; line-height:1.7; margin:0 0 1.5rem; padding:1rem; background:#f8fafc; border-radius:8px; border-left:3px solid #3b82f6;">${escHtmlJ(job.description)}</p>` : ''}
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem;">
             <div style="background:#f0f4ff; padding:0.9rem; border-radius:8px;">
                 <div style="font-size:0.75rem; color:#6b7280; margin-bottom:0.25rem;">💼 경력</div>
-                <div style="font-weight:600; color:#1e3a8a;">${job.experience || '-'}</div>
+                <div style="font-weight:600; color:#1e3a8a;">${escHtmlJ(job.experience || '-')}</div>
             </div>
             <div style="background:#f0f4ff; padding:0.9rem; border-radius:8px;">
                 <div style="font-size:0.75rem; color:#6b7280; margin-bottom:0.25rem;">📍 근무지</div>
-                <div style="font-weight:600; color:#1e3a8a;">${job.location || '-'}</div>
+                <div style="font-weight:600; color:#1e3a8a;">${escHtmlJ(job.location || '-')}</div>
             </div>
             <div style="background:#fefce8; padding:0.9rem; border-radius:8px;">
                 <div style="font-size:0.75rem; color:#6b7280; margin-bottom:0.25rem;">💰 연봉</div>
-                <div style="font-weight:600; color:#854d0e;">${job.salary || '-'}</div>
+                <div style="font-weight:600; color:#854d0e;">${escHtmlJ(job.salary || '-')}</div>
             </div>
             <div style="background:#f0fdf4; padding:0.9rem; border-radius:8px;">
                 <div style="font-size:0.75rem; color:#6b7280; margin-bottom:0.25rem;">👥 채용인원</div>
-                <div style="font-weight:600; color:#166534;">${job.recruitCount || '-'}</div>
+                <div style="font-weight:600; color:#166534;">${job.recruitCount || '-'}명</div>
             </div>
             <div style="background:#fff1f2; padding:0.9rem; border-radius:8px; grid-column:1/-1;">
                 <div style="font-size:0.75rem; color:#6b7280; margin-bottom:0.25rem;">📅 지원 마감</div>
-                <div style="font-weight:600; color:${deadlineColor};">${deadlineText}</div>
+                <div style="font-weight:600; color:${deadlineColor};">${escHtmlJ(deadlineText)}</div>
             </div>
         </div>
         ${job.requirements ? `<div style="margin-bottom:1.25rem;">
             <strong style="color:#1e40af; display:block; margin-bottom:0.6rem; font-size:0.95rem;">📋 지원 자격</strong>
-            <div style="font-size:0.9rem; color:#374151; line-height:1.7; padding:0.75rem; background:#f8fafc; border-radius:8px;">${job.requirements}</div>
+            <div style="font-size:0.9rem; color:#374151; line-height:1.7; padding:0.75rem; background:#f8fafc; border-radius:8px;">${escHtmlJ(job.requirements)}</div>
         </div>` : ''}
         <div style="display:flex; gap:0.75rem; margin-top:1.5rem;">
             <button onclick="closeJobDetailModal()" style="flex:1; padding:0.875rem; background:#f3f4f6; border:none; border-radius:8px; font-size:1rem; cursor:pointer; color:#374151; font-weight:600;">닫기</button>
@@ -310,63 +287,50 @@ function viewJobDetail(jobId) {
         </div>
     `;
 
-    document.getElementById('jobDetailModal').style.display = 'flex';
+    const modal = document.getElementById('jobDetailModal');
+    if (modal) modal.style.display = 'flex';
 }
 
-function applyJob(jobId) {
+function closeJobDetailModal() {
+    const m = document.getElementById('jobDetailModal');
+    if (m) m.style.display = 'none';
+}
+window.closeJobDetailModal = closeJobDetailModal;
+
+async function applyJob(jobId) {
     if (!auth.isLoggedIn()) {
         alert('로그인이 필요한 서비스입니다.');
         window.location.href = 'login.html';
         return;
     }
     
-    const user = auth.getCurrentUser();
     const job = allJobs.find(j => j.id === jobId);
-    
     if (!job) return;
     
-    if (confirm(`${job.company}의 ${job.position} 포지션에 지원하시겠습니까?`)) {
-        // Check for duplicate application
-        const applications = JSON.parse(localStorage.getItem('job_applications') || '[]');
-        const alreadyApplied = applications.some(a => String(a.jobId) === String(job.id) && String(a.userId) === String(user.id));
-        if (alreadyApplied) {
-            alert('이미 지원한 공고입니다.');
-            return;
-        }
-        applications.push({
-            jobId: job.id,
-            userId: user.id,
-            company: job.company,
-            position: job.position,
-            appliedAt: new Date().toISOString(),
-            status: 'pending'
-        });
-        localStorage.setItem('job_applications', JSON.stringify(applications));
-        
-        // Update job applicants count
-        job.applicants = (job.applicants || 0) + 1;
-        const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
-        const jobIndex = jobs.findIndex(j => j.id === jobId);
-        if (jobIndex !== -1) {
-            jobs[jobIndex] = job;
-            localStorage.setItem('jobPostings', JSON.stringify(jobs));
-        }
+    if (!confirm(`${job.company}의 ${job.position} 포지션에 지원하시겠습니까?`)) return;
 
+    try {
+        await api.post(`/jobs/${jobId}/apply`, {});
         alert('지원이 완료되었습니다!');
-        loadJobs(); // 화면 갱신
+        await loadJobs();
+    } catch (e) {
+        if (e.message && e.message.includes('Already applied')) {
+            alert('이미 지원한 공고입니다.');
+        } else {
+            alert('지원 실패: ' + e.message);
+        }
     }
 }
 
 function setupJobApplications() {
-    // 동적으로 생성되는 버튼은 이벤트 위임 방식으로 처리
-    // applyJob과 viewJobDetail 함수로 대체
+    // applyJob 함수가 직접 처리
 }
 
 function setupJobCreateForm() {
     const form = document.getElementById('jobCreateForm');
     if (!form) return;
 
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         if (!auth.isLoggedIn()) {
@@ -375,70 +339,57 @@ function setupJobCreateForm() {
             return;
         }
 
-        const user = auth.getCurrentUser();
-        
-        const jobData = {
-            id: Date.now(),
-            companyId: user.id,
-            company: user.name,
-            companyName: user.name,
-            companyType: '중소기업',
-            position: document.getElementById('title').value,
-            jobTitle: document.getElementById('title').value,
-            description: document.getElementById('description').value,
-            type: document.getElementById('type').value,
-            experience: '경력무관',
-            location: document.getElementById('location').value || '미정',
-            salary: document.getElementById('salary').value || '협의',
-            deadline: document.getElementById('deadline').value || '상시채용',
-            recruitCount: document.getElementById('headcount')?.value ? document.getElementById('headcount').value + '명' : '-',
-            headcount: document.getElementById('headcount')?.value ? parseInt(document.getElementById('headcount').value) : null,
-            status: 'active',
-            createdAt: new Date().toISOString(),
-            views: 0,
-            applicants: 0
+        const payload = {
+            title:            document.getElementById('title')?.value        || '',
+            description:      document.getElementById('description')?.value  || '',
+            requirements:     document.getElementById('requirements')?.value || '',
+            job_type:         document.getElementById('type')?.value         || '',
+            location:         document.getElementById('location')?.value     || '',
+            salary_range:     document.getElementById('salary')?.value       || '',
+            experience_level: document.getElementById('experience')?.value   || '',
+            headcount:        parseInt(document.getElementById('headcount')?.value) || 1,
+            deadline:         document.getElementById('deadline')?.value     || null,
         };
 
-        // Save to localStorage
-        const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
-        jobs.push(jobData);
-        localStorage.setItem('jobPostings', JSON.stringify(jobs));
-
-        alert('채용 공고가 성공적으로 등록되었습니다!');
-        window.location.href = 'dashboard.html';
+        try {
+            await api.post('/jobs', payload);
+            alert('채용 공고가 성공적으로 등록되었습니다!');
+            window.location.href = 'dashboard.html';
+        } catch (e) {
+            alert('등록 실패: ' + e.message);
+        }
     });
 }
 
-function setupJobEditForm() {
+async function setupJobEditForm() {
     const form = document.getElementById('jobEditForm');
     if (!form) return;
 
-    // Load job data for editing
     const urlParams = new URLSearchParams(window.location.search);
     const jobId = urlParams.get('id');
 
     if (jobId) {
-        const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
-        const job = jobs.find(j => j.id == jobId);
-
-        if (job) {
-            document.getElementById('jobId').value = job.id;
-            document.getElementById('title').value = job.position || job.jobTitle || '';
-            document.getElementById('description').value = job.description || '';
-            document.getElementById('type').value = job.type || '';
-            document.getElementById('location').value = job.location || '';
-            document.getElementById('salary').value = job.salary || '';
-            document.getElementById('deadline').value = job.deadline || '';
-            if (document.getElementById('headcount')) {
-                document.getElementById('headcount').value = job.headcount || '';
-            }
-            if (document.getElementById('status')) {
-                document.getElementById('status').value = job.status || 'active';
-            }
+        try {
+            const data = await api.get('/jobs/' + jobId);
+            const job = data.job || data;
+            const el = id => document.getElementById(id);
+            if (el('jobId'))    el('jobId').value    = job.id;
+            if (el('title'))    el('title').value    = job.title || '';
+            if (el('description')) el('description').value = job.description || '';
+            if (el('requirements')) el('requirements').value = job.requirements || '';
+            if (el('type'))     el('type').value     = job.job_type || '';
+            if (el('location')) el('location').value = job.location || '';
+            if (el('salary'))   el('salary').value   = job.salary_range || '';
+            if (el('experience')) el('experience').value = job.experience_level || '';
+            if (el('deadline')) el('deadline').value = (job.deadline || '').slice(0, 10);
+            if (el('headcount')) el('headcount').value = job.headcount || '';
+            if (el('status'))   el('status').value   = job.status || 'active';
+        } catch (e) {
+            alert('공고 정보를 불러오지 못했습니다: ' + e.message);
         }
     }
 
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         if (!auth.isLoggedIn()) {
@@ -447,30 +398,45 @@ function setupJobEditForm() {
             return;
         }
 
-        const jobId = document.getElementById('jobId').value;
-        const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
-        const jobIndex = jobs.findIndex(j => j.id == jobId);
+        const id = document.getElementById('jobId')?.value || jobId;
+        const el = k => document.getElementById(k);
 
-        if (jobIndex !== -1) {
-            jobs[jobIndex].position = document.getElementById('title').value;
-            jobs[jobIndex].jobTitle = document.getElementById('title').value;
-            jobs[jobIndex].description = document.getElementById('description').value;
-            jobs[jobIndex].type = document.getElementById('type').value;
-            jobs[jobIndex].location = document.getElementById('location').value;
-            jobs[jobIndex].salary = document.getElementById('salary').value;
-            jobs[jobIndex].deadline = document.getElementById('deadline').value;
-            if (document.getElementById('headcount')) {
-                const hc = document.getElementById('headcount').value;
-                jobs[jobIndex].headcount = hc ? parseInt(hc) : null;
-            }
-            if (document.getElementById('status')) {
-                jobs[jobIndex].status = document.getElementById('status').value;
-            }
+        const payload = {
+            title:            el('title')?.value        || '',
+            description:      el('description')?.value  || '',
+            requirements:     el('requirements')?.value || '',
+            job_type:         el('type')?.value         || '',
+            location:         el('location')?.value     || '',
+            salary_range:     el('salary')?.value       || '',
+            experience_level: el('experience')?.value   || '',
+            deadline:         el('deadline')?.value     || null,
+            headcount:        parseInt(el('headcount')?.value) || 1,
+            status:           el('status')?.value       || 'active',
+        };
 
-            localStorage.setItem('jobPostings', JSON.stringify(jobs));
-
+        try {
+            await api.put('/jobs/' + id, payload);
             alert('채용 공고가 성공적으로 수정되었습니다!');
             window.location.href = 'dashboard.html';
+        } catch (e) {
+            alert('수정 실패: ' + e.message);
         }
     });
 }
+
+function openEditJob(jobId) {
+    window.location.href = 'job-edit.html?id=' + jobId;
+}
+window.openEditJob = openEditJob;
+
+async function deleteJob(jobId) {
+    if (!confirm('이 채용 공고를 삭제하시겠습니까?')) return;
+    try {
+        await api.delete('/jobs/' + jobId);
+        alert('삭제되었습니다.');
+        await loadJobs();
+    } catch (e) {
+        alert('삭제 실패: ' + e.message);
+    }
+}
+window.deleteJob = deleteJob;

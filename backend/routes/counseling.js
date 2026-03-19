@@ -3,6 +3,19 @@ const router = express.Router();
 const { query } = require('../config/database');
 const { auth, checkRole } = require('../middleware/auth');
 
+// Get teachers (counselors)
+router.get('/teachers', async (req, res) => {
+  try {
+    const result = await query(
+      `SELECT id, name, email, school_name FROM users WHERE user_type = 'teacher' AND is_active = true ORDER BY name`
+    );
+    res.json({ teachers: result.rows });
+  } catch (error) {
+    console.error('Get teachers error:', error);
+    res.status(500).json({ error: 'Failed to get teachers' });
+  }
+});
+
 // Get counseling sessions
 router.get('/', auth, async (req, res) => {
   try {
@@ -32,7 +45,8 @@ router.post('/', auth, async (req, res) => {
       session_type,
       session_date,
       duration_minutes = 60,
-      topic
+      topic,
+      counselor_id
     } = req.body;
 
     if (!session_date) {
@@ -41,10 +55,10 @@ router.post('/', auth, async (req, res) => {
 
     const result = await query(
       `INSERT INTO counseling_sessions 
-       (user_id, session_type, session_date, duration_minutes, topic, status)
-       VALUES ($1, $2, $3, $4, $5, 'scheduled')
+       (user_id, counselor_id, session_type, session_date, duration_minutes, topic, status)
+       VALUES ($1, $2, $3, $4, $5, $6, 'pending')
        RETURNING *`,
-      [req.user.id, session_type, session_date, duration_minutes, topic]
+      [req.user.id, counselor_id || null, session_type, session_date, duration_minutes, topic]
     );
 
     res.status(201).json({

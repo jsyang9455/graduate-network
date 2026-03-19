@@ -151,6 +151,23 @@ router.put('/requests/:id', auth, async (req, res) => {
   }
 });
 
+// Remove connection
+router.delete('/connect/:userId', auth, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    await query(
+      `DELETE FROM connections
+       WHERE (requester_id = $1 AND receiver_id = $2)
+          OR (requester_id = $2 AND receiver_id = $1)`,
+      [req.user.id, userId]
+    );
+    res.json({ message: 'Connection removed' });
+  } catch (error) {
+    console.error('Remove connection error:', error);
+    res.status(500).json({ error: 'Failed to remove connection' });
+  }
+});
+
 // Get mentors
 router.get('/mentors', async (req, res) => {
   try {
