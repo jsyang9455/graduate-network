@@ -112,17 +112,46 @@ function showTeacherDashboard() {
             statCards[3].querySelector('.stat-info p').textContent = '수료 완료 학생';
         }
         
-        // 교사에게 불필요한 채용공고/지원자 섹션 숨김
+        // 내 프로그램공고 섹션: 헤더 변경 + 버튼 변경
         const jobPostingsSection = document.getElementById('jobPostingsList')?.closest('.dashboard-section');
+        if (jobPostingsSection) {
+            jobPostingsSection.style.display = 'block';
+            const h2 = jobPostingsSection.querySelector('.section-header h2');
+            if (h2) h2.textContent = '📋 내 프로그램공고';
+            const createBtn = jobPostingsSection.querySelector('#createJobBtn');
+            if (createBtn) {
+                createBtn.textContent = '프로그램 등록';
+                createBtn.onclick = () => window.location.href = 'education-programs.html';
+            }
+        }
+
+        // 상담한 학생 내역 섹션: 헤더 변경
         const applicantsSection = document.getElementById('recentApplicantsList')?.closest('.dashboard-section');
-        if (jobPostingsSection) jobPostingsSection.style.display = 'none';
-        if (applicantsSection) applicantsSection.style.display = 'none';
+        if (applicantsSection) {
+            applicantsSection.style.display = 'block';
+            const h2 = applicantsSection.querySelector('.section-header h2');
+            if (h2) h2.textContent = '💬 상담한 학생 내역';
+            const link = applicantsSection.querySelector('.section-link');
+            if (link) link.href = 'counseling.html';
+        }
+
+        // 평생교육프로그램 섹션 헤더 확인
+        const eduSection = document.getElementById('educationProgramsCompany')?.closest('.dashboard-section');
+        if (eduSection) {
+            const h2 = eduSection.querySelector('.section-header h2');
+            if (h2) h2.textContent = '🎓 JJOBB 교육프로그램';
+        }
+
+        // 최근 소식 섹션은 교사에게 불필요 → 숨김
+        const newsSection = document.getElementById('recentNewsCompany')?.closest('.dashboard-section');
+        if (newsSection) newsSection.style.display = 'none';
     }
-    
+
     // 교사 전용 통계 데이터 로드
     loadTeacherDashboardStats();
+    loadTeacherMyPrograms();
+    loadTeacherCounseledStudents();
     loadTeacherCounselingRequests();
-    loadRecentNewsForCompany();
     loadEducationProgramsForCompany();
     setupCompanyEventListeners();
 }
@@ -205,6 +234,103 @@ function loadTeacherDashboardStats() {
     // 수료 완료 학생: 내 프로그램 신청 누적 학생 수 (참여 학생과 동일 소스)
     const hiredCountEl = document.getElementById('hiredCount');
     if (hiredCountEl) hiredCountEl.textContent = myEnrollments.length;
+}
+
+// 교사 전용: 내가 등록한 교육프로그램 목록 표시 (수정/삭제 포함)
+function loadTeacherMyPrograms() {
+    const user = auth.getCurrentUser();
+    if (!user) return;
+
+    const programs = JSON.parse(localStorage.getItem('graduateNetwork_programs') || '[]');
+    const myPrograms = programs.filter(p => String(p.createdBy) === String(user.id));
+
+    const container = document.getElementById('jobPostingsList');
+    if (!container) return;
+
+    if (myPrograms.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">등록된 교육프로그램이 없습니다. 우측 상단 버튼을 눌러 등록해보세요.</p>';
+        return;
+    }
+
+    container.innerHTML = myPrograms.map(program => `
+        <div class="job-posting-item">
+            <div class="job-posting-info">
+                <div class="job-posting-title">${program.title}</div>
+                <div class="job-posting-meta">
+                    <span class="job-status active">${program.category || '-'}</span>
+                    <span>${program.type || '-'}</span>
+                    <span>기간: ${program.duration || '-'}</span>
+                    <span>수강료: ${program.cost || '무료'}</span>
+                </div>
+            </div>
+            <div class="job-posting-actions">
+                <button class="btn btn-secondary" onclick="teacherEditProgram('${program.id}')">수정</button>
+                <button class="btn btn-danger" onclick="teacherDeleteProgram('${program.id}')">삭제</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function teacherDeleteProgram(programId) {
+    if (!confirm('이 프로그램을 삭제하시겠습니까?')) return;
+    let programs = JSON.parse(localStorage.getItem('graduateNetwork_programs') || '[]');
+    programs = programs.filter(p => String(p.id) !== String(programId));
+    localStorage.setItem('graduateNetwork_programs', JSON.stringify(programs));
+    loadTeacherMyPrograms();
+    loadTeacherDashboardStats();
+    alert('삭제되었습니다.');
+}
+window.teacherDeleteProgram = teacherDeleteProgram;
+
+function teacherEditProgram(programId) {
+    sessionStorage.setItem('editProgramId', programId);
+    window.location.href = 'education-programs.html';
+}
+window.teacherEditProgram = teacherEditProgram;
+
+// 교사 전용: 상담한 학생 내역 (승인/거절 처리된 상담)
+function loadTeacherCounseledStudents() {
+    const user = auth.getCurrentUser();
+    if (!user) return;
+
+    const requests = JSON.parse(localStorage.getItem('counseling_requests') || '[]');
+    const responded = requests
+        .filter(r => String(r.counselorId) === String(user.id) && r.status !== 'pending')
+        .slice(-5).reverse();
+
+    const container = document.getElementById('recentApplicantsList');
+    if (!container) return;
+
+    if (responded.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">상담한 학생 내역이 없습니다.</p>';
+        return;
+    }
+
+    const users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
+
+    container.innerHTML = responded.map(req => {
+        const student = users.find(u => String(u.id) === String(req.studentId));
+        const studentName = req.studentName || (student ? student.name : '알 수 없음');
+        const statusText = req.status === 'approved' ? '승인됨' : '거절됨';
+        const statusClass = req.status === 'approved' ? 'interview' : 'rejected';
+        const date = new Date(req.respondedAt || req.createdAt).toLocaleDateString('ko-KR');
+        const preview = req.responseMessage ? req.responseMessage.substring(0, 50) + (req.responseMessage.length > 50 ? '...' : '') : '';
+
+        return `
+            <div class="applicant-item">
+                <div class="applicant-info">
+                    <h4>${studentName} 학생</h4>
+                    <p>${req.title}</p>
+                    <span class="applicant-status ${statusClass}">${statusText}</span>
+                    <p style="margin-top: 0.5rem; font-size: 0.85rem;">처리일: ${date}</p>
+                    ${preview ? `<p style="font-size:0.85rem;color:#374151;margin-top:0.3rem;">답변: ${preview}</p>` : ''}
+                </div>
+                <div class="applicant-actions">
+                    <a href="counseling.html" class="btn btn-secondary">상세보기</a>
+                </div>
+            </div>
+        `;
+    }).join('');
 }
 
 function loadStudentStats() {

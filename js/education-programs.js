@@ -35,6 +35,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // 프로그램 로드
     loadPrograms();
     
+    // 대시보드에서 수정 요청으로 온 경우 자동으로 수정 모달 열기
+    const editProgramId = sessionStorage.getItem('editProgramId');
+    if (editProgramId) {
+        sessionStorage.removeItem('editProgramId');
+        // programs 로드 후에 실행되도록 setTimeout 사용
+        setTimeout(() => {
+            editProgram(editProgramId);
+        }, 100);
+    }
+    
     // 검색 입력 이벤트
     document.getElementById('searchProgram').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
