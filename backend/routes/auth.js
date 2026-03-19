@@ -66,7 +66,7 @@ router.post('/register', [
       );
       const { password_hash: _ph, ...user } = reResult.rows[0];
       const token = jwt.sign(
-        { id: user.id, email: user.email, user_type: user.user_type },
+        { id: user.id, email: user.email, name: user.name, user_type: user.user_type },
         process.env.JWT_SECRET,
         { expiresIn: process.env.JWT_EXPIRE || '7d' }
       );
@@ -111,7 +111,7 @@ router.post('/register', [
 
     // Generate token
     const token = jwt.sign(
-      { id: user.id, email: user.email, user_type: user.user_type },
+      { id: user.id, email: user.email, name: user.name, user_type: user.user_type },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRE || '7d' }
     );
@@ -182,7 +182,7 @@ router.post('/login', [
 
     // Generate token
     const token = jwt.sign(
-      { id: user.id, email: user.email, user_type: user.user_type },
+      { id: user.id, email: user.email, name: user.name, user_type: user.user_type },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRE || '7d' }
     );

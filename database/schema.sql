@@ -17,7 +17,9 @@ CREATE TABLE users (
     last_login TIMESTAMP,
     is_active BOOLEAN DEFAULT TRUE,
     withdraw_reason TEXT,
-    withdrawn_at TIMESTAMP
+    withdrawn_at TIMESTAMP,
+    graduation_year INTEGER,
+    department_name VARCHAR(100)
 );
 
 -- Graduate Profiles (졸업생 프로필)

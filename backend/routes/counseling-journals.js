@@ -75,7 +75,15 @@ router.get('/:id', auth, async (req, res) => {
 // 교사, 관리자만 작성 가능
 router.post('/', auth, checkRole('teacher', 'admin'), async (req, res) => {
     try {
-        const { id: teacherId, name: teacherName, user_type } = req.user;
+        const { id: teacherId, name: jwtName, user_type } = req.user;
+
+        // JWT에 name이 없는 구버전 토큰 대비 DB 폴백
+        let teacherName = jwtName;
+        if (!teacherName) {
+            const userResult = await query('SELECT name FROM users WHERE id = $1', [teacherId]);
+            teacherName = userResult.rows[0]?.name || '';
+        }
+
         const {
             student_id = null,
             student_name,
