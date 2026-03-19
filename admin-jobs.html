@@ -246,10 +246,25 @@
             const tbody = document.getElementById('jobsTableBody');
             tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:2rem; color:#6b7280;">불러오는 중...</td></tr>';
             try {
-                const data = await api.get('/jobs?status=all&limit=200');
+                // status=all 먼저 시도 (신규 백엔드), 0건이면 상태별 분리 조회 (구 백엔드 호환)
+                let data = await api.get('/jobs?status=all&limit=200');
                 allJobs = data.jobs || [];
+
+                if (allJobs.length === 0) {
+                    // 구 백엔드: status=all 이 0건 → 상태별 분리 조회
+                    const [active, closed, expired] = await Promise.all([
+                        api.get('/jobs?status=active&limit=200').catch(() => ({ jobs: [] })),
+                        api.get('/jobs?status=closed&limit=200').catch(() => ({ jobs: [] })),
+                        api.get('/jobs?status=expired&limit=200').catch(() => ({ jobs: [] }))
+                    ]);
+                    allJobs = [
+                        ...(active.jobs || []),
+                        ...(closed.jobs || []),
+                        ...(expired.jobs || [])
+                    ];
+                }
             } catch (err) {
-                // API 실패 시 localStorage 폴백
+                // API 전체 실패 시 localStorage 폴백
                 allJobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
             }
             displayJobs(allJobs);
@@ -319,6 +334,7 @@
         async function viewApplicants(jobId, jobTitle) {
             document.getElementById('applicantsModalTitle').textContent = `지원자 목록 - ${jobTitle}`;
             document.getElementById('applicantsLoading').style.display = 'block';
+            document.getElementById('applicantsLoading').innerHTML = '불러오는 중...';
             document.getElementById('applicantsContent').style.display = 'none';
             document.getElementById('applicantsModal').style.display = 'flex';
 
@@ -360,8 +376,12 @@
                 document.getElementById('applicantsLoading').style.display = 'none';
                 document.getElementById('applicantsContent').style.display = 'block';
             } catch (err) {
-                document.getElementById('applicantsLoading').innerHTML =
-                    `<p style="color:#dc2626;">지원자 목록을 불러오지 못했습니다.<br><small>${err.message || ''}</small></p>`;
+                // 404 = 백엔드 미업데이트 (Docker 재빌드 필요), 403 = 권한 없음
+                const is404 = err.message && (err.message.includes('404') || err.message.includes('not found') || err.message.includes('Route'));
+                document.getElementById('applicantsLoading').innerHTML = is404
+                    ? `<p style="color:#d97706;">⚠️ 지원자 조회 기능을 사용하려면<br>서버 백엔드를 업데이트해야 합니다.</p>
+                       <p style="font-size:0.8rem; color:#6b7280; margin-top:0.5rem;">SSH 접속 후: <code>docker-compose build --no-cache backend &amp;&amp; docker-compose up -d backend</code></p>`
+                    : `<p style="color:#dc2626;">오류가 발생했습니다.<br><small>${err.message || ''}</small></p>`;
             }
         }
 
