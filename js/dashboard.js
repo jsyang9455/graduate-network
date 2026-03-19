@@ -213,10 +213,12 @@ function loadStudentStats() {
         newJobCount.textContent = activeJobs.length;
     }
     
-    // Load applications (mock data)
+    // Load actual applications count
+    const applications = JSON.parse(localStorage.getItem('job_applications') || '[]');
+    const myApplications = applications.filter(a => String(a.userId) === String(user.id));
     const applicationCount = document.getElementById('applicationCount');
     if (applicationCount) {
-        applicationCount.textContent = Math.floor(Math.random() * 5);
+        applicationCount.textContent = myApplications.length;
     }
     
     // Load network connections
@@ -487,7 +489,7 @@ function loadTeacherCounselingRequests() {
     
     container.innerHTML = recentRequests.map(req => {
         const student = users.find(u => String(u.id) === String(req.studentId));
-        const studentName = student ? student.name : '알 수 없음';
+        const studentName = req.studentName || (student ? student.name : '알 수 없음');
         const statusText = req.status === 'pending' ? '대기중' : req.status === 'approved' ? '승인됨' : '거절됨';
         const statusClass = req.status === 'pending' ? 'status-pending' : req.status === 'approved' ? 'status-approved' : 'status-rejected';
         const date = new Date(req.createdAt).toLocaleDateString('ko-KR');
@@ -571,7 +573,7 @@ function loadEducationPrograms() {
     const eduContainer = document.getElementById('educationPrograms');
     if (!eduContainer) return;
     
-    const programs = JSON.parse(localStorage.getItem('educationPrograms') || '[]');
+    const programs = JSON.parse(localStorage.getItem('graduateNetwork_programs') || '[]');
     const recentPrograms = programs.slice(0, 3); // 최근 3개만 표시
     
     if (recentPrograms.length === 0) {
@@ -580,11 +582,11 @@ function loadEducationPrograms() {
     }
     
     eduContainer.innerHTML = recentPrograms.map(program => `
-        <div class="news-item" onclick="showEducationDetail(${program.id})" style="cursor: pointer;">
-            <div class="news-date">${program.deadline}</div>
+        <div class="news-item" onclick="showEducationDetail('${program.id}')" style="cursor: pointer;">
+            <div class="news-date">${program.type || ''} | ${program.duration || '-'}</div>
             <div class="news-content">
                 <h4>${program.title}</h4>
-                <p>기간: ${program.startDate} ~ ${program.endDate} | 수강료: ${program.fee}</p>
+                <p>강사: ${program.instructor || '-'} | 수강료: ${program.cost || '-'}</p>
             </div>
         </div>
     `).join('');
@@ -592,16 +594,16 @@ function loadEducationPrograms() {
 
 // 교육프로그램 상세보기
 function showEducationDetail(programId) {
-    const programs = JSON.parse(localStorage.getItem('educationPrograms') || '[]');
-    const program = programs.find(p => p.id === programId);
+    const programs = JSON.parse(localStorage.getItem('graduateNetwork_programs') || '[]');
+    const program = programs.find(p => String(p.id) === String(programId));
     
     if (!program) return;
     
     document.getElementById('educationDetailTitle').textContent = program.title;
-    document.getElementById('educationDetailPeriod').textContent = `${program.startDate} ~ ${program.endDate}`;
-    document.getElementById('educationDetailDeadline').textContent = program.deadline;
-    document.getElementById('educationDetailFee').textContent = program.fee;
-    document.getElementById('educationDetailDescription').textContent = program.description;
+    document.getElementById('educationDetailPeriod').textContent = `${program.type || '-'} | ${program.duration || '-'}`;
+    document.getElementById('educationDetailDeadline').textContent = program.category || '-';
+    document.getElementById('educationDetailFee').textContent = program.cost || '-';
+    document.getElementById('educationDetailDescription').textContent = program.description || '';
     document.getElementById('educationDetailModal').style.display = 'flex';
 }
 
@@ -638,7 +640,7 @@ function loadEducationProgramsForCompany() {
     const eduContainer = document.getElementById('educationProgramsCompany');
     if (!eduContainer) return;
     
-    const programs = JSON.parse(localStorage.getItem('educationPrograms') || '[]');
+    const programs = JSON.parse(localStorage.getItem('graduateNetwork_programs') || '[]');
     const recentPrograms = programs.slice(0, 3); // 최근 3개만 표시
     
     if (recentPrograms.length === 0) {
@@ -647,11 +649,11 @@ function loadEducationProgramsForCompany() {
     }
     
     eduContainer.innerHTML = recentPrograms.map(program => `
-        <div class="news-item" onclick="showEducationDetail(${program.id})" style="cursor: pointer;">
-            <div class="news-date">${program.deadline}</div>
+        <div class="news-item" onclick="showEducationDetail('${program.id}')" style="cursor: pointer;">
+            <div class="news-date">${program.type || ''} | ${program.duration || '-'}</div>
             <div class="news-content">
                 <h4>${program.title}</h4>
-                <p>기간: ${program.startDate} ~ ${program.endDate} | 수강료: ${program.fee}</p>
+                <p>강사: ${program.instructor || '-'} | 수강료: ${program.cost || '-'}</p>
             </div>
         </div>
     `).join('');

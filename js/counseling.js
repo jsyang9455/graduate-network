@@ -449,7 +449,7 @@ function loadMyCounselingRequests() {
     
     container.innerHTML = myRequests.map(req => {
         const teacher = users.find(u => String(u.id) === String(req.counselorId));
-        const teacherName = teacher ? teacher.name : '알 수 없음';
+        const teacherName = req.counselorName || (teacher ? teacher.name : '알 수 없음');
         const statusText = req.status === 'pending' ? '대기중' : req.status === 'approved' ? '승인됨' : '거절됨';
         const statusClass = req.status === 'pending' ? 'status-pending' : req.status === 'approved' ? 'status-approved' : 'status-rejected';
         

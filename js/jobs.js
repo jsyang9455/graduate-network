@@ -326,8 +326,13 @@ function applyJob(jobId) {
     if (!job) return;
     
     if (confirm(`${job.company}의 ${job.position} 포지션에 지원하시겠습니까?`)) {
-        // Store application
+        // Check for duplicate application
         const applications = JSON.parse(localStorage.getItem('job_applications') || '[]');
+        const alreadyApplied = applications.some(a => String(a.jobId) === String(job.id) && String(a.userId) === String(user.id));
+        if (alreadyApplied) {
+            alert('이미 지원한 공고입니다.');
+            return;
+        }
         applications.push({
             jobId: job.id,
             userId: user.id,
