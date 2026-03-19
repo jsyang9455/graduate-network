@@ -27,6 +27,7 @@ const certificateRoutes = require('./routes/certificates');
 const postRoutes = require('./routes/posts');
 const majorRoutes = require('./routes/majors');
 const announcementRoutes = require('./routes/announcements');
+const counselingJournalRoutes = require('./routes/counseling-journals');
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -38,6 +39,7 @@ app.use('/api/certificates', certificateRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/majors', majorRoutes);
 app.use('/api/announcements', announcementRoutes);
+app.use('/api/counseling-journals', counselingJournalRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

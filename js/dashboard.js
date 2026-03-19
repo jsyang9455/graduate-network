@@ -797,45 +797,62 @@ function loadEducationProgramsForCompany() {
     `).join('');
 }
 
-// 교사 대시보드 - 상담일지 최근 3건 표시
-function loadTeacherCounselingJournal() {
+// 교사 대시보드 - 상담일지 최근 3건 표시 (API 연동, localStorage 폴백)
+async function loadTeacherCounselingJournal() {
     const container = document.getElementById('journalDashboardList');
     if (!container) return;
 
     const user = auth.getCurrentUser();
     if (!user) return;
 
-    let journals = [];
-    try {
-        journals = JSON.parse(localStorage.getItem('counseling_journals')) || [];
-    } catch (e) {
-        journals = [];
-    }
-
-    const myJournals = journals
-        .filter(j => String(j.teacherId) === String(user.id))
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 3);
-
-    if (myJournals.length === 0) {
-        container.innerHTML = `<p style="text-align:center; color:#6b7280; padding:2rem;">작성된 상담일지가 없습니다.</p>`;
-        return;
-    }
-
     function escH(str) {
         return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
-    container.innerHTML = myJournals.map(j => {
-        const dateStr = j.counselingDate || '-';
-        return `
-        <div class="applicant-item" style="cursor:pointer;" onclick="window.location.href='counseling-journal.html'">
-            <div class="applicant-name">${escH(j.title || '')}</div>
-            <div class="applicant-info">
-                <span>📅 ${dateStr}</span>
-                <span style="margin-left:0.8rem;">👤 ${escH(j.studentName || '-')}</span>
-                <span style="margin-left:0.8rem; background:#e0e7ff; color:#3730a3; padding:0.15rem 0.5rem; border-radius:12px; font-size:0.78rem;">${escH(j.type || '')}</span>
-            </div>
-        </div>`;
-    }).join('');
+    function renderItems(journals) {
+        if (journals.length === 0) {
+            container.innerHTML = `<p style="text-align:center; color:#6b7280; padding:2rem;">작성된 상담일지가 없습니다.</p>`;
+            return;
+        }
+        container.innerHTML = journals.slice(0, 3).map(j => {
+            const dateStr = (j.counseling_date || j.counselingDate || '-').substring(0, 10);
+            const studentName = j.student_name || j.studentName || '-';
+            return `
+            <div class="applicant-item" style="cursor:pointer;" onclick="window.location.href='counseling-journal.html'">
+                <div class="applicant-name">${escH(j.title || '')}</div>
+                <div class="applicant-info">
+                    <span>📅 ${dateStr}</span>
+                    <span style="margin-left:0.8rem;">👤 ${escH(studentName)}</span>
+                    <span style="margin-left:0.8rem; background:#e0e7ff; color:#3730a3; padding:0.15rem 0.5rem; border-radius:12px; font-size:0.78rem;">${escH(j.type || '')}</span>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    try {
+        const token = localStorage.getItem('token') || '';
+        const apiBase = (() => {
+            const h = window.location.hostname;
+            if (h === 'localhost' || h === '127.0.0.1') return 'http://localhost:5001/api';
+            if (/^\d+\.\d+\.\d+\.\d+$/.test(h)) return `http://${h}:5001/api`;
+            return '/api';
+        })();
+        const res = await fetch(`${apiBase}/counseling-journals`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error('API 오류');
+        const data = await res.json();
+        const journals = (data.journals || []).sort((a, b) =>
+            new Date(b.created_at || b.createdAt) - new Date(a.created_at || a.createdAt)
+        );
+        renderItems(journals);
+    } catch (e) {
+        // localStorage 폴백
+        let journals = [];
+        try { journals = JSON.parse(localStorage.getItem('counseling_journals')) || []; } catch {}
+        journals = journals
+            .filter(j => String(j.teacherId) === String(user.id))
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        renderItems(journals);
+    }
 }
