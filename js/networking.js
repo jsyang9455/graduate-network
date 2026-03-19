@@ -74,7 +74,7 @@ function loadMessages() {
 // 모든 사용자 로드 (본인 제외)
 async function loadAllUsers() {
     try {
-        const data = await api.get('/users?user_type=student,graduate');
+        const data = await api.get('/users?user_type=student,graduate&exclude_user_id=' + currentUser.id);
         allUsers = data.users || [];
     } catch (err) {
         console.warn('Users load failed:', err.message);

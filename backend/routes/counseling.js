@@ -6,8 +6,17 @@ const { auth, checkRole } = require('../middleware/auth');
 // Get teachers (counselors)
 router.get('/teachers', async (req, res) => {
   try {
+    // school_name 컬럼 존재 여부 확인 (AWS DB 버전 차이 대응)
+    const colCheck = await query(
+      `SELECT column_name FROM information_schema.columns
+       WHERE table_name = 'users' AND column_name = 'school_name'`
+    );
+    const hasSchoolName = colCheck.rows.length > 0;
+    const schoolNameSel = hasSchoolName ? 'school_name' : "null AS school_name";
+
     const result = await query(
-      `SELECT id, name, email, school_name FROM users WHERE user_type = 'teacher' AND is_active = true ORDER BY name`
+      `SELECT id, name, email, ${schoolNameSel}
+       FROM users WHERE user_type = 'teacher' AND is_active = true ORDER BY name`
     );
     res.json({ teachers: result.rows });
   } catch (error) {
