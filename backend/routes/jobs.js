@@ -16,6 +16,9 @@ router.get('/', async (req, res) => {
       limit = 20 
     } = req.query;
 
+    // status=all means no status filter (admin use)
+    const statusAll = status === 'all';
+
     let queryText = `
       SELECT j.*, 
              u.name as company_name,
@@ -23,10 +26,10 @@ router.get('/', async (req, res) => {
       FROM jobs j
       JOIN users u ON j.company_id = u.id
       LEFT JOIN company_profiles cp ON u.id = cp.user_id
-      WHERE j.status = $1
+      ${statusAll ? 'WHERE 1=1' : 'WHERE j.status = $1'}
     `;
-    const params = [status];
-    let paramCount = 1;
+    const params = statusAll ? [] : [status];
+    let paramCount = statusAll ? 0 : 1;
 
     if (search) {
       paramCount++;
@@ -59,8 +62,8 @@ router.get('/', async (req, res) => {
 
     // Get total count
     const countResult = await query(
-      'SELECT COUNT(*) FROM jobs WHERE status = $1',
-      [status]
+      statusAll ? 'SELECT COUNT(*) FROM jobs' : 'SELECT COUNT(*) FROM jobs WHERE status = $1',
+      statusAll ? [] : [status]
     );
 
     res.json({
@@ -281,6 +284,37 @@ router.post('/:id/apply', auth, async (req, res) => {
   } catch (error) {
     console.error('Apply job error:', error);
     res.status(500).json({ error: 'Failed to apply' });
+  }
+});
+
+// Get applicants for a job (admin only)
+router.get('/:id/applicants', auth, checkRole('admin', 'company'), async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Company can only see their own job applicants; admin sees all
+    if (req.user.user_type === 'company') {
+      const jobCheck = await query('SELECT company_id FROM jobs WHERE id = $1', [id]);
+      if (jobCheck.rows.length === 0) return res.status(404).json({ error: 'Job not found' });
+      if (jobCheck.rows[0].company_id !== req.user.id)
+        return res.status(403).json({ error: 'Not authorized' });
+    }
+
+    const result = await query(
+      `SELECT ja.id, ja.status as application_status, ja.applied_at, ja.cover_letter,
+              u.id as user_id, u.name, u.email, u.phone, u.school_name, u.major,
+              u.user_type, u.graduation_year
+       FROM job_applications ja
+       JOIN users u ON ja.user_id = u.id
+       WHERE ja.job_id = $1
+       ORDER BY ja.applied_at DESC`,
+      [id]
+    );
+
+    res.json({ applicants: result.rows, total: result.rows.length });
+  } catch (error) {
+    console.error('Get applicants error:', error);
+    res.status(500).json({ error: 'Failed to get applicants' });
   }
 });
 

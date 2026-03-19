@@ -170,6 +170,40 @@
         </div>
     </div>
 
+    <!-- 지원자 목록 모달 -->
+    <div id="applicantsModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 760px;">
+            <div class="modal-header">
+                <h2 id="applicantsModalTitle">지원자 목록</h2>
+                <span class="close" onclick="closeApplicantsModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="applicantsLoading" style="text-align:center; padding:2rem; color:#6b7280;">불러오는 중...</div>
+                <div id="applicantsContent" style="display:none;">
+                    <p id="applicantsSummary" style="margin-bottom:1rem; color:#6b7280; font-size:0.9rem;"></p>
+                    <div style="overflow-x:auto;">
+                        <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+                            <thead style="background:#f9fafb;">
+                                <tr>
+                                    <th style="padding:0.75rem 1rem; text-align:left; border-bottom:2px solid #e5e7eb;">#</th>
+                                    <th style="padding:0.75rem 1rem; text-align:left; border-bottom:2px solid #e5e7eb;">이름</th>
+                                    <th style="padding:0.75rem 1rem; text-align:left; border-bottom:2px solid #e5e7eb;">이메일</th>
+                                    <th style="padding:0.75rem 1rem; text-align:left; border-bottom:2px solid #e5e7eb;">연락처</th>
+                                    <th style="padding:0.75rem 1rem; text-align:left; border-bottom:2px solid #e5e7eb;">학교</th>
+                                    <th style="padding:0.75rem 1rem; text-align:left; border-bottom:2px solid #e5e7eb;">전공</th>
+                                    <th style="padding:0.75rem 1rem; text-align:left; border-bottom:2px solid #e5e7eb;">지원일</th>
+                                    <th style="padding:0.75rem 1rem; text-align:left; border-bottom:2px solid #e5e7eb;">상태</th>
+                                </tr>
+                            </thead>
+                            <tbody id="applicantsTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div id="applicantsEmpty" style="display:none; text-align:center; padding:2rem; color:#6b7280;">지원자가 없습니다.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script>
@@ -198,10 +232,26 @@
                 e.preventDefault();
                 saveJob();
             });
+
+            // 모달 바깥 클릭 시 닫기
+            document.getElementById('applicantsModal').addEventListener('click', function(e) {
+                if (e.target === this) closeApplicantsModal();
+            });
+            document.getElementById('jobModal').addEventListener('click', function(e) {
+                if (e.target === this) closeJobModal();
+            });
         });
 
-        function loadJobs() {
-            allJobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
+        async function loadJobs() {
+            const tbody = document.getElementById('jobsTableBody');
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:2rem; color:#6b7280;">불러오는 중...</td></tr>';
+            try {
+                const data = await api.get('/jobs?status=all&limit=200');
+                allJobs = data.jobs || [];
+            } catch (err) {
+                // API 실패 시 localStorage 폴백
+                allJobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
+            }
             displayJobs(allJobs);
         }
 
@@ -216,17 +266,26 @@
             tbody.innerHTML = jobs.map((job, index) => {
                 const statusText = { 'active': '진행중', 'closed': '마감', 'expired': '만료' };
                 const statusClass = { 'active': 'success', 'closed': 'warning', 'expired': 'danger' };
+                const applicantCount = job.applications_count || job.applicants || 0;
+                const deadline = job.deadline ? job.deadline.substring(0, 10) : '상시채용';
+                const company = job.company_name || job.company || job.companyName || '-';
+                const title = job.title || job.position || job.jobTitle || '-';
 
                 return `
                     <tr style="border-bottom: 1px solid #e5e7eb;">
                         <td style="padding: 1rem;">${index + 1}</td>
-                        <td style="padding: 1rem;">${job.company || job.companyName || '-'}</td>
-                        <td style="padding: 1rem;">${job.position || job.jobTitle || job.title || '-'}</td>
-                        <td style="padding: 1rem;">${job.deadline || '상시채용'}</td>
-                        <td style="padding: 1rem;">${job.applicants || 0}명</td>
+                        <td style="padding: 1rem;">${company}</td>
+                        <td style="padding: 1rem;">${title}</td>
+                        <td style="padding: 1rem;">${deadline}</td>
+                        <td style="padding: 1rem;">
+                            <span
+                                onclick="viewApplicants(${job.id}, '${title.replace(/'/g, "\\'")}')"
+                                style="cursor:pointer; color:#2563eb; font-weight:600; text-decoration:underline;"
+                                title="클릭하면 지원자 목록을 볼 수 있습니다"
+                            >${applicantCount}명</span>
+                        </td>
                         <td style="padding: 1rem;"><span class="badge badge-${statusClass[job.status] || 'secondary'}">${statusText[job.status] || job.status}</span></td>
                         <td style="padding: 1rem; text-align: center;">
-                            <button onclick="viewJob(${job.id})" class="btn btn-sm btn-secondary" style="margin-right: 0.5rem;">보기</button>
                             <button onclick="editJob(${job.id})" class="btn btn-sm btn-primary" style="margin-right: 0.5rem;">수정</button>
                             <button onclick="expireJob(${job.id})" class="btn btn-sm btn-warning" style="margin-right: 0.5rem;">만료</button>
                             <button onclick="deleteJob(${job.id})" class="btn btn-sm btn-danger">삭제</button>
@@ -244,8 +303,8 @@
 
             if (searchTerm) {
                 filtered = filtered.filter(job => 
-                    (job.position || job.jobTitle || job.title || '').toLowerCase().includes(searchTerm) ||
-                    (job.company || job.companyName || '').toLowerCase().includes(searchTerm)
+                    (job.title || job.position || job.jobTitle || '').toLowerCase().includes(searchTerm) ||
+                    (job.company_name || job.company || job.companyName || '').toLowerCase().includes(searchTerm)
                 );
             }
 
@@ -256,6 +315,61 @@
             displayJobs(filtered);
         }
 
+        // ─── 지원자 목록 팝업 ────────────────────────────────────────────────
+        async function viewApplicants(jobId, jobTitle) {
+            document.getElementById('applicantsModalTitle').textContent = `지원자 목록 - ${jobTitle}`;
+            document.getElementById('applicantsLoading').style.display = 'block';
+            document.getElementById('applicantsContent').style.display = 'none';
+            document.getElementById('applicantsModal').style.display = 'flex';
+
+            try {
+                const data = await api.get(`/jobs/${jobId}/applicants`);
+                const applicants = data.applicants || [];
+
+                document.getElementById('applicantsSummary').textContent =
+                    `총 ${applicants.length}명이 지원하였습니다.`;
+
+                const tbodyEl = document.getElementById('applicantsTableBody');
+                const emptyEl = document.getElementById('applicantsEmpty');
+
+                if (applicants.length === 0) {
+                    tbodyEl.innerHTML = '';
+                    emptyEl.style.display = 'block';
+                } else {
+                    emptyEl.style.display = 'none';
+                    const statusLabel = { pending: '검토중', reviewed: '검토완료', interviewed: '면접', accepted: '합격', rejected: '불합격' };
+                    const statusColor = { pending: '#6b7280', reviewed: '#2563eb', interviewed: '#d97706', accepted: '#16a34a', rejected: '#dc2626' };
+                    tbodyEl.innerHTML = applicants.map((a, i) => {
+                        const appliedDate = a.applied_at ? new Date(a.applied_at).toLocaleDateString('ko-KR') : '-';
+                        const color = statusColor[a.application_status] || '#6b7280';
+                        const label = statusLabel[a.application_status] || (a.application_status || '-');
+                        return `
+                            <tr style="border-bottom:1px solid #e5e7eb;">
+                                <td style="padding:0.75rem 1rem;">${i + 1}</td>
+                                <td style="padding:0.75rem 1rem; font-weight:600;">${a.name || '-'}</td>
+                                <td style="padding:0.75rem 1rem;">${a.email || '-'}</td>
+                                <td style="padding:0.75rem 1rem;">${a.phone || '-'}</td>
+                                <td style="padding:0.75rem 1rem;">${a.school_name || '-'}</td>
+                                <td style="padding:0.75rem 1rem;">${a.major || '-'}</td>
+                                <td style="padding:0.75rem 1rem;">${appliedDate}</td>
+                                <td style="padding:0.75rem 1rem; color:${color}; font-weight:600;">${label}</td>
+                            </tr>`;
+                    }).join('');
+                }
+
+                document.getElementById('applicantsLoading').style.display = 'none';
+                document.getElementById('applicantsContent').style.display = 'block';
+            } catch (err) {
+                document.getElementById('applicantsLoading').innerHTML =
+                    `<p style="color:#dc2626;">지원자 목록을 불러오지 못했습니다.<br><small>${err.message || ''}</small></p>`;
+            }
+        }
+
+        function closeApplicantsModal() {
+            document.getElementById('applicantsModal').style.display = 'none';
+        }
+
+        // ─── 채용공고 등록/수정 모달 ──────────────────────────────────────────
         function showCreateJobModal() {
             document.getElementById('jobModalTitle').textContent = '채용공고 등록';
             document.getElementById('jobForm').reset();
@@ -263,43 +377,22 @@
             document.getElementById('jobModal').style.display = 'flex';
         }
 
-        function viewJob(jobId) {
-            const job = allJobs.find(j => j.id === jobId);
-            if (!job) return;
-            
-            alert([
-                `[채용 제목] ${job.position || job.jobTitle || job.title || '-'}`,
-                `[기업명] ${job.company || job.companyName || '-'}`,
-                `[기업유형] ${job.companyType || '-'}`,
-                `[경력] ${job.experience || '-'}`,
-                `[채용유형] ${job.type || '-'}`,
-                `[근무지역] ${job.location || '-'}`,
-                `[채용인원] ${job.recruitCount || '-'}`,
-                `[급여] ${job.salary || '-'}`,
-                `[마감일] ${job.deadline || '상시채용'}`,
-                `[상태] ${job.status}`,
-                `[지원자수] ${job.applicants || 0}명`,
-                '',
-                `[내용] ${job.description || '-'}`
-            ].join('\n'));
-        }
-
-        function editJob(jobId) {
+        async function editJob(jobId) {
             const job = allJobs.find(j => j.id === jobId);
             if (!job) return;
 
             document.getElementById('jobModalTitle').textContent = '채용공고 수정';
             document.getElementById('jobId').value = job.id;
-            document.getElementById('jobPosition').value = job.position || job.jobTitle || job.title || '';
-            document.getElementById('jobCompany').value = job.company || job.companyName || '';
-            document.getElementById('jobCompanyType').value = job.companyType || '중소기업';
+            document.getElementById('jobPosition').value = job.title || job.position || job.jobTitle || '';
+            document.getElementById('jobCompany').value = job.company_name || job.company || job.companyName || '';
+            document.getElementById('jobCompanyType').value = job.company_type || job.companyType || '중소기업';
             document.getElementById('jobDescription').value = job.description || '';
-            document.getElementById('jobExperience').value = job.experience || '신입';
-            document.getElementById('jobType').value = job.type || '정규직';
+            document.getElementById('jobExperience').value = job.experience_level || job.experience || '신입';
+            document.getElementById('jobType').value = job.job_type || job.type || '정규직';
             document.getElementById('jobLocation').value = job.location || '';
-            document.getElementById('jobRecruitCount').value = job.recruitCount || '';
-            document.getElementById('jobSalary').value = job.salary || '';
-            document.getElementById('jobDeadline').value = job.deadline || '';
+            document.getElementById('jobRecruitCount').value = job.headcount || job.recruitCount || '';
+            document.getElementById('jobSalary').value = job.salary_range || job.salary || '';
+            document.getElementById('jobDeadline').value = job.deadline ? job.deadline.substring(0, 10) : '';
             document.getElementById('jobStatus').value = job.status || 'active';
 
             document.getElementById('jobModal').style.display = 'flex';
@@ -310,75 +403,56 @@
             document.getElementById('jobForm').reset();
         }
 
-        function saveJob() {
+        async function saveJob() {
             const jobId = document.getElementById('jobId').value;
-            const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
 
             const jobData = {
-                position:    document.getElementById('jobPosition').value,
-                company:     document.getElementById('jobCompany').value,
-                companyType: document.getElementById('jobCompanyType').value,
-                description: document.getElementById('jobDescription').value,
-                experience:  document.getElementById('jobExperience').value,
-                type:        document.getElementById('jobType').value,
-                location:    document.getElementById('jobLocation').value || '미정',
-                recruitCount: document.getElementById('jobRecruitCount').value || '-',
-                salary:      document.getElementById('jobSalary').value || '협의',
-                deadline:    document.getElementById('jobDeadline').value || '상시채용',
-                status:      document.getElementById('jobStatus').value
+                title:           document.getElementById('jobPosition').value,
+                description:     document.getElementById('jobDescription').value,
+                experience_level: document.getElementById('jobExperience').value,
+                job_type:        document.getElementById('jobType').value,
+                location:        document.getElementById('jobLocation').value || '미정',
+                headcount:       parseInt(document.getElementById('jobRecruitCount').value) || 1,
+                salary_range:    document.getElementById('jobSalary').value || '협의',
+                deadline:        document.getElementById('jobDeadline').value || null,
+                status:          document.getElementById('jobStatus').value
             };
 
-            if (jobId) {
-                // 수정
-                const jobIndex = jobs.findIndex(j => j.id == jobId);
-                if (jobIndex !== -1) {
-                    jobs[jobIndex] = { ...jobs[jobIndex], ...jobData };
+            try {
+                if (jobId) {
+                    await api.put(`/jobs/${jobId}`, jobData);
+                    alert('채용공고가 수정되었습니다.');
+                } else {
+                    await api.post('/jobs', jobData);
+                    alert('채용공고가 등록되었습니다.');
                 }
-            } else {
-                // 신규 등록
-                const newJob = {
-                    id: Date.now(),
-                    companyId: 0,
-                    companyName: jobData.company,
-                    ...jobData,
-                    createdAt: new Date().toISOString(),
-                    views: 0,
-                    applicants: 0
-                };
-                jobs.push(newJob);
+                closeJobModal();
+                loadJobs();
+            } catch (err) {
+                alert('저장 실패: ' + (err.message || '오류가 발생했습니다.'));
             }
-
-            localStorage.setItem('jobPostings', JSON.stringify(jobs));
-            
-            alert(jobId ? '채용공고가 수정되었습니다.' : '채용공고가 등록되었습니다.');
-            closeJobModal();
-            loadJobs();
         }
 
-        function expireJob(jobId) {
+        async function expireJob(jobId) {
             if (!confirm('이 공고를 만료 처리하시겠습니까?')) return;
-
-            const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
-            const jobIndex = jobs.findIndex(j => j.id === jobId);
-
-            if (jobIndex !== -1) {
-                jobs[jobIndex].status = 'expired';
-                localStorage.setItem('jobPostings', JSON.stringify(jobs));
+            try {
+                await api.put(`/jobs/${jobId}`, { status: 'expired' });
                 alert('공고가 만료되었습니다.');
                 loadJobs();
+            } catch (err) {
+                alert('처리 실패: ' + (err.message || '오류가 발생했습니다.'));
             }
         }
 
-        function deleteJob(jobId) {
+        async function deleteJob(jobId) {
             if (!confirm('정말 이 채용공고를 삭제하시겠습니까?')) return;
-
-            const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
-            const filtered = jobs.filter(j => j.id !== jobId);
-            
-            localStorage.setItem('jobPostings', JSON.stringify(filtered));
-            
-            alert('채용공고가 삭제되었습니다.');
-            loadJobs();
+            try {
+                await api.delete(`/jobs/${jobId}`);
+                alert('채용공고가 삭제되었습니다.');
+                loadJobs();
+            } catch (err) {
+                alert('삭제 실패: ' + (err.message || '오류가 발생했습니다.'));
+            }
         }
     </script>
 </body>
