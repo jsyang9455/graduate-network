@@ -19,12 +19,13 @@ router.get('/', async (req, res) => {
     // status=all means no status filter (admin use)
     const statusAll = status === 'all';
 
-    // job_applications 테이블에서 실제 지원자 수를 집계 (stored count와 무관하게 항상 정확)
+    // GREATEST: job_applications 실제 COUNT vs 저장된 applications_count 중 큰 값 사용
+    // → job_applications 테이블이 비어있어도 기존 누적 카운트 보존
     let queryText = `
       SELECT j.*,
              u.name as company_name,
              cp.logo_url as company_logo,
-             COALESCE(ja_cnt.cnt, 0) AS applications_count
+             GREATEST(j.applications_count, COALESCE(ja_cnt.cnt, 0)) AS applications_count
       FROM jobs j
       JOIN users u ON j.company_id = u.id
       LEFT JOIN company_profiles cp ON u.id = cp.user_id
@@ -120,9 +121,9 @@ router.get('/:id', async (req, res) => {
       `SELECT j.*,
               u.name as company_name, u.email as company_email, u.phone as company_phone,
               cp.logo_url, cp.website, cp.description as company_description,
-              COALESCE((
+              GREATEST(j.applications_count, COALESCE((
                 SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = j.id
-              ), 0) AS applications_count
+              ), 0)) AS applications_count
        FROM jobs j
        JOIN users u ON j.company_id = u.id
        LEFT JOIN company_profiles cp ON u.id = cp.user_id
