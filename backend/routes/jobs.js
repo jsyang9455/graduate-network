@@ -90,12 +90,14 @@ router.get('/', async (req, res) => {
 });
 
 // Sync applications_count from actual job_applications (admin only)
+// GREATEST 사용 → 기존 값보다 실제 COUNT가 많을 때만 업데이트 (기존 데이터 보존)
 router.post('/admin/sync-counts', auth, checkRole('admin'), async (req, res) => {
   try {
     const result = await query(`
       UPDATE jobs j
-      SET applications_count = (
-        SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = j.id
+      SET applications_count = GREATEST(
+        j.applications_count,
+        (SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = j.id)
       )
       RETURNING id, title, applications_count
     `);
