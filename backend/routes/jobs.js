@@ -159,15 +159,35 @@ router.post('/', auth, checkRole('company', 'admin', 'teacher'), async (req, res
       deadline
     } = req.body;
 
-    const result = await query(
-      `INSERT INTO jobs 
-       (company_id, title, description, requirements, location, job_type, 
-        salary_range, experience_level, headcount, deadline)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-       RETURNING *`,
-      [req.user.id, title, description, requirements, location, job_type,
-       salary_range, experience_level, headcount || 1, deadline]
+    // headcount 컬럼 존재 여부 확인 후 동적으로 INSERT
+    const colCheck = await query(
+      `SELECT column_name FROM information_schema.columns 
+       WHERE table_name='jobs' AND column_name='headcount'`
     );
+    const hasHeadcount = colCheck.rows.length > 0;
+
+    let result;
+    if (hasHeadcount) {
+      result = await query(
+        `INSERT INTO jobs 
+         (company_id, title, description, requirements, location, job_type, 
+          salary_range, experience_level, headcount, deadline)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+         RETURNING *`,
+        [req.user.id, title, description, requirements, location, job_type,
+         salary_range, experience_level, headcount || 1, deadline]
+      );
+    } else {
+      result = await query(
+        `INSERT INTO jobs 
+         (company_id, title, description, requirements, location, job_type, 
+          salary_range, experience_level, deadline)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+         RETURNING *`,
+        [req.user.id, title, description, requirements, location, job_type,
+         salary_range, experience_level, deadline]
+      );
+    }
 
     res.status(201).json({
       message: 'Job created successfully',
