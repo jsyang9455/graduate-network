@@ -214,22 +214,8 @@
     <script>
         let announcements = [];
 
-        // ===== 디버그 오버레이 =====
-        function dbg(msg) {
-            let el = document.getElementById('__debugOverlay');
-            if (!el) {
-                el = document.createElement('div');
-                el.id = '__debugOverlay';
-                el.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:#0f0;font:12px monospace;padding:8px;z-index:99999;max-height:180px;overflow-y:auto;white-space:pre-wrap;border-top:2px solid #0f0;';
-                document.body.appendChild(el);
-            }
-            el.textContent += new Date().toLocaleTimeString() + ' ' + msg + '\n';
-        }
-        window.addEventListener('error', e => dbg('💥 JS오류: ' + e.message + ' @ ' + e.filename + ':' + e.lineno));
-
         // 페이지 로드 시
         document.addEventListener('DOMContentLoaded', async () => {
-            dbg('DOMContentLoaded - loadAnnouncements 시작');
             await loadAnnouncements();
             setupFilters();
         });
@@ -243,32 +229,26 @@
             const emptyState = document.getElementById('emptyState');
             const countEl = document.getElementById('announcementCount');
             if (countEl) countEl.textContent = '로딩 중...';
-            dbg('fetch 시도: ' + API_BASE + '/announcements/job-fair');
             try {
                 const res = await fetch(API_BASE + '/announcements/job-fair');
-                dbg('응답 상태: ' + res.status + ' ok=' + res.ok);
                 if (!res.ok) throw new Error('서버 응답 오류: ' + res.status);
                 const data = await res.json();
                 announcements = data.announcements || [];
-                dbg('데이터 수신: ' + announcements.length + '건');
                 if (announcements.length === 0) {
                     if (grid) grid.style.display = 'none';
                     if (emptyState) emptyState.style.display = 'block';
                     if (countEl) countEl.textContent = '';
-                    dbg('⚠️ 공지사항 0건 - emptyState 표시');
                 } else {
                     if (emptyState) emptyState.style.display = 'none';
                     if (grid) grid.style.display = 'grid';
                     if (countEl) countEl.textContent = '총 ' + announcements.length + '개의 박람회';
                     const html = announcements.map(function(item) {
                         try { return createAnnouncementCard(item); }
-                        catch(e) { dbg('카드 오류: ' + e.message); return ''; }
+                        catch(e) { console.error('카드 오류:', e.message); return ''; }
                     }).join('');
                     grid.innerHTML = html;
-                    dbg('✅ grid.innerHTML 설정완료 - grid display=' + (grid ? grid.style.display : 'N/A'));
                 }
             } catch (error) {
-                dbg('❌ fetch 오류: ' + error.message);
                 console.error('취업 박람회 로드 실패:', error);
                 if (emptyState) {
                     emptyState.style.display = 'block';
