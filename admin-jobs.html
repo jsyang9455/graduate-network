@@ -48,6 +48,7 @@
                 <div class="user-info">
                     <span id="userName"></span>
                     <button onclick="showCreateJobModal()" class="btn btn-primary" style="margin-left: 1rem;">공고 등록</button>
+                    <button onclick="clearSampleJobs()" class="btn btn-secondary" style="margin-left: 0.5rem; background:#fee2e2; color:#b91c1c; border-color:#fca5a5;">샘플 데이터 삭제</button>
                 </div>
             </header>
 
@@ -469,6 +470,17 @@
             try {
                 await api.delete(`/jobs/${jobId}`);
                 alert('채용공고가 삭제되었습니다.');
+                loadJobs();
+            } catch (err) {
+                alert('삭제 실패: ' + (err.message || '오류가 발생했습니다.'));
+            }
+        }
+
+        async function clearSampleJobs() {
+            if (!confirm('삼성전자·현대자동차·포스코 등 시드 샘플 채용공고를 모두 삭제하시겠습니까?\n실제 서비스 데이터에는 영향이 없습니다.')) return;
+            try {
+                const result = await api.delete('/jobs/admin/clear-sample-jobs');
+                alert(result.message || '샘플 데이터 삭제 완료');
                 loadJobs();
             } catch (err) {
                 alert('삭제 실패: ' + (err.message || '오류가 발생했습니다.'));

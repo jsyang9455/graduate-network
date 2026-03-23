@@ -184,30 +184,28 @@ function showAdminDashboard() {
     loadEducationPrograms();
 }
 
-function loadAdminStats() {
+async function loadAdminStats() {
     const user = auth.getCurrentUser();
     if (!user) return;
-    
-    // Load total users count
+
+    // 전체 채용공고 수 - API에서 로드
+    try {
+        const data = await api.get('/jobs?status=all&limit=1');
+        const totalJobsElement = document.getElementById('appliedJobsCount');
+        if (totalJobsElement) totalJobsElement.textContent = (data.pagination && data.pagination.total) || (data.jobs || []).length;
+    } catch (e) {
+        const el = document.getElementById('appliedJobsCount');
+        if (el) el.textContent = 0;
+    }
+
+    // 유저 수 / 상담 건수는 localStorage 유지 (별도 admin API 없음)
     const users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
     const totalUsersElement = document.getElementById('networkCount');
-    if (totalUsersElement) {
-        totalUsersElement.textContent = users.length;
-    }
-    
-    // Load total job postings count
-    const jobPostings = JSON.parse(localStorage.getItem('jobPostings') || '[]');
-    const totalJobsElement = document.getElementById('appliedJobsCount');
-    if (totalJobsElement) {
-        totalJobsElement.textContent = jobPostings.length;
-    }
-    
-    // Load counseling requests count
+    if (totalUsersElement) totalUsersElement.textContent = users.length;
+
     const counselingRequests = JSON.parse(localStorage.getItem('counseling_requests') || '[]');
     const counselingCountElement = document.getElementById('savedJobsCount');
-    if (counselingCountElement) {
-        counselingCountElement.textContent = counselingRequests.length;
-    }
+    if (counselingCountElement) counselingCountElement.textContent = counselingRequests.length;
 }
 
 function loadTeacherStats() {
@@ -339,80 +337,89 @@ function loadTeacherCounseledStudents() {
     }).join('');
 }
 
-function loadStudentStats() {
+async function loadStudentStats() {
     const user = auth.getCurrentUser();
     if (!user) return;
-    
-    // Load jobs
-    const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
-    const activeJobs = jobs.filter(j => j.status === 'active');
-    const newJobCount = document.getElementById('newJobCount');
-    if (newJobCount) {
-        newJobCount.textContent = activeJobs.length;
+
+    // 활성 채용공고 수 - API에서 로드
+    try {
+        const data = await api.get('/jobs?status=active&limit=1');
+        const newJobCount = document.getElementById('newJobCount');
+        if (newJobCount) newJobCount.textContent = (data.pagination && data.pagination.total) || (data.jobs || []).length;
+    } catch (e) {
+        const el = document.getElementById('newJobCount');
+        if (el) el.textContent = 0;
     }
-    
-    // Load actual applications count
-    const applications = JSON.parse(localStorage.getItem('job_applications') || '[]');
-    const myApplications = applications.filter(a => String(a.userId) === String(user.id));
-    const applicationCount = document.getElementById('applicationCount');
-    if (applicationCount) {
-        applicationCount.textContent = myApplications.length;
+
+    // 내가 지원한 공고 수 - API에서 로드
+    try {
+        const appData = await api.get('/jobs/my/applications');
+        const applicationCount = document.getElementById('applicationCount');
+        if (applicationCount) applicationCount.textContent = (appData.applications || []).length;
+    } catch (e) {
+        const el = document.getElementById('applicationCount');
+        if (el) el.textContent = 0;
     }
-    
-    // Load network connections
+
+    // 네트워크 연결/메시지 (localStorage 유지 - 별도 API 없음)
     const connections = JSON.parse(localStorage.getItem('graduateNetwork_connections') || '[]');
-    const myConnections = connections.filter(c => 
+    const myConnections = connections.filter(c =>
         String(c.userId) === String(user.id) || String(c.connectedUserId) === String(user.id)
     );
     const networkCount = document.getElementById('networkCount');
-    if (networkCount) {
-        networkCount.textContent = myConnections.length;
-    }
-    
-    // Load messages
+    if (networkCount) networkCount.textContent = myConnections.length;
+
     const messages = JSON.parse(localStorage.getItem('graduateNetwork_messages') || '[]');
-    const unreadMessages = messages.filter(m => 
-        String(m.toUserId) === String(user.id) && !m.read
-    );
+    const unreadMessages = messages.filter(m => String(m.toUserId) === String(user.id) && !m.read);
     const messageCount = document.getElementById('messageCount');
-    if (messageCount) {
-        messageCount.textContent = unreadMessages.length;
-    }
+    if (messageCount) messageCount.textContent = unreadMessages.length;
 }
 
-function loadRecommendedJobs() {
+async function loadRecommendedJobs() {
     const recommendedJobsContainer = document.getElementById('recommendedJobs');
     if (!recommendedJobsContainer) return;
-    
-    const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
-    const activeJobs = jobs.filter(j => j.status === 'active').slice(0, 3);
-    
-    if (activeJobs.length === 0) {
-        recommendedJobsContainer.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">추천 채용공고가 없습니다.</p>';
-        return;
-    }
-    
-    recommendedJobsContainer.innerHTML = activeJobs.map(job => `
-        <div class="job-card">
-            <div class="job-card-header">
-                <h3>${job.company || job.companyName || '-'}</h3>
-                <span class="job-badge">${job.status === 'active' ? '모집중' : '마감'}</span>
-            </div>
-            <div class="job-card-body">
-                <h4>${job.position || job.jobTitle || job.title || '-'}</h4>
-                <div class="job-meta">
-                    <span>📍 ${job.location || '위치 미정'}</span>
-                    <span>💰 ${job.salary || '협의'}</span>
-                    <span>📅 ${job.deadline || '상시채용'}</span>
+
+    recommendedJobsContainer.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">불러오는 중...</p>';
+
+    try {
+        const data = await api.get('/jobs?status=active&limit=3');
+        const activeJobs = data.jobs || [];
+
+        if (activeJobs.length === 0) {
+            recommendedJobsContainer.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">추천 채용공고가 없습니다.</p>';
+            return;
+        }
+
+        recommendedJobsContainer.innerHTML = activeJobs.map(job => {
+            const deadline = job.deadline ? String(job.deadline).substring(0, 10) : '상시채용';
+            const salary = job.salary_range || '협의';
+            const desc = (job.description || '');
+            const shortDesc = desc.length > 80 ? desc.substring(0, 80) + '...' : desc;
+            return `
+            <div class="job-card">
+                <div class="job-card-header">
+                    <h3>${job.company_name || '-'}</h3>
+                    <span class="job-badge">모집중</span>
                 </div>
-                <p class="job-description">${(job.description || '').substring(0, 80)}${job.description && job.description.length > 80 ? '...' : ''}</p>
-            </div>
-            <div class="job-card-footer">
-                <button class="btn btn-primary btn-sm" onclick="location.href='jobs.html'">지원하기</button>
-                <button class="btn btn-secondary btn-sm" onclick="location.href='jobs.html'">자세히보기</button>
-            </div>
-        </div>
-    `).join('');
+                <div class="job-card-body">
+                    <h4>${job.title || '-'}</h4>
+                    <div class="job-meta">
+                        <span>📍 ${job.location || '위치 미정'}</span>
+                        <span>💰 ${salary}</span>
+                        <span>📅 ${deadline}</span>
+                    </div>
+                    <p class="job-description">${shortDesc}</p>
+                </div>
+                <div class="job-card-footer">
+                    <button class="btn btn-primary btn-sm" onclick="location.href='jobs.html'">지원하기</button>
+                    <button class="btn btn-secondary btn-sm" onclick="location.href='jobs.html'">자세히보기</button>
+                </div>
+            </div>`;
+        }).join('');
+    } catch (e) {
+        console.error('추천 채용공고 로드 실패:', e);
+        recommendedJobsContainer.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">채용공고를 불러올 수 없습니다.</p>';
+    }
 }
 
 function showCompanyDashboard() {
@@ -429,24 +436,28 @@ function showCompanyDashboard() {
     setupCompanyEventListeners();
 }
 
-function loadCompanyStats() {
+async function loadCompanyStats() {
     const user = auth.getCurrentUser();
     if (!user) return;
-    
-    const jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
-    const myJobs = jobs.filter(job => job.companyId === user.id);
-    
-    const activeJobs = myJobs.filter(j => j.status === 'active').length;
-    const totalApplicants = myJobs.reduce((sum, j) => sum + (j.applicants || 0), 0);
-    const totalViews = myJobs.reduce((sum, j) => sum + (j.views || 0), 0);
-    
-    const activeJobCount = document.getElementById('activeJobCount');
-    const totalApplicantsEl = document.getElementById('totalApplicants');
-    const totalViewsEl = document.getElementById('totalViews');
-    
-    if (activeJobCount) activeJobCount.textContent = activeJobs;
-    if (totalApplicantsEl) totalApplicantsEl.textContent = totalApplicants;
-    if (totalViewsEl) totalViewsEl.textContent = totalViews;
+
+    try {
+        const data = await api.get('/jobs?status=all&limit=200');
+        const myJobs = (data.jobs || []).filter(j => String(j.company_id) === String(user.id));
+
+        const activeJobs = myJobs.filter(j => j.status === 'active').length;
+        const totalApplicants = myJobs.reduce((sum, j) => sum + (j.applications_count || 0), 0);
+        const totalViews = myJobs.reduce((sum, j) => sum + (j.views_count || 0), 0);
+
+        const activeJobCount = document.getElementById('activeJobCount');
+        const totalApplicantsEl = document.getElementById('totalApplicants');
+        const totalViewsEl = document.getElementById('totalViews');
+
+        if (activeJobCount) activeJobCount.textContent = activeJobs;
+        if (totalApplicantsEl) totalApplicantsEl.textContent = totalApplicants;
+        if (totalViewsEl) totalViewsEl.textContent = totalViews;
+    } catch (e) {
+        console.error('회사 통계 로드 실패:', e);
+    }
 }
 
 function loadCompanyJobPostings() {

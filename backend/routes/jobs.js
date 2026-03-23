@@ -392,4 +392,36 @@ router.get('/my/applications', auth, async (req, res) => {
   }
 });
 
+// Admin: 시드/샘플 채용공고 삭제 (테스트 계정의 공고 + 만료 공고 정리)
+router.delete('/admin/clear-sample-jobs', auth, checkRole('admin'), async (req, res) => {
+  try {
+    // 시드 계정 이메일로 등록된 샘플 채용공고 삭제
+    const seedEmails = [
+      'hr@samsung.com',
+      'recruit@hyundai.com',
+      'jobs@posco.com',
+      'company@jjob.com',   // create-test-accounts 샘플
+      'recruit@hyundai.com'
+    ];
+
+    const placeholders = seedEmails.map((_, i) => `$${i + 1}`).join(',');
+    const result = await query(
+      `DELETE FROM jobs
+       WHERE company_id IN (
+         SELECT id FROM users WHERE email IN (${placeholders})
+       )
+       RETURNING id, title`,
+      seedEmails
+    );
+
+    res.json({
+      message: `샘플 채용공고 ${result.rowCount}건 삭제 완료`,
+      deleted: result.rows
+    });
+  } catch (error) {
+    console.error('Clear sample jobs error:', error);
+    res.status(500).json({ error: 'Failed to clear sample jobs' });
+  }
+});
+
 module.exports = router;
