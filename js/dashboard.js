@@ -112,16 +112,16 @@ function showTeacherDashboard() {
             statCards[3].querySelector('.stat-info p').textContent = '수료 완료 학생';
         }
         
-        // 내 프로그램공고 섹션: 헤더 변경 + 버튼 변경
+        // 내 채용공고 섹션: 헤더 변경 + 버튼 변경
         const jobPostingsSection = document.getElementById('jobPostingsList')?.closest('.dashboard-section');
         if (jobPostingsSection) {
             jobPostingsSection.style.display = 'block';
             const h2 = jobPostingsSection.querySelector('.section-header h2');
-            if (h2) h2.textContent = '📋 내 프로그램공고';
+            if (h2) h2.textContent = '📋 내 채용공고';
             const createBtn = jobPostingsSection.querySelector('#createJobBtn');
             if (createBtn) {
-                createBtn.textContent = '프로그램 등록';
-                createBtn.onclick = () => window.location.href = 'education-programs.html';
+                createBtn.textContent = '채용공고 등록';
+                createBtn.onclick = () => window.location.href = 'job-create.html';
             }
         }
 
@@ -149,7 +149,7 @@ function showTeacherDashboard() {
 
     // 교사 전용 통계 데이터 로드
     loadTeacherDashboardStats();
-    loadTeacherMyPrograms();
+    loadJobPostings();  // 교사 등록 채용공고 (API에서 로드)
     loadTeacherCounseledStudents();
     loadTeacherCounselingRequests();
     loadEducationProgramsForCompany();
@@ -453,55 +453,62 @@ function loadCompanyJobPostings() {
     loadJobPostings();
 }
 
-function loadJobPostings() {
+async function loadJobPostings() {
     const jobPostingsList = document.getElementById('jobPostingsList');
     if (!jobPostingsList) return;
     
     const user = auth.getCurrentUser();
-    
-    // Load from localStorage
-    let jobs = JSON.parse(localStorage.getItem('jobPostings') || '[]');
-    
-    // Filter by company
-    jobs = jobs.filter(job => job.companyId === user.id);
-    
-    if (jobs.length === 0) {
-        jobPostingsList.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">등록된 채용 공고가 없습니다.</p>';
-        return;
-    }
-    
-    jobPostingsList.innerHTML = jobs.map(job => `
-        <div class="job-posting-item">
-            <div class="job-posting-info">
-                <div class="job-posting-title">${job.jobTitle || job.title || job.position || '제목 없음'}</div>
-                <div class="job-posting-meta">
-                    <span class="job-status ${job.status}">${job.status === 'active' ? '모집중' : '마감완료'}</span>
-                    <span>지원자: ${job.applicants || 0}명</span>
-                    <span>조회: ${job.views || 0}회</span>
-                    <span>마감: ${job.deadline || '-'}</span>
-                    ${job.headcount ? `<span>모집인원: ${job.headcount}명</span>` : ''}
+    jobPostingsList.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">불러오는 중...</p>';
+
+    try {
+        // API에서 전체 공고 불러와서 본인 것만 필터
+        const data = await api.get('/jobs?status=all&limit=200');
+        let jobs = (data.jobs || []).filter(j => String(j.company_id) === String(user.id));
+
+        if (jobs.length === 0) {
+            jobPostingsList.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">등록된 채용 공고가 없습니다.</p>';
+            return;
+        }
+
+        jobPostingsList.innerHTML = jobs.map(job => {
+            const statusLabel = job.status === 'active' ? '모집중' : job.status === 'closed' ? '마감완료' : '기간만료';
+            const title = job.title || '제목 없음';
+            const deadline = job.deadline ? String(job.deadline).substring(0, 10) : '-';
+            return `
+            <div class="job-posting-item">
+                <div class="job-posting-info">
+                    <div class="job-posting-title">${title}</div>
+                    <div class="job-posting-meta">
+                        <span class="job-status ${job.status}">${statusLabel}</span>
+                        <span>지원자: ${job.applications_count || 0}명</span>
+                        <span>조회: ${job.views_count || 0}회</span>
+                        <span>마감: ${deadline}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="job-posting-actions">
-                <button class="btn btn-secondary" onclick="viewJob('${job.id}')">보기</button>
-                ${job.status === 'active' ? `<button class="btn btn-primary" onclick="editJob('${job.id}')">수정</button>` : ''}
-            </div>
-        </div>
-    `).join('');
-    
-    // Update stats
-    const activeJobs = jobs.filter(j => j.status === 'active').length;
-    const totalApplicants = jobs.reduce((sum, j) => sum + (j.applicants || 0), 0);
-    const totalViews = jobs.reduce((sum, j) => sum + (j.views || 0), 0);
-    
-    if (document.getElementById('activeJobCount')) {
-        document.getElementById('activeJobCount').textContent = activeJobs;
-    }
-    if (document.getElementById('totalApplicants')) {
-        document.getElementById('totalApplicants').textContent = totalApplicants;
-    }
-    if (document.getElementById('totalViews')) {
-        document.getElementById('totalViews').textContent = totalViews;
+                <div class="job-posting-actions">
+                    <button class="btn btn-secondary" onclick="window.location.href='jobs.html'">보기</button>
+                    <button class="btn btn-primary" onclick="window.location.href='job-edit.html?id=${job.id}'">수정</button>
+                </div>
+            </div>`;
+        }).join('');
+
+        // Update stats
+        const activeJobs = jobs.filter(j => j.status === 'active').length;
+        const totalApplicants = jobs.reduce((sum, j) => sum + (j.applications_count || 0), 0);
+        const totalViews = jobs.reduce((sum, j) => sum + (j.views_count || 0), 0);
+
+        if (document.getElementById('activeJobCount')) {
+            document.getElementById('activeJobCount').textContent = activeJobs;
+        }
+        if (document.getElementById('totalApplicants')) {
+            document.getElementById('totalApplicants').textContent = totalApplicants;
+        }
+        if (document.getElementById('totalViews')) {
+            document.getElementById('totalViews').textContent = totalViews;
+        }
+    } catch (e) {
+        console.error('채용 공고 로드 실패:', e);
+        jobPostingsList.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">채용 공고를 불러오지 못했습니다.</p>';
     }
 }
 

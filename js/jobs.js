@@ -85,7 +85,7 @@ function displayJobs(jobs) {
     }
 
     const user = auth.getCurrentUser();
-    const isCompanyOrAdmin = user && (user.user_type === 'company' || user.user_type === 'admin');
+    const isCompanyOrAdmin = user && (user.user_type === 'company' || user.user_type === 'admin' || user.user_type === 'teacher');
     
     container.innerHTML = jobs.map(job => {
         const daysLeft = job.deadline

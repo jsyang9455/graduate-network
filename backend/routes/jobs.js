@@ -144,8 +144,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Create job (company only)
-router.post('/', auth, checkRole('company', 'admin'), async (req, res) => {
+// Create job (company, teacher, admin)
+router.post('/', auth, checkRole('company', 'admin', 'teacher'), async (req, res) => {
   try {
     const {
       title,
@@ -180,7 +180,7 @@ router.post('/', auth, checkRole('company', 'admin'), async (req, res) => {
 });
 
 // Update job
-router.put('/:id', auth, checkRole('company', 'admin'), async (req, res) => {
+router.put('/:id', auth, checkRole('company', 'admin', 'teacher'), async (req, res) => {
   try {
     const { id } = req.params;
     const {
@@ -206,7 +206,7 @@ router.put('/:id', auth, checkRole('company', 'admin'), async (req, res) => {
       return res.status(404).json({ error: 'Job not found' });
     }
 
-    if (jobCheck.rows[0].company_id !== req.user.id && req.user.user_type !== 'admin') {
+    if (jobCheck.rows[0].company_id !== req.user.id && req.user.user_type !== 'admin' && req.user.user_type !== 'teacher') {
       return res.status(403).json({ error: 'Not authorized' });
     }
 
@@ -240,7 +240,7 @@ router.put('/:id', auth, checkRole('company', 'admin'), async (req, res) => {
 });
 
 // Delete job
-router.delete('/:id', auth, checkRole('company', 'admin'), async (req, res) => {
+router.delete('/:id', auth, checkRole('company', 'admin', 'teacher'), async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -254,7 +254,7 @@ router.delete('/:id', auth, checkRole('company', 'admin'), async (req, res) => {
       return res.status(404).json({ error: 'Job not found' });
     }
 
-    if (jobCheck.rows[0].company_id !== req.user.id && req.user.user_type !== 'admin') {
+    if (jobCheck.rows[0].company_id !== req.user.id && req.user.user_type !== 'admin' && req.user.user_type !== 'teacher') {
       return res.status(403).json({ error: 'Not authorized' });
     }
 
