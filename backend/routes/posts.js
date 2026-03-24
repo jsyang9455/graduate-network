@@ -111,9 +111,9 @@ router.post('/', auth, async (req, res) => {
 router.put('/:id', auth, async (req, res) => {
   try {
     const { id } = req.params;
-    const { category, title, content } = req.body;
+    const { category, title, content, is_pinned } = req.body;
 
-    // Check ownership
+    // Check ownership (admin can edit any post)
     const postCheck = await query(
       'SELECT user_id FROM posts WHERE id = $1',
       [id]
@@ -123,7 +123,7 @@ router.put('/:id', auth, async (req, res) => {
       return res.status(404).json({ error: 'Post not found' });
     }
 
-    if (postCheck.rows[0].user_id !== req.user.id) {
+    if (postCheck.rows[0].user_id !== req.user.id && req.user.user_type !== 'admin') {
       return res.status(403).json({ error: 'Not authorized' });
     }
 
@@ -132,10 +132,11 @@ router.put('/:id', auth, async (req, res) => {
        SET category = COALESCE($1, category),
            title = COALESCE($2, title),
            content = COALESCE($3, content),
+           is_pinned = COALESCE($4, is_pinned),
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $4
+       WHERE id = $5
        RETURNING *`,
-      [category, title, content, id]
+      [category, title, content, is_pinned !== undefined ? is_pinned : null, id]
     );
 
     res.json({

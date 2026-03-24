@@ -67,17 +67,7 @@ async function loadUsers() {
     } catch (error) {
         console.error('회원 로드 실패:', error);
         
-        // API 실패 시 localStorage fallback
-        const usersData = localStorage.getItem('graduateNetwork_users');
-        if (usersData) {
-            users = JSON.parse(usersData);
-            console.log('localStorage에서 로드:', users.length);
-            updateStats();
-            displayUsers(users);
-        } else {
-            console.error('localStorage에도 데이터 없음');
-            alert('회원 목록을 불러올 수 없습니다.');
-        }
+        alert('회원 목록을 불러올 수 없습니다.');
     }
 }
 

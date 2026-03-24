@@ -28,6 +28,8 @@ const postRoutes = require('./routes/posts');
 const majorRoutes = require('./routes/majors');
 const announcementRoutes = require('./routes/announcements');
 const counselingJournalRoutes = require('./routes/counseling-journals');
+const educationProgramRoutes = require('./routes/education-programs');
+const messageRoutes = require('./routes/messages');
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -40,6 +42,8 @@ app.use('/api/posts', postRoutes);
 app.use('/api/majors', majorRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/counseling-journals', counselingJournalRoutes);
+app.use('/api/education-programs', educationProgramRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

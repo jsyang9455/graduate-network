@@ -2,7 +2,7 @@
 let currentUser = null;
 let allUsers = [];
 let connections = [];
-let messages = [];
+let messages = { inbox: [], sent: [] };
 
 document.addEventListener('DOMContentLoaded', async function() {
     // Initialize auth and load data
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         document.getElementById('userName').textContent = currentUser.name;
         
         await loadConnections();
-        loadMessages();
+        await loadMessages();
         await loadAllUsers();
         updateStats();
         
@@ -61,13 +61,20 @@ async function loadConnections() {
     }
 }
 
-// 메시지 로드
-function loadMessages() {
-    const messagesData = localStorage.getItem('graduateNetwork_messages');
-    if (messagesData) {
-        messages = JSON.parse(messagesData);
-    } else {
-        messages = [];
+// 메시지 로드 (API)
+async function loadMessages() {
+    try {
+        const [inboxData, sentData] = await Promise.all([
+            api.get('/messages/inbox'),
+            api.get('/messages/sent')
+        ]);
+        messages = {
+            inbox: inboxData.messages || [],
+            sent: sentData.messages || []
+        };
+    } catch (err) {
+        console.warn('Messages load failed:', err.message);
+        messages = { inbox: [], sent: [] };
     }
 }
 
@@ -217,71 +224,35 @@ function viewProfile(userId) {
 }
 window.viewProfile = viewProfile;
 
-// 메시지 보내기
-function sendMessage(userId) {
-    console.log('sendMessage called with userId:', userId, 'type:', typeof userId);
-    
-    // userId를 문자열과 숫자 모두 비교
-    const user = allUsers.find(u => u.id == userId || u.id === userId || String(u.id) === String(userId));
-    console.log('Found user:', user);
-    
-    if (!user) {
-        alert('사용자를 찾을 수 없습니다.');
-        return;
-    }
-    
+// 메시지 보내기 (API)
+async function sendMessage(userId) {
+    const user = allUsers.find(u => String(u.id) === String(userId));
+    if (!user) { alert('사용자를 찾을 수 없습니다.'); return; }
+
     const message = prompt(`${user.name}님에게 보낼 메시지를 입력하세요:`);
-    
     if (message && message.trim()) {
-        const newMessage = {
-            id: Date.now().toString(),
-            fromUserId: String(currentUser.id),
-            fromUserName: currentUser.name,
-            toUserId: String(userId),
-            toUserName: user.name,
-            message: message.trim(),
-            sentAt: new Date().toISOString(),
-            read: false
-        };
-        
-        console.log('Saving message:', newMessage);
-        messages.push(newMessage);
-        
-        localStorage.setItem('graduateNetwork_messages', JSON.stringify(messages));
-        console.log('All messages after save:', messages);
-        updateStats();
-        alert('메시지가 전송되었습니다!');
+        try {
+            await api.post('/messages', { to_user_id: userId, message: message.trim() });
+            await loadMessages();
+            updateStats();
+            alert('메시지가 전송되었습니다!');
+        } catch (err) {
+            alert('전송 실패: ' + (err.message || '오류가 발생했습니다.'));
+        }
     }
 }
 window.sendMessage = sendMessage;
 
 // 통계 업데이트
 function updateStats() {
-    console.log('updateStats called');
-    console.log('currentUser:', currentUser);
-    console.log('all messages:', messages);
-    
-    // 받은 메시지 수 (타입 일관성 확인)
-    const receivedCount = messages.filter(m => {
-        const match = String(m.toUserId) === String(currentUser.id);
-        console.log(`Message toUserId: ${m.toUserId} (${typeof m.toUserId}), currentUser.id: ${currentUser.id} (${typeof currentUser.id}), match: ${match}`);
-        return match;
-    }).length;
-    console.log('receivedCount:', receivedCount);
-    
+    const receivedCount = (messages.inbox || []).length;
+    const sentCount = (messages.sent || []).length;
+
     const receivedElement = document.getElementById('receivedMessages');
-    if (receivedElement) {
-        receivedElement.textContent = `${receivedCount}건`;
-    }
-    
-    // 보낸 메시지 수
-    const sentCount = messages.filter(m => String(m.fromUserId) === String(currentUser.id)).length;
-    console.log('sentCount:', sentCount);
-    
+    if (receivedElement) receivedElement.textContent = `${receivedCount}건`;
+
     const sentElement = document.getElementById('sentMessages');
-    if (sentElement) {
-        sentElement.textContent = `${sentCount}건`;
-    }
+    if (sentElement) sentElement.textContent = `${sentCount}건`;
 }
 
 // 검색 설정
@@ -429,34 +400,17 @@ function applyFilters() {
 
 // 메시지함 표시
 function showMessages(type) {
-    console.log('showMessages called with type:', type);
-    console.log('currentUser:', currentUser);
-    console.log('all messages:', messages);
-    
     const modal = document.getElementById('messageModal');
     const title = document.getElementById('messageModalTitle');
-    const container = document.getElementById('messageListContainer');
-    
+
     if (type === 'received') {
         title.textContent = '받은 메시지';
-        const receivedMessages = messages.filter(m => {
-            const match = String(m.toUserId) === String(currentUser.id);
-            console.log('Checking message:', m, 'toUserId:', m.toUserId, 'currentUser.id:', currentUser.id, 'match:', match);
-            return match;
-        });
-        console.log('receivedMessages:', receivedMessages);
-        displayMessageList(receivedMessages, 'received');
+        displayMessageList(messages.inbox || [], 'received');
     } else {
         title.textContent = '보낸 메시지';
-        const sentMessages = messages.filter(m => {
-            const match = String(m.fromUserId) === String(currentUser.id);
-            console.log('Checking message:', m, 'fromUserId:', m.fromUserId, 'currentUser.id:', currentUser.id, 'match:', match);
-            return match;
-        });
-        console.log('sentMessages:', sentMessages);
-        displayMessageList(sentMessages, 'sent');
+        displayMessageList(messages.sent || [], 'sent');
     }
-    
+
     modal.style.display = 'block';
 }
 window.showMessages = showMessages;
@@ -472,55 +426,58 @@ function displayMessageList(messageList, type) {
     }
     
     container.innerHTML = messageList.map(msg => {
-        const date = new Date(msg.sentAt);
+        const date = new Date(msg.sent_at);
         const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-        const otherUser = type === 'received' ? msg.fromUserName : msg.toUserName;
-        const preview = msg.message.length > 50 ? msg.message.substring(0, 50) + '...' : msg.message;
-        const readClass = type === 'received' && !msg.read ? 'unread' : '';
-        
-        console.log('Creating message item:', msg.id, otherUser, readClass);
-        
+        const otherUser = type === 'received' ? (msg.from_user_name || '알 수 없음') : (msg.to_user_name || '알 수 없음');
+        const preview = (msg.message || '').length > 50 ? msg.message.substring(0, 50) + '...' : (msg.message || '');
+        const readClass = type === 'received' && !msg.is_read ? 'unread' : '';
+
         return `
-            <div class="message-item ${readClass}" onclick="showMessageDetail('${msg.id}', '${type}')">
+            <div class="message-item ${readClass}" onclick="showMessageDetail(${msg.id}, '${type}')">
                 <div class="message-item-header">
                     <span class="message-user">${type === 'received' ? '보낸 사람' : '받는 사람'}: <strong>${otherUser}</strong></span>
                     <span class="message-date">${formattedDate}</span>
                 </div>
                 <div class="message-preview">${preview}</div>
-                ${type === 'received' && !msg.read ? '<span class="new-badge">NEW</span>' : ''}
+                ${type === 'received' && !msg.is_read ? '<span class="new-badge">NEW</span>' : ''}
             </div>
         `;
     }).join('');
 }
 
-// 메시지 상세보기
-function showMessageDetail(messageId, type) {
-    const message = messages.find(m => m.id === messageId);
+// 메시지 상세보기 (API)
+async function showMessageDetail(messageId, type) {
+    // 현재 로드된 메시지 목록에서 찾기
+    const list = type === 'received' ? (messages.inbox || []) : (messages.sent || []);
+    const message = list.find(m => m.id == messageId);
     if (!message) return;
-    
-    // 받은 메시지를 읽음으로 표시
-    if (type === 'received' && !message.read) {
-        message.read = true;
-        localStorage.setItem('graduateNetwork_messages', JSON.stringify(messages));
-        updateStats();
+
+    // 받은 메시지를 읽음으로 표시 (API)
+    if (type === 'received' && !message.is_read) {
+        try {
+            await api.put(`/messages/${messageId}/read`, {});
+            message.is_read = true;
+        } catch (err) {
+            console.warn('읽음 처리 실패:', err.message);
+        }
     }
-    
+
     const modal = document.getElementById('messageDetailModal');
     const container = document.getElementById('messageDetailContainer');
-    
-    const date = new Date(message.sentAt);
+
+    const date = new Date(message.sent_at);
     const formattedDate = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-    
+
     container.innerHTML = `
         <div class="message-detail">
             <div class="message-detail-header">
                 <div class="message-detail-row">
                     <span class="message-label">보낸 사람:</span>
-                    <span class="message-value">${message.fromUserName}</span>
+                    <span class="message-value">${message.from_user_name || '-'}</span>
                 </div>
                 <div class="message-detail-row">
                     <span class="message-label">받는 사람:</span>
-                    <span class="message-value">${message.toUserName}</span>
+                    <span class="message-value">${message.to_user_name || '-'}</span>
                 </div>
                 <div class="message-detail-row">
                     <span class="message-label">보낸 시간:</span>
@@ -528,43 +485,35 @@ function showMessageDetail(messageId, type) {
                 </div>
             </div>
             <div class="message-detail-body">
-                <p>${message.message.replace(/\n/g, '<br>')}</p>
+                <p>${(message.message || '').replace(/\n/g, '<br>')}</p>
             </div>
             ${type === 'received' ? `
                 <div class="message-detail-actions">
-                    <button class="btn btn-primary" onclick="replyToMessage('${message.fromUserId}', '${message.fromUserName}')">답장하기</button>
+                    <button class="btn btn-primary" onclick="replyToMessage('${message.from_user_id}', '${message.from_user_name}')">답장하기</button>
                 </div>
             ` : ''}
         </div>
     `;
-    
+
     modal.style.display = 'block';
 }
 window.showMessageDetail = showMessageDetail;
 
-// 답장하기
-function replyToMessage(userId, userName) {
+// 답장하기 (API)
+async function replyToMessage(userId, userName) {
     closeMessageDetailModal();
     closeMessageModal();
-    
+
     const message = prompt(`${userName}님에게 답장할 메시지를 입력하세요:`);
-    
     if (message && message.trim()) {
-        const newMessage = {
-            id: Date.now().toString(),
-            fromUserId: String(currentUser.id),
-            fromUserName: currentUser.name,
-            toUserId: String(userId),
-            toUserName: userName,
-            message: message.trim(),
-            sentAt: new Date().toISOString(),
-            read: false
-        };
-        
-        messages.push(newMessage);
-        localStorage.setItem('graduateNetwork_messages', JSON.stringify(messages));
-        updateStats();
-        alert('답장이 전송되었습니다!');
+        try {
+            await api.post('/messages', { to_user_id: userId, message: message.trim() });
+            await loadMessages();
+            updateStats();
+            alert('답장이 전송되었습니다!');
+        } catch (err) {
+            alert('전송 실패: ' + (err.message || '오류가 발생했습니다.'));
+        }
     }
 }
 window.replyToMessage = replyToMessage;

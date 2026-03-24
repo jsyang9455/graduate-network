@@ -198,91 +198,112 @@ async function loadAdminStats() {
         if (el) el.textContent = 0;
     }
 
-    // 유저 수 / 상담 건수는 localStorage 유지 (별도 admin API 없음)
-    const users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
-    const totalUsersElement = document.getElementById('networkCount');
-    if (totalUsersElement) totalUsersElement.textContent = users.length;
+    // 전체 유저 수
+    try {
+        const uData = await api.get('/users?limit=1');
+        const totalUsersElement = document.getElementById('networkCount');
+        if (totalUsersElement) totalUsersElement.textContent = (uData.pagination && uData.pagination.total) || (uData.users || []).length;
+    } catch (e) {
+        const el = document.getElementById('networkCount');
+        if (el) el.textContent = 0;
+    }
 
-    const counselingRequests = JSON.parse(localStorage.getItem('counseling_requests') || '[]');
-    const counselingCountElement = document.getElementById('savedJobsCount');
-    if (counselingCountElement) counselingCountElement.textContent = counselingRequests.length;
+    // 상담 건수
+    try {
+        const cData = await api.get('/counseling');
+        const counselingCountElement = document.getElementById('savedJobsCount');
+        if (counselingCountElement) counselingCountElement.textContent = (cData.sessions || []).length;
+    } catch (e) {
+        const el = document.getElementById('savedJobsCount');
+        if (el) el.textContent = 0;
+    }
 }
 
 function loadTeacherStats() {
     // legacy: not used anymore, replaced by loadTeacherDashboardStats()
 }
 
-function loadTeacherDashboardStats() {
+async function loadTeacherDashboardStats() {
     const user = auth.getCurrentUser();
     if (!user) return;
-    
-    // 진행 중 프로그램: 내가 등록한 교육프로그램 수
-    const programs = JSON.parse(localStorage.getItem('graduateNetwork_programs') || '[]');
-    const myPrograms = programs.filter(p => String(p.createdBy) === String(user.id));
-    const activeJobCountEl = document.getElementById('activeJobCount');
-    if (activeJobCountEl) activeJobCountEl.textContent = myPrograms.length;
-    
-    // 참여 학생 수: 내 프로그램에 신청한 학생 수
-    const enrollments = JSON.parse(localStorage.getItem('program_enrollments') || '[]');
-    const myProgramIds = myPrograms.map(p => String(p.id));
-    const myEnrollments = enrollments.filter(e => myProgramIds.includes(String(e.programId)));
-    const totalApplicantsEl = document.getElementById('totalApplicants');
-    if (totalApplicantsEl) totalApplicantsEl.textContent = myEnrollments.length;
-    
-    // 상담 진행 건수: 나에게 온 상담 요청 전체
-    const counselingRequests = JSON.parse(localStorage.getItem('counseling_requests') || '[]');
-    const myCounselings = counselingRequests.filter(r => String(r.counselorId) === String(user.id));
-    const totalViewsEl = document.getElementById('totalViews');
-    if (totalViewsEl) totalViewsEl.textContent = myCounselings.length;
-    
-    // 수료 완료 학생: 내 프로그램 신청 누적 학생 수 (참여 학생과 동일 소스)
-    const hiredCountEl = document.getElementById('hiredCount');
-    if (hiredCountEl) hiredCountEl.textContent = myEnrollments.length;
+
+    // 진행 중 프로그램 수 (API)
+    try {
+        const pData = await api.get('/education-programs?limit=200');
+        const myPrograms = (pData.programs || []).filter(p => String(p.created_by) === String(user.id));
+        const el = document.getElementById('activeJobCount');
+        if (el) el.textContent = myPrograms.length;
+        const hiredEl = document.getElementById('hiredCount');
+        if (hiredEl) hiredEl.textContent = myPrograms.length;
+        const totalApplicantsEl = document.getElementById('totalApplicants');
+        if (totalApplicantsEl) totalApplicantsEl.textContent = myPrograms.length;
+    } catch (e) {
+        ['activeJobCount','hiredCount','totalApplicants'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=0; });
+    }
+
+    // 상담 진행 건수 (API)
+    try {
+        const cData = await api.get('/counseling');
+        const sessions = cData.sessions || [];
+        const el = document.getElementById('totalViews');
+        if (el) el.textContent = sessions.length;
+    } catch (e) {
+        const el = document.getElementById('totalViews');
+        if (el) el.textContent = 0;
+    }
 }
 
 // 교사 전용: 내가 등록한 교육프로그램 목록 표시 (수정/삭제 포함)
-function loadTeacherMyPrograms() {
+async function loadTeacherMyPrograms() {
     const user = auth.getCurrentUser();
     if (!user) return;
-
-    const programs = JSON.parse(localStorage.getItem('graduateNetwork_programs') || '[]');
-    const myPrograms = programs.filter(p => String(p.createdBy) === String(user.id));
 
     const container = document.getElementById('jobPostingsList');
     if (!container) return;
 
-    if (myPrograms.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">등록된 교육프로그램이 없습니다. 우측 상단 버튼을 눌러 등록해보세요.</p>';
-        return;
-    }
+    container.innerHTML = '<p style="text-align:center;color:#6b7280;padding:2rem;">불러오는 중...</p>';
 
-    container.innerHTML = myPrograms.map(program => `
-        <div class="job-posting-item">
-            <div class="job-posting-info">
-                <div class="job-posting-title">${program.title}</div>
-                <div class="job-posting-meta">
-                    <span class="job-status active">${program.category || '-'}</span>
-                    <span>${program.type || '-'}</span>
-                    <span>기간: ${program.duration || '-'}</span>
-                    <span>수강료: ${program.cost || '무료'}</span>
+    try {
+        const pData = await api.get('/education-programs?limit=200');
+        const myPrograms = (pData.programs || []).filter(p => String(p.created_by) === String(user.id));
+
+        if (myPrograms.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">등록된 교육프로그램이 없습니다. 우측 상단 버튼을 눌러 등록해보세요.</p>';
+            return;
+        }
+
+        container.innerHTML = myPrograms.map(program => `
+            <div class="job-posting-item">
+                <div class="job-posting-info">
+                    <div class="job-posting-title">${program.title}</div>
+                    <div class="job-posting-meta">
+                        <span class="job-status active">${program.category || '-'}</span>
+                        <span>${program.type || '-'}</span>
+                        <span>기간: ${program.duration || '-'}</span>
+                        <span>수강료: ${program.cost || '무료'}</span>
+                    </div>
+                </div>
+                <div class="job-posting-actions">
+                    <button class="btn btn-secondary" onclick="teacherEditProgram('${program.id}')">수정</button>
+                    <button class="btn btn-danger" onclick="teacherDeleteProgram('${program.id}')">삭제</button>
                 </div>
             </div>
-            <div class="job-posting-actions">
-                <button class="btn btn-secondary" onclick="teacherEditProgram('${program.id}')">수정</button>
-                <button class="btn btn-danger" onclick="teacherDeleteProgram('${program.id}')">삭제</button>
-            </div>
-        </div>
-    `).join('');
+        `).join('');
+    } catch (err) {
+        container.innerHTML = '<p style="text-align:center;color:#ef4444;padding:2rem;">데이터를 불러올 수 없습니다.</p>';
+    }
 }
 
-function teacherDeleteProgram(programId) {
+async function teacherDeleteProgram(programId) {
     if (!confirm('이 프로그램을 삭제하시겠습니까?')) return;
-    let programs = JSON.parse(localStorage.getItem('graduateNetwork_programs') || '[]');
-    programs = programs.filter(p => String(p.id) !== String(programId));
-    localStorage.setItem('graduateNetwork_programs', JSON.stringify(programs));
-    loadTeacherMyPrograms();
-    loadTeacherDashboardStats();
-    alert('삭제되었습니다.');
+    try {
+        await api.delete(`/education-programs/${programId}`);
+        alert('삭제되었습니다.');
+        await loadTeacherMyPrograms();
+        await loadTeacherDashboardStats();
+    } catch (err) {
+        alert('삭제 실패: ' + (err.message || '오류가 발생했습니다.'));
+    }
 }
 window.teacherDeleteProgram = teacherDeleteProgram;
 
@@ -292,49 +313,40 @@ function teacherEditProgram(programId) {
 }
 window.teacherEditProgram = teacherEditProgram;
 
-// 교사 전용: 상담한 학생 내역 (승인/거절 처리된 상담)
-function loadTeacherCounseledStudents() {
-    const user = auth.getCurrentUser();
-    if (!user) return;
-
-    const requests = JSON.parse(localStorage.getItem('counseling_requests') || '[]');
-    const responded = requests
-        .filter(r => String(r.counselorId) === String(user.id) && r.status !== 'pending')
-        .slice(-5).reverse();
-
+// 교사 전용: 상담한 학생 내역 (API)
+async function loadTeacherCounseledStudents() {
     const container = document.getElementById('recentApplicantsList');
     if (!container) return;
 
-    if (responded.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">상담한 학생 내역이 없습니다.</p>';
-        return;
+    try {
+        const data = await api.get('/counseling');
+        const sessions = (data.sessions || []).filter(s => s.status && s.status !== 'pending').slice(0, 5);
+
+        if (sessions.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">상담한 학생 내역이 없습니다.</p>';
+            return;
+        }
+
+        container.innerHTML = sessions.map(s => {
+            const statusText = s.status === 'approved' ? '승인됨' : s.status === 'completed' ? '완료됨' : '거절됨';
+            const statusClass = s.status === 'approved' || s.status === 'completed' ? 'interview' : 'rejected';
+            const date = new Date(s.updated_at || s.created_at).toLocaleDateString('ko-KR');
+            return `
+                <div class="applicant-item">
+                    <div class="applicant-info">
+                        <h4>${s.student_name || s.requester_name || '학생'}</h4>
+                        <p>${s.title || s.subject || ''}</p>
+                        <span class="applicant-status ${statusClass}">${statusText}</span>
+                        <p style="margin-top:0.5rem;font-size:0.85rem;">처리일: ${date}</p>
+                    </div>
+                    <div class="applicant-actions">
+                        <a href="counseling.html" class="btn btn-secondary">상세보기</a>
+                    </div>
+                </div>`;
+        }).join('');
+    } catch (err) {
+        container.innerHTML = '<p style="text-align:center;color:#6b7280;padding:2rem;">데이터를 불러올 수 없습니다.</p>';
     }
-
-    const users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
-
-    container.innerHTML = responded.map(req => {
-        const student = users.find(u => String(u.id) === String(req.studentId));
-        const studentName = req.studentName || (student ? student.name : '알 수 없음');
-        const statusText = req.status === 'approved' ? '승인됨' : '거절됨';
-        const statusClass = req.status === 'approved' ? 'interview' : 'rejected';
-        const date = new Date(req.respondedAt || req.createdAt).toLocaleDateString('ko-KR');
-        const preview = req.responseMessage ? req.responseMessage.substring(0, 50) + (req.responseMessage.length > 50 ? '...' : '') : '';
-
-        return `
-            <div class="applicant-item">
-                <div class="applicant-info">
-                    <h4>${studentName} 학생</h4>
-                    <p>${req.title}</p>
-                    <span class="applicant-status ${statusClass}">${statusText}</span>
-                    <p style="margin-top: 0.5rem; font-size: 0.85rem;">처리일: ${date}</p>
-                    ${preview ? `<p style="font-size:0.85rem;color:#374151;margin-top:0.3rem;">답변: ${preview}</p>` : ''}
-                </div>
-                <div class="applicant-actions">
-                    <a href="counseling.html" class="btn btn-secondary">상세보기</a>
-                </div>
-            </div>
-        `;
-    }).join('');
 }
 
 async function loadStudentStats() {
@@ -361,18 +373,26 @@ async function loadStudentStats() {
         if (el) el.textContent = 0;
     }
 
-    // 네트워크 연결/메시지 (localStorage 유지 - 별도 API 없음)
-    const connections = JSON.parse(localStorage.getItem('graduateNetwork_connections') || '[]');
-    const myConnections = connections.filter(c =>
-        String(c.userId) === String(user.id) || String(c.connectedUserId) === String(user.id)
-    );
-    const networkCount = document.getElementById('networkCount');
-    if (networkCount) networkCount.textContent = myConnections.length;
+    // 네트워크 연결 수 (API)
+    try {
+        const connData = await api.get('/networking/connections');
+        const networkCount = document.getElementById('networkCount');
+        if (networkCount) networkCount.textContent = (connData.connections || []).length;
+    } catch (e) {
+        const el = document.getElementById('networkCount');
+        if (el) el.textContent = 0;
+    }
 
-    const messages = JSON.parse(localStorage.getItem('graduateNetwork_messages') || '[]');
-    const unreadMessages = messages.filter(m => String(m.toUserId) === String(user.id) && !m.read);
-    const messageCount = document.getElementById('messageCount');
-    if (messageCount) messageCount.textContent = unreadMessages.length;
+    // 받은 메시지 수 (API)
+    try {
+        const msgData = await api.get('/messages/inbox');
+        const unreadCount = (msgData.messages || []).filter(m => !m.is_read).length;
+        const messageCount = document.getElementById('messageCount');
+        if (messageCount) messageCount.textContent = unreadCount;
+    } catch (e) {
+        const el = document.getElementById('messageCount');
+        if (el) el.textContent = 0;
+    }
 }
 
 async function loadRecommendedJobs() {
@@ -623,48 +643,43 @@ function setupCompanyEventListeners() {
     }
 }
 
-function loadTeacherCounselingRequests() {
+async function loadTeacherCounselingRequests() {
     const user = auth.getCurrentUser();
     if (!user || user.user_type !== 'teacher') return;
 
-    const requests = JSON.parse(localStorage.getItem('counseling_requests') || '[]');
-    const myRequests = requests.filter(r => String(r.counselorId) === String(user.id));
-    
     const container = document.getElementById('counselingRequestsList');
     if (!container) return;
 
-    if (myRequests.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">상담 신청 내역이 없습니다.</p>';
-        return;
-    }
+    try {
+        const data = await api.get('/counseling');
+        const sessions = (data.sessions || []).slice(0, 5);
 
-    const users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
-    
-    // Show only the 5 most recent requests
-    const recentRequests = myRequests.slice(-5).reverse();
-    
-    container.innerHTML = recentRequests.map(req => {
-        const student = users.find(u => String(u.id) === String(req.studentId));
-        const studentName = req.studentName || (student ? student.name : '알 수 없음');
-        const statusText = req.status === 'pending' ? '대기중' : req.status === 'approved' ? '승인됨' : '거절됨';
-        const statusClass = req.status === 'pending' ? 'status-pending' : req.status === 'approved' ? 'status-approved' : 'status-rejected';
-        const date = new Date(req.createdAt).toLocaleDateString('ko-KR');
-        
-        return `
-            <div class="counseling-request-item">
-                <div class="request-info">
-                    <h4>${studentName} 학생</h4>
-                    <p class="request-title">${req.title}</p>
-                    <div class="request-meta">
-                        <span class="request-type-badge">${req.type}</span>
-                        <span class="request-date">${date}</span>
-                        <span class="request-status ${statusClass}">${statusText}</span>
+        if (sessions.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">상담 신청 내역이 없습니다.</p>';
+            return;
+        }
+
+        container.innerHTML = sessions.map(s => {
+            const statusText = s.status === 'pending' ? '대기중' : s.status === 'approved' ? '승인됨' : s.status === 'completed' ? '완료됨' : '거절됨';
+            const statusClass = s.status === 'pending' ? 'status-pending' : s.status === 'approved' || s.status === 'completed' ? 'status-approved' : 'status-rejected';
+            const date = new Date(s.created_at).toLocaleDateString('ko-KR');
+            return `
+                <div class="counseling-request-item">
+                    <div class="request-info">
+                        <h4>${s.student_name || s.requester_name || '학생'}</h4>
+                        <p class="request-title">${s.title || s.subject || ''}</p>
+                        <div class="request-meta">
+                            <span class="request-type-badge">${s.type || ''}</span>
+                            <span class="request-date">${date}</span>
+                            <span class="request-status ${statusClass}">${statusText}</span>
+                        </div>
                     </div>
-                </div>
-                <a href="counseling.html" class="btn btn-sm btn-secondary">상세보기</a>
-            </div>
-        `;
-    }).join('');
+                    <a href="counseling.html" class="btn btn-sm btn-secondary">상세보기</a>
+                </div>`;
+        }).join('');
+    } catch (err) {
+        container.innerHTML = '<p style="text-align:center;color:#6b7280;padding:2rem;">데이터를 불러올 수 없습니다.</p>';
+    }
 }
 
 function setupJobApplications() {
@@ -683,136 +698,158 @@ function setupJobApplications() {
     });
 }
 
-// 최근 소식 로드
-function loadRecentNews() {
+// 최근 소식 로드 (API)
+async function loadRecentNews() {
     const newsContainer = document.getElementById('recentNews');
     if (!newsContainer) return;
-    
-    const news = JSON.parse(localStorage.getItem('recentNews') || '[]');
-    const recentNews = news.slice(0, 3); // 최근 3개만 표시
-    
-    if (recentNews.length === 0) {
-        newsContainer.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">등록된 소식이 없습니다.</p>';
-        return;
-    }
-    
-    newsContainer.innerHTML = recentNews.map(item => `
-        <div class="news-item" onclick="showNewsDetail(${item.id})" style="cursor: pointer;">
-            <div class="news-date">${new Date(item.createdAt).toLocaleDateString('ko-KR')}</div>
-            <div class="news-content">
-                <h4>${item.title}</h4>
-                <p>${(item.content || '').substring(0, 80)}${item.content && item.content.length > 80 ? '...' : ''}</p>
+
+    try {
+        const data = await api.get('/posts?limit=3');
+        const posts = data.posts || [];
+
+        if (posts.length === 0) {
+            newsContainer.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">등록된 소식이 없습니다.</p>';
+            return;
+        }
+
+        newsContainer.innerHTML = posts.map(post => `
+            <div class="news-item" onclick="showNewsDetail(${post.id})" style="cursor: pointer;">
+                <div class="news-date">${new Date(post.created_at).toLocaleDateString('ko-KR')}</div>
+                <div class="news-content">
+                    <h4>${post.title}</h4>
+                    <p>${(post.content || '').substring(0, 80)}${post.content && post.content.length > 80 ? '...' : ''}</p>
+                </div>
             </div>
-        </div>
-    `).join('');
+        `).join('');
+    } catch (e) {
+        newsContainer.innerHTML = '<p style="text-align:center;color:#6b7280;padding:2rem;">소식을 불러올 수 없습니다.</p>';
+    }
 }
 
-// 최근 소식 상세보기
-function showNewsDetail(newsId) {
-    const news = JSON.parse(localStorage.getItem('recentNews') || '[]');
-    const item = news.find(n => n.id === newsId);
-    
-    if (!item) return;
-    
-    document.getElementById('newsDetailTitle').textContent = item.title;
-    document.getElementById('newsDetailDate').textContent = new Date(item.createdAt).toLocaleDateString('ko-KR');
-    document.getElementById('newsDetailContent').textContent = item.content;
-    document.getElementById('newsDetailModal').style.display = 'flex';
+// 최근 소식 상세보기 (API)
+async function showNewsDetail(newsId) {
+    try {
+        const data = await api.get(`/posts/${newsId}`);
+        const post = data.post;
+        if (!post) return;
+
+        document.getElementById('newsDetailTitle').textContent = post.title;
+        document.getElementById('newsDetailDate').textContent = new Date(post.created_at).toLocaleDateString('ko-KR');
+        document.getElementById('newsDetailContent').textContent = post.content;
+        document.getElementById('newsDetailModal').style.display = 'flex';
+    } catch (e) {
+        alert('공지사항을 불러올 수 없습니다.');
+    }
 }
 
 function closeNewsDetailModal() {
     document.getElementById('newsDetailModal').style.display = 'none';
 }
 
-// 교육프로그램 로드
-function loadEducationPrograms() {
+// 교육프로그램 로드 (API)
+async function loadEducationPrograms() {
     const eduContainer = document.getElementById('educationPrograms');
     if (!eduContainer) return;
-    
-    const programs = JSON.parse(localStorage.getItem('graduateNetwork_programs') || '[]');
-    const recentPrograms = programs.slice(0, 3); // 최근 3개만 표시
-    
-    if (recentPrograms.length === 0) {
-        eduContainer.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">등록된 교육프로그램이 없습니다.</p>';
-        return;
-    }
-    
-    eduContainer.innerHTML = recentPrograms.map(program => `
-        <div class="news-item" onclick="showEducationDetail('${program.id}')" style="cursor: pointer;">
-            <div class="news-date">${program.type || ''} | ${program.duration || '-'}</div>
-            <div class="news-content">
-                <h4>${program.title}</h4>
-                <p>강사: ${program.instructor || '-'} | 수강료: ${program.cost || '-'}</p>
+
+    try {
+        const data = await api.get('/education-programs?limit=3');
+        const programs = data.programs || [];
+
+        if (programs.length === 0) {
+            eduContainer.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">등록된 교육프로그램이 없습니다.</p>';
+            return;
+        }
+
+        eduContainer.innerHTML = programs.map(program => `
+            <div class="news-item" onclick="showEducationDetail(${program.id})" style="cursor: pointer;">
+                <div class="news-date">${program.type || ''} | ${program.duration || '-'}</div>
+                <div class="news-content">
+                    <h4>${program.title}</h4>
+                    <p>강사: ${program.instructor || '-'} | 수강료: ${program.cost || '-'}</p>
+                </div>
             </div>
-        </div>
-    `).join('');
+        `).join('');
+    } catch (e) {
+        eduContainer.innerHTML = '<p style="text-align:center;color:#6b7280;padding:2rem;">교육프로그램을 불러올 수 없습니다.</p>';
+    }
 }
 
-// 교육프로그램 상세보기
-function showEducationDetail(programId) {
-    const programs = JSON.parse(localStorage.getItem('graduateNetwork_programs') || '[]');
-    const program = programs.find(p => String(p.id) === String(programId));
-    
-    if (!program) return;
-    
-    document.getElementById('educationDetailTitle').textContent = program.title;
-    document.getElementById('educationDetailPeriod').textContent = `${program.type || '-'} | ${program.duration || '-'}`;
-    document.getElementById('educationDetailDeadline').textContent = program.category || '-';
-    document.getElementById('educationDetailFee').textContent = program.cost || '-';
-    document.getElementById('educationDetailDescription').textContent = program.description || '';
-    document.getElementById('educationDetailModal').style.display = 'flex';
+// 교육프로그램 상세보기 (API)
+async function showEducationDetail(programId) {
+    try {
+        const data = await api.get(`/education-programs/${programId}`);
+        const program = data.program;
+        if (!program) return;
+
+        document.getElementById('educationDetailTitle').textContent = program.title;
+        document.getElementById('educationDetailPeriod').textContent = `${program.type || '-'} | ${program.duration || '-'}`;
+        document.getElementById('educationDetailDeadline').textContent = program.category || '-';
+        document.getElementById('educationDetailFee').textContent = program.cost || '-';
+        document.getElementById('educationDetailDescription').textContent = program.description || '';
+        document.getElementById('educationDetailModal').style.display = 'flex';
+    } catch (e) {
+        alert('프로그램 정보를 불러올 수 없습니다.');
+    }
 }
 
 function closeEducationDetailModal() {
     document.getElementById('educationDetailModal').style.display = 'none';
 }
 
-// 회사/선생님 대시보드용 최근 소식 로드
-function loadRecentNewsForCompany() {
+// 회사/선생님 대시보드용 최근 소식 로드 (API)
+async function loadRecentNewsForCompany() {
     const newsContainer = document.getElementById('recentNewsCompany');
     if (!newsContainer) return;
-    
-    const news = JSON.parse(localStorage.getItem('recentNews') || '[]');
-    const recentNews = news.slice(0, 3); // 최근 3개만 표시
-    
-    if (recentNews.length === 0) {
-        newsContainer.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">등록된 소식이 없습니다.</p>';
-        return;
-    }
-    
-    newsContainer.innerHTML = recentNews.map(item => `
-        <div class="news-item" onclick="showNewsDetail(${item.id})" style="cursor: pointer;">
-            <div class="news-date">${new Date(item.createdAt).toLocaleDateString('ko-KR')}</div>
-            <div class="news-content">
-                <h4>${item.title}</h4>
-                <p>${(item.content || '').substring(0, 80)}${item.content && item.content.length > 80 ? '...' : ''}</p>
+
+    try {
+        const data = await api.get('/posts?limit=3');
+        const posts = data.posts || [];
+
+        if (posts.length === 0) {
+            newsContainer.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">등록된 소식이 없습니다.</p>';
+            return;
+        }
+
+        newsContainer.innerHTML = posts.map(post => `
+            <div class="news-item" onclick="showNewsDetail(${post.id})" style="cursor: pointer;">
+                <div class="news-date">${new Date(post.created_at).toLocaleDateString('ko-KR')}</div>
+                <div class="news-content">
+                    <h4>${post.title}</h4>
+                    <p>${(post.content || '').substring(0, 80)}${post.content && post.content.length > 80 ? '...' : ''}</p>
+                </div>
             </div>
-        </div>
-    `).join('');
+        `).join('');
+    } catch (e) {
+        newsContainer.innerHTML = '<p style="text-align:center;color:#6b7280;padding:2rem;">소식을 불러올 수 없습니다.</p>';
+    }
 }
 
-// 회사/선생님 대시보드용 교육프로그램 로드
-function loadEducationProgramsForCompany() {
+// 회사/선생님 대시보드용 교육프로그램 로드 (API)
+async function loadEducationProgramsForCompany() {
     const eduContainer = document.getElementById('educationProgramsCompany');
     if (!eduContainer) return;
-    
-    const programs = JSON.parse(localStorage.getItem('graduateNetwork_programs') || '[]');
-    const recentPrograms = programs.slice(0, 3); // 최근 3개만 표시
-    
-    if (recentPrograms.length === 0) {
-        eduContainer.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">등록된 교육프로그램이 없습니다.</p>';
-        return;
-    }
-    
-    eduContainer.innerHTML = recentPrograms.map(program => `
-        <div class="news-item" onclick="showEducationDetail('${program.id}')" style="cursor: pointer;">
-            <div class="news-date">${program.type || ''} | ${program.duration || '-'}</div>
-            <div class="news-content">
-                <h4>${program.title}</h4>
-                <p>강사: ${program.instructor || '-'} | 수강료: ${program.cost || '-'}</p>
+
+    try {
+        const data = await api.get('/education-programs?limit=3');
+        const programs = data.programs || [];
+
+        if (programs.length === 0) {
+            eduContainer.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">등록된 교육프로그램이 없습니다.</p>';
+            return;
+        }
+
+        eduContainer.innerHTML = programs.map(program => `
+            <div class="news-item" onclick="showEducationDetail(${program.id})" style="cursor: pointer;">
+                <div class="news-date">${program.type || ''} | ${program.duration || '-'}</div>
+                <div class="news-content">
+                    <h4>${program.title}</h4>
+                    <p>강사: ${program.instructor || '-'} | 수강료: ${program.cost || '-'}</p>
+                </div>
             </div>
-        </div>
-    `).join('');
+        `).join('');
+    } catch (e) {
+        eduContainer.innerHTML = '<p style="text-align:center;color:#6b7280;padding:2rem;">교육프로그램을 불러올 수 없습니다.</p>';
+    }
 }
 
 // 교사 대시보드 - 상담일지 최근 3건 표시 (API 연동, localStorage 폴백)

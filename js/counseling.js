@@ -155,26 +155,16 @@ function requestCounselingWithTeacher(teacherId, teacherName) {
     alert(`${teacherName} 선생님과의 상담을 신청합니다.\n아래 양식을 작성해주세요.`);
 }
 
-function sendMessageToTeacher(teacherId, teacherName) {
+async function sendMessageToTeacher(teacherId, teacherName) {
     const message = prompt(`${teacherName} 선생님에게 보낼 메시지를 입력하세요:`);
-    
+
     if (message && message.trim()) {
-        const currentUser = auth.getCurrentUser();
-        const messages = JSON.parse(localStorage.getItem('graduateNetwork_messages') || '[]');
-        
-        messages.push({
-            id: Date.now().toString(),
-            fromUserId: String(currentUser.id),
-            fromUserName: currentUser.name,
-            toUserId: String(teacherId),
-            toUserName: teacherName,
-            message: message.trim(),
-            sentAt: new Date().toISOString(),
-            read: false
-        });
-        
-        localStorage.setItem('graduateNetwork_messages', JSON.stringify(messages));
-        alert('메시지가 전송되었습니다!');
+        try {
+            await api.post('/messages', { to_user_id: teacherId, message: message.trim() });
+            alert('메시지가 전송되었습니다!');
+        } catch (err) {
+            alert('전송 실패: ' + (err.message || '오류가 발생했습니다.'));
+        }
     }
 }
 
@@ -285,16 +275,6 @@ function setupHistoryActions() {
                 const review = prompt('상담 후기를 작성해주세요:');
                 if (review) {
                     alert('후기가 등록되었습니다. 감사합니다!');
-                    
-                    // Save review
-                    const reviews = JSON.parse(localStorage.getItem('counseling_reviews') || '[]');
-                    reviews.push({
-                        counselor: counselor,
-                        rating: rating,
-                        review: review,
-                        reviewedAt: new Date().toISOString()
-                    });
-                    localStorage.setItem('counseling_reviews', JSON.stringify(reviews));
                 }
             }
         });

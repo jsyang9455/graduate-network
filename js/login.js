@@ -48,43 +48,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     window.location.href = returnUrl || 'dashboard.html';
                 }, 1000);
             })
-            .catch(() => {
-                // 오프라인 fallback: localStorage
-                const users = JSON.parse(localStorage.getItem('graduateNetwork_users') || '[]');
-                const foundUser = users.find(u => u.email === email && u.password === password);
-
-                if (foundUser) {
-                    const loginUser = {
-                        id: foundUser.id,
-                        email: foundUser.email,
-                        name: foundUser.name,
-                        user_type: foundUser.user_type || 'graduate',
-                        phone: foundUser.phone
-                    };
-
-                    localStorage.setItem('graduateNetwork_user', JSON.stringify(loginUser));
-                    localStorage.setItem('token', 'user_token_' + foundUser.id);
-
-                    const successMsg = document.getElementById('loginSuccess');
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const returnUrl = urlParams.get('returnUrl');
-
-                    if (successMsg) {
-                        successMsg.textContent = '로그인 성공! 이동합니다...';
-                        successMsg.style.display = 'block';
-                    }
-
-                    setTimeout(() => {
-                        window.location.href = returnUrl || 'dashboard.html';
-                    }, 1000);
-
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                } else {
-                    showError('이메일 또는 비밀번호가 올바르지 않습니다.');
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                }
+            .catch(err => {
+                showError('이메일 또는 비밀번호가 올바르지 않습니다.');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
             });
     }
 

@@ -250,3 +250,32 @@ CREATE TABLE IF NOT EXISTS announcements (
 CREATE INDEX idx_announcements_type ON announcements(type);
 CREATE INDEX idx_announcements_event_date ON announcements(event_date);
 CREATE INDEX idx_announcements_active ON announcements(is_active);
+
+-- Education Programs (교육프로그램)
+CREATE TABLE IF NOT EXISTS education_programs (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    category VARCHAR(100),
+    type VARCHAR(50),
+    duration VARCHAR(100),
+    description TEXT,
+    instructor VARCHAR(200),
+    cost VARCHAR(100),
+    link TEXT,
+    created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Messages (메시지)
+CREATE TABLE IF NOT EXISTS messages (
+    id SERIAL PRIMARY KEY,
+    from_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    to_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    message TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_messages_to_user ON messages(to_user_id);
+CREATE INDEX IF NOT EXISTS idx_messages_from_user ON messages(from_user_id);
