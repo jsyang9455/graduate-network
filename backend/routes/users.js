@@ -300,6 +300,7 @@ router.get('/', async (req, res) => {
       major,
       school_name,
       is_mentor,
+      is_counselor,
       include_withdrawn,
       exclude_user_id,
       page = 1, 
@@ -327,6 +328,7 @@ router.get('/', async (req, res) => {
       SELECT u.id, u.email, u.name, u.user_type, u.phone,
              ${sel('school_name')}, ${sel('major')}, ${sel('desired_job')},
              u.profile_image, u.created_at, u.is_active${extraWithdraw},
+             COALESCE(u.is_counselor, false) AS is_counselor,
              gp.graduation_year, gp.major AS gp_major, gp.current_company, 
              gp.current_position, gp.is_mentor
       FROM users u
@@ -377,6 +379,9 @@ router.get('/', async (req, res) => {
     }
     if (is_mentor === 'true') {
       queryText += ` AND gp.is_mentor = true`;
+    }
+    if (is_counselor === 'true') {
+      queryText += ` AND COALESCE(u.is_counselor, false) = true`;
     }
 
     queryText += ` ORDER BY u.created_at DESC LIMIT $${paramCount + 1} OFFSET $${paramCount + 2}`;
@@ -448,7 +453,7 @@ router.get('/', async (req, res) => {
 router.put('/:id', auth, async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, user_type, phone, school_name, major, desired_job, graduation_year, department_name } = req.body;
+    const { name, email, user_type, phone, school_name, major, desired_job, graduation_year, department_name, is_counselor } = req.body;
 
     // Only admins can update other users
     if (req.user.user_type !== 'admin') {
@@ -459,7 +464,7 @@ router.put('/:id', auth, async (req, res) => {
     const colCheck = await query(
       `SELECT column_name FROM information_schema.columns 
        WHERE table_name = 'users' AND column_name IN 
-         ('phone','school_name','major','desired_job','graduation_year','department_name')`
+         ('phone','school_name','major','desired_job','graduation_year','department_name','is_counselor')`
     );
     const existingCols = colCheck.rows.map(r => r.column_name);
 
@@ -481,6 +486,12 @@ router.put('/:id', auth, async (req, res) => {
         setClauses.push(`${col} = COALESCE($${paramIdx}, ${col})`);
         params.push(val);
       }
+    }
+    // is_counselor: boolean 필드 - COALESCE 불가, 직접 설정
+    if (existingCols.includes('is_counselor') && is_counselor !== undefined) {
+      paramIdx++;
+      setClauses.push(`is_counselor = $${paramIdx}`);
+      params.push(is_counselor === true || is_counselor === 'true');
     }
 
     paramIdx++;

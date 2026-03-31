@@ -84,6 +84,15 @@ function hideCareerMenuForTeacher() {
 
 function showTeacherDashboard() {
     hideCareerMenuForTeacher();
+
+    // 상담교사로 지정되지 않은 교사는 상담 메뉴 숨김
+    const user = auth.getCurrentUser();
+    if (user && !user.is_counselor) {
+        const counselingMenu = document.getElementById('counselingMenu');
+        const journalMenu = document.getElementById('journalMenu');
+        if (counselingMenu) counselingMenu.style.display = 'none';
+        if (journalMenu) journalMenu.style.display = 'none';
+    }
     const defaultDashboard = document.getElementById('defaultDashboard');
     const companyDashboard = document.getElementById('companyDashboard');
     

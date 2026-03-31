@@ -32,6 +32,18 @@ document.addEventListener('DOMContentLoaded', function() {
             searchUsers();
         }
     });
+
+    // 회원 유형 변경 시 상담교사 섹션 표시/숨김
+    document.getElementById('editUserType')?.addEventListener('change', function() {
+        const counselorSection = document.getElementById('counselorSection');
+        if (counselorSection) {
+            counselorSection.style.display = this.value === 'teacher' ? 'block' : 'none';
+            if (this.value !== 'teacher') {
+                const cb = document.getElementById('editUserIsCounselor');
+                if (cb) cb.checked = false;
+            }
+        }
+    });
 });
 
 // 회원 로드
@@ -118,6 +130,11 @@ function displayUsers(userList) {
         const phone = user.phone || '-';
         const schoolName = user.school_name || user.current_company || '-';
         const major = user.major || '-';
+        // 상담교사 배지 (교사 유형 + is_counselor = true 일 때)
+        const counselorBadge = (user.user_type === 'teacher' && user.is_counselor)
+            ? ' <span style="background:#dcfce7;color:#166534;font-size:0.72rem;padding:1px 6px;border-radius:10px;font-weight:600;">상담교사</span>'
+            : '';
+        const displayTypeLabel = `<span class="badge badge-${user.user_type}">${userTypeLabel}</span>${counselorBadge}`;
 
         if (currentView === 'withdrawn') {
             return `
@@ -125,7 +142,7 @@ function displayUsers(userList) {
                     <td>${index2 + 1}</td>
                     <td>${user.name || '-'}</td>
                     <td>${user.email || '-'}</td>
-                    <td><span class="badge badge-${user.user_type}">${userTypeLabel}</span></td>
+                    <td>${displayTypeLabel}</td>
                     <td>${phone}</td>
                     <td>${schoolName}</td>
                     <td>${major}</td>
@@ -146,7 +163,7 @@ function displayUsers(userList) {
                 <td>${index2 + 1}</td>
                 <td>${user.name || '-'}</td>
                 <td>${user.email || '-'}</td>
-                <td><span class="badge badge-${user.user_type}">${userTypeLabel}</span></td>
+                <td>${displayTypeLabel}</td>
                 <td>${phone}</td>
                 <td>${schoolName}</td>
                 <td>${major}</td>
@@ -177,6 +194,14 @@ function editUser(userId) {
     document.getElementById('editUserGradYear').value = user.graduation_year || '';
     document.getElementById('editUserDesiredJob').value = user.desired_job || '';
 
+    // 상담교사 체크박스 설정 (교사 유형일 때만 표시)
+    const counselorSection = document.getElementById('counselorSection');
+    const isCounselorCheck = document.getElementById('editUserIsCounselor');
+    if (counselorSection && isCounselorCheck) {
+        isCounselorCheck.checked = user.is_counselor === true;
+        counselorSection.style.display = user.user_type === 'teacher' ? 'block' : 'none';
+    }
+
     document.getElementById('editUserModal').style.display = 'block';
 }
 window.editUser = editUser;
@@ -187,11 +212,12 @@ async function saveUser(event) {
 
     const userId = document.getElementById('editUserId').value;
     const gradYearVal = document.getElementById('editUserGradYear').value;
+    const userType = document.getElementById('editUserType').value;
 
     const payload = {
         name:            document.getElementById('editUserName').value,
         email:           document.getElementById('editUserEmail').value,
-        user_type:       document.getElementById('editUserType').value,
+        user_type:       userType,
         phone:           document.getElementById('editUserPhone').value,
         school_name:     document.getElementById('editUserSchool').value,
         department_name: document.getElementById('editUserDept').value,
@@ -199,6 +225,13 @@ async function saveUser(event) {
         graduation_year: gradYearVal ? parseInt(gradYearVal) : null,
         desired_job:     document.getElementById('editUserDesiredJob').value,
     };
+
+    // 교사 유형인 경우만 is_counselor 포함
+    if (userType === 'teacher') {
+        payload.is_counselor = document.getElementById('editUserIsCounselor')?.checked === true;
+    } else {
+        payload.is_counselor = false;
+    }
 
     const btn = event.submitter || document.querySelector('#editUserForm button[type="submit"]');
     const origText = btn.textContent;

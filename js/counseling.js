@@ -7,6 +7,13 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = 'dashboard.html';
         return;
     }
+
+    // 교사 계정이지만 상담교사로 지정되지 않은 경우 차단
+    if (user && user.user_type === 'teacher' && !user.is_counselor) {
+        alert('상담교사로 지정된 교사만 진로 상담 서비스를 이용할 수 있습니다.\n관리자에게 상담교사 권한을 요청하세요.');
+        window.location.href = 'dashboard.html';
+        return;
+    }
     
     // Setup tab navigation
     setupTabNavigation();
@@ -84,7 +91,7 @@ async function loadTeachers() {
         try {
             const data2 = await fetch(
                 (typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : '/api')
-                + '/users?user_type=teacher&limit=100'
+                + '/users?user_type=teacher&is_counselor=true&limit=100'
             );
             if (data2.ok) {
                 const json = await data2.json();

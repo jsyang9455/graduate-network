@@ -49,6 +49,13 @@ async function initJournalPage() {
     }
     currentUser = JSON.parse(userStr);
 
+    // 교사 계정이지만 상담교사로 지정되지 않은 경우 차단
+    if (currentUser.user_type === 'teacher' && !currentUser.is_counselor) {
+        alert('상담교사로 지정된 교사만 상담일지를 이용할 수 있습니다.\n관리자에게 상담교사 권한을 요청하세요.');
+        window.location.href = 'dashboard.html';
+        return;
+    }
+
     // 헤더 사용자 이름
     const userNameEl = document.getElementById('userName');
     if (userNameEl) userNameEl.textContent = currentUser.name || '';

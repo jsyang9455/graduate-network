@@ -3,7 +3,18 @@ const router = express.Router();
 const { query } = require('../config/database');
 const { auth, checkRole } = require('../middleware/auth');
 
-// Get teachers (counselors)
+// is_counselor 컬럼 자동 추가 (AWS DB 안전 마이그레이션)
+async function ensureIsCounselorColumn() {
+  try {
+    await query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS is_counselor BOOLEAN DEFAULT false`);
+    console.log('✅ is_counselor 컬럼 준비 완료');
+  } catch (err) {
+    console.warn('is_counselor 컬럼 마이그레이션 경고:', err.message);
+  }
+}
+ensureIsCounselorColumn();
+
+// Get teachers (counselors) - is_counselor = true 인 교사만 반환
 router.get('/teachers', async (req, res) => {
   try {
     // school_name 컬럼 존재 여부 확인 (AWS DB 버전 차이 대응)
@@ -16,7 +27,10 @@ router.get('/teachers', async (req, res) => {
 
     const result = await query(
       `SELECT id, name, email, ${schoolNameSel}
-       FROM users WHERE user_type = 'teacher' AND is_active = true ORDER BY name`
+       FROM users
+       WHERE user_type = 'teacher' AND is_active = true
+         AND COALESCE(is_counselor, false) = true
+       ORDER BY name`
     );
     res.json({ teachers: result.rows });
   } catch (error) {

@@ -198,7 +198,8 @@ router.post('/login', [
         school_name: user.school_name,
         major: user.major,
         desired_job: user.desired_job,
-        profile_image: user.profile_image
+        profile_image: user.profile_image,
+        is_counselor: user.is_counselor || false
       },
       token
     });
