@@ -103,7 +103,7 @@
                 <h2>회원 정보 수정</h2>
                 <span class="close" onclick="closeEditUserModal()">&times;</span>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height:80vh;overflow-y:auto;">
                 <form id="editUserForm">
                     <input type="hidden" id="editUserId">
 
@@ -133,6 +133,15 @@
                         </div>
                     </div>
 
+                    <!-- 상담교사 지정 (교사 유형일 때만 표시) -->
+                    <div id="counselorSection" style="display:none; margin:1rem 0; padding:1rem 1.25rem; background:#f0f9ff; border-radius:10px; border:1.5px solid #bae6fd;">
+                        <h4 style="margin:0 0 0.6rem;color:#0369a1;font-size:0.95rem;">📋 상담 권한 설정</h4>
+                        <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-size:0.95rem;">
+                            <input type="checkbox" id="editUserIsCounselor" style="width:18px;height:18px;cursor:pointer;">
+                            <span>상담교사로 지정 <span style="color:#6b7280;font-size:0.85rem;">(학생 상담 신청/교사 목록에 노출됩니다)</span></span>
+                        </label>
+                    </div>
+
                     <h4 style="margin:1.5rem 0 1rem;color:#374151;border-bottom:1px solid #e5e7eb;padding-bottom:0.5rem;">학력 / 직업 정보</h4>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
                         <div class="form-group">
@@ -157,15 +166,6 @@
                         </div>
                     </div>
 
-                    <!-- 상담교사 지정 (교사 유형일 때만 표시) -->
-                    <div id="counselorSection" style="display:none; margin:1.25rem 0; padding:1rem 1.25rem; background:#f0f9ff; border-radius:10px; border:1.5px solid #bae6fd;">
-                        <h4 style="margin:0 0 0.6rem;color:#0369a1;font-size:0.95rem;">📋 상담 권한 설정</h4>
-                        <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-size:0.95rem;">
-                            <input type="checkbox" id="editUserIsCounselor" style="width:18px;height:18px;cursor:pointer;">
-                            <span>상담교사로 지정 <span style="color:#6b7280;font-size:0.85rem;">(학생 상담 신청/교사 목록에 노출됩니다)</span></span>
-                        </label>
-                    </div>
-
                     <div class="form-actions" style="margin-top:1.5rem;">
                         <button type="submit" class="btn btn-primary">저장</button>
                         <button type="button" onclick="closeEditUserModal()" class="btn btn-secondary">취소</button>
@@ -179,5 +179,4 @@
     <script src="js/auth.js"></script>
     <script src="js/admin-users.js"></script>
 </body>
-</html>
 </html>
