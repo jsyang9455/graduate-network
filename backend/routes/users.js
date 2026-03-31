@@ -58,7 +58,45 @@ router.post('/withdraw', auth, async (req, res) => {
   }
 });
 
-// Get user profile
+// Get current user's own profile (must be before /:id)
+router.get('/profile', auth, async (req, res) => {
+  try {
+    const colCheckResult = await query(
+      `SELECT column_name FROM information_schema.columns 
+       WHERE table_name = 'users' AND column_name IN ('major','desired_job','school_name','graduation_year','department_name')`
+    );
+    const existingCols = colCheckResult.rows.map(r => r.column_name);
+    const sel = (col, alias) => existingCols.includes(col)
+      ? `u.${col}${alias ? ` AS ${alias}` : ''}`
+      : `null AS ${alias || col}`;
+
+    const result = await query(
+      `SELECT u.id, u.email, u.name, u.user_type, u.phone,
+              ${sel('school_name')}, ${sel('major')}, ${sel('desired_job')},
+              u.profile_image, u.created_at,
+              ${sel('graduation_year')}, ${sel('department_name')},
+              gp.major AS gp_major, gp.current_company, gp.current_position,
+              gp.bio, gp.skills, gp.is_mentor,
+              cp.company_name, cp.industry, cp.company_size, cp.website, cp.description AS company_description
+       FROM users u
+       LEFT JOIN graduate_profiles gp ON u.id = gp.user_id
+       LEFT JOIN company_profiles cp ON u.id = cp.user_id
+       WHERE u.id = $1 AND u.is_active = true`,
+      [req.user.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({ user: result.rows[0] });
+  } catch (error) {
+    console.error('Get profile error:', error);
+    res.status(500).json({ error: 'Failed to get user' });
+  }
+});
+
+// Get user by ID
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -260,6 +298,7 @@ router.get('/', async (req, res) => {
       user_type, 
       graduation_year, 
       major,
+      school_name,
       is_mentor,
       include_withdrawn,
       exclude_user_id,
@@ -331,6 +370,11 @@ router.get('/', async (req, res) => {
       queryText += ` AND gp.major ILIKE $${paramCount}`;
       params.push(`%${major}%`);
     }
+    if (school_name) {
+      paramCount++;
+      queryText += ` AND u.school_name ILIKE $${paramCount}`;
+      params.push(`%${school_name}%`);
+    }
     if (is_mentor === 'true') {
       queryText += ` AND gp.is_mentor = true`;
     }
@@ -365,6 +409,21 @@ router.get('/', async (req, res) => {
         countQuery += ` AND u.user_type = ANY($${countParamNum}::text[])`;
         countParams.push(typeList);
       }
+    }
+    if (graduation_year) {
+      countParamNum++;
+      countQuery += ` AND gp.graduation_year = $${countParamNum}`;
+      countParams.push(graduation_year);
+    }
+    if (major) {
+      countParamNum++;
+      countQuery += ` AND gp.major ILIKE $${countParamNum}`;
+      countParams.push(`%${major}%`);
+    }
+    if (school_name) {
+      countParamNum++;
+      countQuery += ` AND u.school_name ILIKE $${countParamNum}`;
+      countParams.push(`%${school_name}%`);
     }
 
     const countResult = await query(countQuery, countParams);

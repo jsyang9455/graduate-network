@@ -3,6 +3,7 @@ let currentUser = null;
 let allUsers = [];
 let connections = [];
 let messages = { inbox: [], sent: [] };
+let isStudentView = false;
 
 document.addEventListener('DOMContentLoaded', async function() {
     // Initialize auth and load data
@@ -19,14 +20,21 @@ document.addEventListener('DOMContentLoaded', async function() {
             hideCareerMenuForTeacher();
         }
         
+        isStudentView = (currentUser.user_type === 'student');
+        
         document.getElementById('userName').textContent = currentUser.name;
         
         await loadConnections();
         await loadMessages();
-        await loadAllUsers();
-        updateStats();
         
-        setupSearch();
+        // 학생은 검색 전 결과 없음 표시, 비학생은 전체 로드
+        if (isStudentView) {
+            showSearchPrompt();
+        } else {
+            await loadAllUsers();
+        }
+        
+        updateStats();
         setupFilters();
         loadMajorFilter();
     }
@@ -78,10 +86,12 @@ async function loadMessages() {
     }
 }
 
-// 모든 사용자 로드 (본인 제외)
+// 모든 사용자 로드 (비학생용 - 기본 전체 목록)
 async function loadAllUsers() {
     try {
-        const data = await api.get('/users?user_type=student,graduate&exclude_user_id=' + currentUser.id);
+        const params = isStudentView ? 'user_type=graduate' : 'user_type=student,graduate';
+        const excludeParam = '&exclude_user_id=' + currentUser.id;
+        const data = await api.get('/users?' + params + excludeParam + '&limit=200');
         allUsers = data.users || [];
     } catch (err) {
         console.warn('Users load failed:', err.message);
@@ -90,12 +100,26 @@ async function loadAllUsers() {
     displayAlumni(allUsers);
 }
 
+// 이름 마스킹: 김재현 → 김0현
+function maskName(name) {
+    if (!name) return '이름 없음';
+    if (name.length === 1) return name;
+    if (name.length === 2) return name.charAt(0) + '0';
+    return name.charAt(0) + '0'.repeat(name.length - 2) + name.charAt(name.length - 1);
+}
+
+// 검색 전 안내 메시지 표시
+function showSearchPrompt() {
+    const alumniGrid = document.getElementById('alumniGrid');
+    alumniGrid.innerHTML = '<div style="text-align:center; color:#6b7280; padding:60px 20px; grid-column: 1/-1;"><p style="font-size:1.2rem; margin-bottom:8px;">🔍 졸업생을 검색하세요</p><p style="font-size:0.9rem;">졸업연도, 학교명, 전공을 입력 후 검색 버튼을 눌러주세요.</p></div>';
+}
+
 // 동문 목록 표시
 function displayAlumni(users) {
     const alumniGrid = document.getElementById('alumniGrid');
     
     if (users.length === 0) {
-        alumniGrid.innerHTML = '<p style="text-align: center; color: #999; padding: 40px; grid-column: 1/-1;">등록된 동문이 없습니다.</p>';
+        alumniGrid.innerHTML = '<p style="text-align: center; color: #999; padding: 40px; grid-column: 1/-1;">검색 결과가 없습니다.</p>';
         return;
     }
     
@@ -107,9 +131,10 @@ function displayAlumni(users) {
             (String(c.connectedUserId) === curUid && String(c.userId) === uid)
         );
         
-        const avatar = user.name ? user.name.charAt(0) : '?';
+        const displayName = isStudentView ? maskName(user.name) : (user.name || '이름 없음');
+        const avatar = displayName.charAt(0);
         const graduationYear = user.graduation_year || user.gp_graduation_year || '미상';
-        const major = user.major || user.gp_major || '전공 미상';
+        const major = user.gp_major || user.major || '전공 미상';
         const company = user.current_company || '정보 없음';
         const position = user.current_position || '직책 미상';
         
@@ -123,14 +148,13 @@ function displayAlumni(users) {
                     </button>
                 </div>
                 <div class="alumni-info">
-                    <h3>${user.name}</h3>
+                    <h3>${displayName}</h3>
                     <p class="alumni-company">${company}</p>
                     <p class="alumni-position">${position}</p>
                     <div class="alumni-details">
                         <span class="detail-tag">📅 ${graduationYear}년 졸업</span>
                         <span class="detail-tag">🎓 ${major}</span>
                     </div>
-                    <p class="alumni-bio">${user.email}</p>
                 </div>
                 <div class="alumni-actions">
                     <button class="btn btn-secondary" onclick="viewProfile('${user.id}')">프로필 보기</button>
@@ -182,36 +206,30 @@ window.toggleConnection = toggleConnection;
 
 // 프로필 보기
 function viewProfile(userId) {
-    console.log('viewProfile called with userId:', userId, 'type:', typeof userId);
-    console.log('allUsers:', allUsers);
-    console.log('allUsers ids:', allUsers.map(u => ({ id: u.id, type: typeof u.id, name: u.name })));
-    
-    // userId를 문자열과 숫자 모두 비교
-    const user = allUsers.find(u => u.id == userId || u.id === userId || String(u.id) === String(userId));
-    console.log('Found user:', user);
+    const user = allUsers.find(u => String(u.id) === String(userId));
     
     if (!user) {
         alert('사용자를 찾을 수 없습니다.');
         return;
     }
     
-    const graduationYear = user.graduationYear || '미상';
-    const major = user.major || '전공 미상';
-    const company = user.company || '정보 없음';
-    const position = user.position || '직책 미상';
-    const schoolName = user.schoolName || '학교 미상';
+    const displayName = isStudentView ? maskName(user.name) : (user.name || '이름 없음');
+    const graduationYear = user.graduation_year || user.gp_graduation_year || '미상';
+    const major = user.gp_major || user.major || '전공 미상';
+    const company = user.current_company || '정보 없음';
+    const position = user.current_position || '직책 미상';
+    const schoolName = user.school_name || '학교 미상';
     
     const profileInfo = `
 ========== 프로필 정보 ==========
 
-이름: ${user.name}
-이메일: ${user.email}
-사용자 유형: ${user.user_type === 'student' ? '학생' : '졸업생'}
+이름: ${displayName}
+사용자 유형: 졸업생
 
 학력:
 - 학교: ${schoolName}
 - 전공: ${major}
-- 졸업년도: ${graduationYear}
+- 졸업년도: ${graduationYear}년
 
 경력:
 - 회사: ${company}
@@ -255,57 +273,57 @@ function updateStats() {
     if (sentElement) sentElement.textContent = `${sentCount}건`;
 }
 
-// 검색 설정
+// 검색 설정 (비학생 전용 실시간 검색 - 현재는 사용 안함)
 function setupSearch() {
-    const searchInput = document.getElementById('searchAlumni');
-    const searchBtn = document.querySelector('.btn-search');
-
-    if (searchBtn) {
-        searchBtn.addEventListener('click', function() {
-            searchAlumni();
-        });
-    }
-    
-    if (searchInput) {
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchAlumni();
-            }
-        });
-        
-        // 실시간 검색
-        searchInput.addEventListener('input', function() {
-            searchAlumni();
-        });
-    }
+    // setupFilters()에서 통합 처리
 }
 
-// 동문 검색
-function searchAlumni() {
-    const searchInput = document.getElementById('searchAlumni');
-    const query = searchInput.value.trim().toLowerCase();
-    
-    if (!query) {
-        displayAlumni(allUsers);
+// 졸업생 검색 (학생 전용 - 버튼 클릭 시)
+async function searchGraduates() {
+    const gradYear = document.getElementById('filterGradYear')?.value?.trim();
+    const school = document.getElementById('filterSchool')?.value?.trim();
+    const major = document.getElementById('filterMajor')?.value?.trim();
+
+    // 학생의 경우 최소 하나의 조건 필요
+    if (isStudentView && !gradYear && !school && !major) {
+        alert('졸업연도, 학교명, 전공 중 하나 이상의 조건을 입력해 주세요.');
         return;
     }
-    
-    const filtered = allUsers.filter(user => {
-        const name = (user.name || '').toLowerCase();
-        const email = (user.email || '').toLowerCase();
-        const company = (user.company || '').toLowerCase();
-        const position = (user.position || '').toLowerCase();
-        const major = (user.major || '').toLowerCase();
-        
-        return name.includes(query) || 
-               email.includes(query) || 
-               company.includes(query) || 
-               position.includes(query) ||
-               major.includes(query);
-    });
-    
-    displayAlumni(filtered);
+
+    try {
+        let params = 'user_type=graduate&exclude_user_id=' + currentUser.id + '&limit=200';
+        if (gradYear) params += '&graduation_year=' + encodeURIComponent(gradYear);
+        if (school) params += '&school_name=' + encodeURIComponent(school);
+        if (major) params += '&major=' + encodeURIComponent(major);
+
+        const data = await api.get('/users?' + params);
+        allUsers = data.users || [];
+        displayAlumni(allUsers);
+    } catch (err) {
+        console.warn('Graduate search failed:', err.message);
+        allUsers = [];
+        displayAlumni([]);
+    }
 }
+window.searchGraduates = searchGraduates;
+
+// 검색 초기화
+function resetSearch() {
+    const gradYearEl = document.getElementById('filterGradYear');
+    const schoolEl = document.getElementById('filterSchool');
+    const majorEl = document.getElementById('filterMajor');
+    if (gradYearEl) gradYearEl.value = '';
+    if (schoolEl) schoolEl.value = '';
+    if (majorEl) majorEl.value = '';
+
+    allUsers = [];
+    if (isStudentView) {
+        showSearchPrompt();
+    } else {
+        loadAllUsers();
+    }
+}
+window.resetSearch = resetSearch;
 
 // 전공 필터 옵션 동적 로드 (회원가입과 동일한 목록)
 async function loadMajorFilter() {
@@ -341,62 +359,29 @@ async function loadMajorFilter() {
     }
 }
 
-// 필터 설정
+// 필터 설정 (Enter 키로도 검색)
 function setupFilters() {
-    const filters = ['filterGradYear', 'filterMajor', 'filterIndustry'];
-    filters.forEach(filterId => {
-        const element = document.getElementById(filterId);
-        if (element) {
-            element.addEventListener('change', function() {
-                applyFilters();
+    const gradYearEl = document.getElementById('filterGradYear');
+    const schoolEl = document.getElementById('filterSchool');
+    const majorEl = document.getElementById('filterMajor');
+
+    [gradYearEl, schoolEl].forEach(el => {
+        if (el) {
+            el.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') searchGraduates();
             });
         }
     });
+
+    if (majorEl) {
+        majorEl.addEventListener('change', function() {
+            // 비학생은 전공 변경 시 자동 검색
+            if (!isStudentView) searchGraduates();
+        });
+    }
 }
 
-// 필터 적용
-function applyFilters() {
-    const gradYearFilter = document.getElementById('filterGradYear').value;
-    const majorFilter = document.getElementById('filterMajor').value;
-    
-    let filtered = [...allUsers];
-    
-    // 졸업년도 필터
-    if (gradYearFilter) {
-        const [startYear, endYear] = gradYearFilter.split('-').map(Number);
-        filtered = filtered.filter(user => {
-            const gradYear = parseInt(user.graduationYear);
-            return gradYear >= startYear && gradYear <= endYear;
-        });
-    }
-    
-    // 전공 필터
-    if (majorFilter) {
-        filtered = filtered.filter(user => {
-            return (user.major || '').includes(majorFilter);
-        });
-    }
-    
-    // 검색어도 함께 적용
-    const searchQuery = document.getElementById('searchAlumni').value.trim().toLowerCase();
-    if (searchQuery) {
-        filtered = filtered.filter(user => {
-            const name = (user.name || '').toLowerCase();
-            const email = (user.email || '').toLowerCase();
-            const company = (user.company || '').toLowerCase();
-            const position = (user.position || '').toLowerCase();
-            const major = (user.major || '').toLowerCase();
-            
-            return name.includes(searchQuery) || 
-                   email.includes(searchQuery) || 
-                   company.includes(searchQuery) || 
-                   position.includes(searchQuery) ||
-                   major.includes(searchQuery);
-        });
-    }
-    
-    displayAlumni(filtered);
-}
+// 기존 applyFilters 제거 (searchGraduates로 통합)
 
 // 메시지함 표시
 function showMessages(type) {

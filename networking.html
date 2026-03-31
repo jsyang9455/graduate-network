@@ -116,28 +116,14 @@
         </div>
 
         <div class="search-section">
-            <div class="search-bar">
-                <input type="text" id="searchAlumni" placeholder="이름, 회사, 직종으로 검색...">
-                <button class="btn-search">🔍 검색</button>
-            </div>
-            <div class="filter-bar">
-                <select id="filterGradYear">
-                    <option value="">졸업연도</option>
-                    <option value="2020-2025">2020-2025</option>
-                    <option value="2015-2019">2015-2019</option>
-                    <option value="2010-2014">2010-2014</option>
-                    <option value="2005-2009">2005-2009</option>
-                </select>
+            <div class="filter-bar" id="graduateSearchBar">
+                <input type="number" id="filterGradYear" placeholder="졸업연도 (예: 2023)" min="2000" max="2030" style="width:160px;">
+                <input type="text" id="filterSchool" placeholder="학교명">
                 <select id="filterMajor">
-                    <option value="">전공</option>
+                    <option value="">전공 선택</option>
                 </select>
-                <select id="filterIndustry">
-                    <option value="">업종</option>
-                    <option value="제조">제조업</option>
-                    <option value="IT">IT/소프트웨어</option>
-                    <option value="건설">건설</option>
-                    <option value="금융">금융</option>
-                </select>
+                <button class="btn-search" onclick="searchGraduates()">🔍 검색</button>
+                <button class="btn btn-secondary" onclick="resetSearch()" style="padding:0.5rem 1rem; font-size:0.9rem;">초기화</button>
             </div>
         </div>
 
