@@ -117,13 +117,13 @@
 
         <div class="search-section">
             <div class="filter-bar" id="graduateSearchBar">
-                <input type="number" id="filterGradYear" placeholder="졸업연도 (예: 2023)" min="2000" max="2030" style="width:160px;">
+                <input type="number" id="filterGradYear" placeholder="졸업연도 (예: 2023)" min="2000" max="2030">
                 <input type="text" id="filterSchool" placeholder="학교명">
                 <select id="filterMajor">
                     <option value="">전공 선택</option>
                 </select>
                 <button class="btn-search" onclick="searchGraduates()">🔍 검색</button>
-                <button class="btn btn-secondary" onclick="resetSearch()" style="padding:0.5rem 1rem; font-size:0.9rem;">초기화</button>
+                <button class="btn-reset" onclick="resetSearch()">초기화</button>
             </div>
         </div>
 
