@@ -109,7 +109,7 @@ function displayUsers(userList) {
     const pageUsers = filteredUsers.slice(start, start + PAGE_SIZE);
 
     if (pageUsers.length === 0) {
-        const colCount = currentView === 'withdrawn' ? 10 : 9;
+        const colCount = currentView === 'withdrawn' ? 11 : 10;
         tbody.innerHTML = `<tr><td colspan="${colCount}" style="text-align: center; color: #999; padding: 40px;">회원이 없습니다.</td></tr>`;
         return;
     }
@@ -145,6 +145,7 @@ function displayUsers(userList) {
                     <td>${displayTypeLabel}</td>
                     <td>${phone}</td>
                     <td>${schoolName}</td>
+                    <td>${user.department_name || '-'}</td>
                     <td>${major}</td>
                     <td style="color:#b91c1c;font-weight:600;">${withdrawnDate}</td>
                     <td style="max-width:200px;">
@@ -166,6 +167,7 @@ function displayUsers(userList) {
                 <td>${displayTypeLabel}</td>
                 <td>${phone}</td>
                 <td>${schoolName}</td>
+                <td>${user.department_name || '-'}</td>
                 <td>${major}</td>
                 <td>${joinDate}</td>
                 <td>
