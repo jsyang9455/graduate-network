@@ -18,16 +18,20 @@ document.addEventListener('DOMContentLoaded', function() {
         radio.addEventListener('change', function() {
             const studentFields = document.getElementById('studentFields');
             
-            if (this.value === 'teacher') {
+            if (userType === 'teacher') {
                 // 선생님: 이름, 이메일, 비밀번호, 학교만 표시
                 studentFields.style.display = 'none';
                 
                 // Remove required from student fields
                 const phoneInput = document.getElementById('phone');
                 const graduationYearInput = document.getElementById('graduationYear');
+                const majorInput = document.getElementById('major');
+                const departmentNameInput = document.getElementById('departmentName');
                 
                 if (phoneInput) phoneInput.removeAttribute('required');
                 if (graduationYearInput) graduationYearInput.removeAttribute('required');
+                if (majorInput) majorInput.removeAttribute('required');
+                if (departmentNameInput) departmentNameInput.removeAttribute('required');
             } else {
                 // 학생/졸업생: 모든 필드 표시
                 studentFields.style.display = 'block';
@@ -35,9 +39,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Add required to student fields
                 const phoneInput = document.getElementById('phone');
                 const graduationYearInput = document.getElementById('graduationYear');
+                const majorInput = document.getElementById('major');
+                const departmentNameInput = document.getElementById('departmentName');
                 
                 if (phoneInput) phoneInput.setAttribute('required', 'required');
                 if (graduationYearInput) graduationYearInput.setAttribute('required', 'required');
+                if (majorInput) majorInput.setAttribute('required', 'required');
+                if (departmentNameInput) departmentNameInput.setAttribute('required', 'required');
             }
         });
     });
@@ -162,6 +170,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data.userType === 'student' || data.userType === 'graduate') {
             if (!data.phone || !data.graduationYear) {
                 showError('필수 항목을 모두 입력해주세요. (전화번호, 졸업년도)');
+                return false;
+            }
+            if (!data.major) {
+                showError('전공을 선택해주세요.');
+                return false;
+            }
+            if (!data.departmentName) {
+                showError('학과명을 입력해주세요.');
                 return false;
             }
             

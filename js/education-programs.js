@@ -22,6 +22,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (careerMenu && currentUser.user_type !== 'student' && currentUser.user_type !== 'graduate') {
             careerMenu.style.display = 'none';
         }
+        // 상담교사로 지정되지 않은 교사는 상담 메뉴 숨김
+        if (currentUser.user_type === 'teacher' && !currentUser.is_counselor) {
+            const counselingMenu = document.getElementById('counselingMenu');
+            const journalMenu = document.getElementById('journalMenu');
+            if (counselingMenu) counselingMenu.style.display = 'none';
+            if (journalMenu) journalMenu.style.display = 'none';
+        }
+        // 기업 사용자는 상담 메뉴 숨김
+        if (currentUser.user_type === 'company') {
+            const counselingMenu = document.getElementById('counselingMenu');
+            if (counselingMenu) counselingMenu.style.display = 'none';
+        }
     }
 
     loadPrograms();

@@ -100,12 +100,12 @@ async function loadAllUsers() {
     displayAlumni(allUsers);
 }
 
-// 이름 마스킹: 김재현 → 김0현
+// 이름 마스킹: 김재현 → 김*현
 function maskName(name) {
     if (!name) return '이름 없음';
     if (name.length === 1) return name;
-    if (name.length === 2) return name.charAt(0) + '0';
-    return name.charAt(0) + '0'.repeat(name.length - 2) + name.charAt(name.length - 1);
+    if (name.length === 2) return name.charAt(0) + '*';
+    return name.charAt(0) + '*'.repeat(name.length - 2) + name.charAt(name.length - 1);
 }
 
 // 검색 전 안내 메시지 표시

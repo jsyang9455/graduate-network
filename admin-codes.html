@@ -74,10 +74,10 @@
                     </div>
                 </div>
 
-                <!-- 학과 관리 -->
+                <!-- 전공 관리 -->
                 <div id="majorSection" style="margin-top: 3rem;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                        <h2>학과 관리</h2>
+                        <h2>전공 관리</h2>
                         <button onclick="showMajorModal()" class="btn btn-primary">학과 등록</button>
                     </div>
 
@@ -297,7 +297,7 @@
             loadSchools();
         }
         
-        // ===== 학과 관리 함수 =====
+        // ===== 전공 관리 함수 =====
         async function loadMajors() {
             try {
                 const response = await api.get('/majors');
