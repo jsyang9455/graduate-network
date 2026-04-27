@@ -12,16 +12,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function updateStats() {
     try {
-        const stats = await api.get('/users/stats');
+        const stats = await api.get('/stats');
 
         const totalStudentsEl = document.getElementById('totalStudents');
+        const employmentRateEl = document.getElementById('employmentRate');
         const activeMembersEl = document.getElementById('activeMembers');
 
-        if (totalStudentsEl) {
-            totalStudentsEl.textContent = parseInt(stats.total_students || 0).toLocaleString();
+        if (totalStudentsEl && stats.total_students) {
+            totalStudentsEl.textContent = stats.total_students.value || '0';
+            const lbl = totalStudentsEl.closest('.stat-card')?.querySelector('.stat-label');
+            if (lbl && stats.total_students.label) lbl.textContent = stats.total_students.label;
         }
-        if (activeMembersEl) {
-            activeMembersEl.textContent = parseInt(stats.total_members || 0).toLocaleString();
+        if (employmentRateEl && stats.employment_rate) {
+            employmentRateEl.textContent = stats.employment_rate.value || '0%';
+            const lbl = employmentRateEl.closest('.stat-card')?.querySelector('.stat-label');
+            if (lbl && stats.employment_rate.label) lbl.textContent = stats.employment_rate.label;
+        }
+        if (activeMembersEl && stats.active_members) {
+            activeMembersEl.textContent = stats.active_members.value || '0';
+            const lbl = activeMembersEl.closest('.stat-card')?.querySelector('.stat-label');
+            if (lbl && stats.active_members.label) lbl.textContent = stats.active_members.label;
         }
     } catch (error) {
         // 조용히 실패 (콘솔 에러 스팸 방지)
