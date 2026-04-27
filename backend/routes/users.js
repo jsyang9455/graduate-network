@@ -312,7 +312,7 @@ router.get('/', async (req, res) => {
     // users 테이블에 실제 존재하는 컬럼만 SELECT (AWS DB가 구버전일 수 있음)
     const colCheckResult = await query(
       `SELECT column_name FROM information_schema.columns 
-       WHERE table_name = 'users' AND column_name IN ('major','desired_job','school_name','withdraw_reason','withdrawn_at')`
+       WHERE table_name = 'users' AND column_name IN ('major','desired_job','school_name','withdraw_reason','withdrawn_at','graduation_year','department_name')`
     );
     const existingCols = colCheckResult.rows.map(r => r.column_name);
 
@@ -327,9 +327,10 @@ router.get('/', async (req, res) => {
     let queryText = `
       SELECT u.id, u.email, u.name, u.user_type, u.phone,
              ${sel('school_name')}, ${sel('major')}, ${sel('desired_job')},
+             ${sel('graduation_year', 'graduation_year')}, ${sel('department_name', 'department_name')},
              u.profile_image, u.created_at, u.is_active${extraWithdraw},
              COALESCE(u.is_counselor, false) AS is_counselor,
-             gp.graduation_year, gp.major AS gp_major, gp.current_company, 
+             gp.graduation_year AS gp_graduation_year, gp.major AS gp_major, gp.current_company, 
              gp.current_position, gp.is_mentor
       FROM users u
       LEFT JOIN graduate_profiles gp ON u.id = gp.user_id
